@@ -15,46 +15,29 @@ La investigación documental está en `evidencias/semana-1/01-preguntas-reales.m
 | ID | Necesidad | Procedencia | Prioridad |
 |---|---|---|---|
 | N01 | Determinar si el relato se enmarca dentro de las relaciones de consumo amparadas por la LODC, descartando consultas ajenas al dominio. | P01, P02, P04 | Obligatoria |
-
 | N02 | Estructurar cronológicamente los hechos e identificar tanto la ausencia de datos esenciales como las contradicciones lógicas en el relato, para requerir su aclaración al usuario. | P08, P09, P10, P13 | Obligatoria |
-
 | N03 | Vincular los hechos relatados con los artículos exactos de la normativa vigente mediante recuperación de fuentes verificables (RAG), evitando alucinaciones legales. | P03, P05 | Obligatoria |
-
 | N04 | Establecer la ruta institucional correcta (proveedor → ente regulador sectorial → Defensoría del Pueblo) según el tipo de servicio. | P06, P07, P15 | Obligatoria |
-
 | N05 | Clasificar la naturaleza del problema (ej. garantías, cobros indebidos), definir la pretensión económica exacta e inducir a la correción de textos maliciosos o difamatorias. | P11, P12 | Obligatoria |
-
 | N06 | Contrastar el relato del consumidor con la evidencia documental aportada para validar la existencia de la transacción o el incumplimiento. | P14 y Caso 02 | Opcional |
-
 | N07 | Generar un documento legal formal (DOCX/PDF) inyectando los hechos y citas confirmados garantizando cero invenciones | Caso 02, objetivo y Fase 1 | Obligatoria |
-
 | N08 | Requerir la autorización humana explícita (confirmación) sobre los datos extraídos antes de persistir la información en la base de datos o generar archivos. | Caso 02, indicadores | Obligatoria |
-
 | N09 | Ejecutar cálculos o estimaciones (plazos legales, promedios de montos en disputa) y definir rutas mediante reglas deterministas verificadas, garantizando que el modelo de IA no invente cifras ni procedimientos para satisfacer el reclamo | `01-propuesta.md`, alcance 3.1 | Obligatoria, condicionada a validación normativa |
 
 ## 3. Requisitos funcionales
-| ID | Comportamiento requerido | HU | Prioridad | Necesidad
-|---|---|---|---|
+
+| ID | Comportamiento requerido | HU | Prioridad | Necesidad |
+|---|---|---|---|---|
 | RF-01 | Validar que el relato ingresado no esté vacío, confirmar que pertenece al dominio de defensa del consumidor y aislarlo temporalmente en sesión, separando los datos personales (PII) antes del procesamiento. | HU-01 | Obligatoria | N01 |
-
 | RF-02 | Permitir la carga opcional de archivos adjuntos, aplicando validación de formato y OCR local para digitalizar la evidencia de forma segura, haciendo que su contenido esté disponible para ser contrastado con el relato del consumidor, y notificando si el documento resulta ilegible. | HU-02 | Opcional | N06 |
-
 | RF-03 | Utilizar el modelo generativo (LLM) para extraer y estructurar cronológicamente los hechos clave del relato y aislar la pretensión económica exacta, devolviendo un JSON fuertemente tipado (mediante BeanOutputConverter) que servirá de insumo para la validación lógica posterior.| HU-03 | Obligatoria | N02, N05 |
-
 | RF-04 | Detectar omisiones o contradicciones lógicas en los datos extraídos frente al OCR (ej. falta de proveedor o fechas incompatibles), solicitar aclaraciones al usuario y gestionar las correcciones incrementando la versión del estado en memoria. | HU-04 | Obligatoria | N02, N06 |
-
 | RF-05 | Clasificar la categoría legal preliminar del reclamo (sin emitir un dictamen jurídico definitivo), definir la pretensión económica exacta e inducir a la correción de textos maliciosos o difamatorias automáticamente el procesamiento si el relato contiene lenguaje difamatorio o intenciones maliciosas. | HU-05 | Obligatoria | N05 |
-
 | RF-06 | Consultar la base vectorial (ChromaDB) para recuperar exclusivamente fragmentos vigentes de la normativa (LODC), absteniéndose por completo de sugerir fundamentos si no existe coincidencia en el corpus oficial. | HU-06 | Obligatoria | N03 |
-
 | RF-07 | Presentar un informe visual estructurado (Frontend) que muestre los derechos posibles, las citas exactas de la ley recuperadas por el motor RAG, los datos faltantes y la ruta de escalamiento institucional correcta. | HU-07 | Obligatoria | N03 , N04 |
-
 | RF-08 | Renderizar una vista previa en pantalla y, únicamente tras la acción del usuario, inyectar los datos confirmados en plantillas estáticas del servidor para generar documentos formales descargables (DOCX/PDF). | HU-08 | Obligatoria | N07 |
-
 | RF-09 | Requerir acciones de confirmación humana separadas y explícitas para (a) generar el documento y (b) registrar el reclamo, invalidando automáticamente los permisos previos si los hechos (la versión) sufren modificaciones. | HU-09 | Obligatoria | N08 |
-
 | RF-10 | Persistir los datos esenciales del reclamo en la base de datos relacional mediante una transacción atómica e idempotente solo cuando exista autorización explícita vigente. | HU-10 | Obligatoria | N08 |
-
 | RF-11 | Ejecutar funciones estáticas (código Java puro) para calcular plazos legales y valores económicos (ej. promedio de consumo), así como determinar la instancia de resolución correcta, basándose exclusivamente en los datos extraídos y reglas preconfiguradas, sin utilizar el LLM para el cálculo lógico o aritmético. | HU-11 | Obligatoria, condicionada a validación normativa | N09 |
 
 ## 4. Reglas de negocio
