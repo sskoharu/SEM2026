@@ -24,9 +24,9 @@ Este documento registra las decisiones técnicas, de diseño y de proceso tomada
 
 | Campo | Detalle |
 |---|---|
-| **Fecha** | 2026-10-19 |
+| **Fecha** | 2026-10-16 |
 | **Decisión** | Utilizar un asistente de IA generativa (Claude) para generar el borrador inicial del documento `01-propuesta.md`. |
-| **Contexto** | El plazo de entrega era ajustado y el equipo necesitaba un punto de partida estructurado que cubriera todos los apartados requeridos (problema, objetivo, arquitectura tentativa, herramientas, fuentes de conocimiento). Se optó por usar IA para acelerar la redacción inicial y dedicar el tiempo restante a revisar, corregir y enriquecer el contenido con criterio propio. |
+| **Contexto** | El plazo de entrega era ajustado y el equipo necesitaba un punto de partida estructurado que cubriera todos los apartados requeridos (problema, usuarios, alcance, riesgos y modelo con stack). Se optó por usar IA para acelerar la redacción inicial y dedicar el tiempo restante a revisar, corregir y enriquecer el contenido con criterio propio. |
 | **Apoyado en IA** | **Herramienta:** Claude. **Uso:** generación del borrador completo de `01-propuesta.md` a partir de la descripción del caso asignado y los lineamientos del seminario. |
 | **Verificación** | Todos los integrantes leyeron el borrador generado, corrigieron datos incorrectos, ajustaron el alcance a la realidad del grupo y verificaron que las fuentes de conocimiento mencionadas existen y son accesibles. El documento final refleja decisiones propias del equipo, no afirmaciones del modelo sin contrastar. |
 | **Responsable** | Equipo completo |
