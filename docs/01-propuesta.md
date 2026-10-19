@@ -30,7 +30,7 @@ Los consumidores ecuatorianos enfrentan con frecuencia problemas de garantías, 
 
 ### 3.1 Lo que hace (In-Scope)
 - **Análisis normativo:** Analiza el relato contra la LODC y su Reglamento, citando el artículo de origen con precisión.
-- **Evaluación de evidencia:** Lista la evidencia presentada y la faltante según la categoría específica del reclamo.
+- **Evaluación de evidencia:** A partir del relato escrito del usuario, identifica qué pruebas debería reunir y aportar según la categoría específica del reclamo.
 -  **Cálculo de plazos determinista:** Calcula plazos legales aplicables mediante funciones deterministas (ej.: 3 días para devolución, 90 días en reparaciones, 12 meses de prescripción en acciones civiles).
 -  **Ruta de escalamiento:** Indica la instancia idónea a la que acudir primero y el flujo de escalamiento institucional.
 -  **Generación de documentos:** Genera un borrador formal descargable (DOCX/PDF) a partir de una plantilla estandarizada.
@@ -42,7 +42,7 @@ Los consumidores ecuatorianos enfrentan con frecuencia problemas de garantías, 
 -  **No gestiona trámites ante instituciones:** No presenta ni envía el reclamo en nombre del usuario a ninguna entidad pública o privada. Solo lo prepara y guarda internamente.
 -  **No atiende materias fuera de la LODC:** Excluye materias laboral, penal, arrendamientos, tributaria o familiar (las reconoce y deriva oportunamente).
 -  **No alucina artículos ni sanciones:** Si no encuentra respaldo expreso en las fuentes indexadas, lo declara con total transparencia y orienta la abstención.
--  **No vulnerable a inyecciones:** No obedece instrucciones contenidas en adjuntos o relatos que pretendan alterar el comportamiento o directivas del agente.
+-  **No vulnerable a inyecciones:** No obedece instrucciones contenidas en el relato del usuario que pretendan alterar el comportamiento o las directivas del agente.
 -  **Protección estricta de privacidad (PII):** No envía datos personales sensibles (cédula, teléfono, dirección) al modelo generativo.
 
 ---
@@ -55,10 +55,9 @@ Los consumidores ecuatorianos enfrentan con frecuencia problemas de garantías, 
 | **R2** | **Alucinación de artículos o sanciones:** El modelo inventa normas inexistentes. | 🔴 **Alto** | Citas obligatorias con `id` de fragmento, validación de que el artículo citado exista en el índice vectorial y política de abstención probada. |
 | **R3** | **Confusión con asesoría jurídica:** El usuario interpreta el informe como patrocinio legal formal. | 🔴 **Alto** | Aviso preventivo visible en la interfaz, tono estrictamente orientativo y derivación a la Defensoría del Pueblo o consultorios jurídicos. |
 | **R4** | **Fuga de datos personales (PII):** Exposición de cédula, dirección o teléfono hacia el LLM o logs del sistema. | 🔴 **Alto**<br>*(LOPDP)* | Anonimización previa: sustituir datos personales por marcadores antes de invocar al modelo; completarlos en la plantilla local por código; logs sin PII. |
-| **R5** | **Inyección de prompt desde adjuntos:** Facturas o documentos adjuntos con texto malicioso para evadir instrucciones. |  **Medio** | Contenido de adjuntos delimitado como dato no confiable (*untrusted data*) y pruebas automatizadas de inyección en la fase de evaluación. |
+| **R5** | **Inyección de prompt desde el relato:** El usuario incluye instrucciones maliciosas en el texto libre para evadir el system prompt. | 🟡 **Medio** | El relato se inyecta como dato no confiable (*untrusted data*) delimitado; pruebas automatizadas de inyección en la fase de evaluación. |
 | **R6** | **Regulaciones sectoriales especializadas:** Telecomunicaciones, energía o banca poseen normativas propias no cubiertas en el corpus base. |  **Medio** | Fichas de instancia en configuración marcadas como "por verificar"; derivar explícitamente cuando el caso corresponda a un sector especial. |
 | **R7** | **Agotamiento de cuotas / rate-limiting:** La capa gratuita del modelo se agota o aplica límites estrictos de peticiones. |  **Medio** | Reintentos con backoff exponencial, caché semántica de recuperación y soporte de proveedores alternativos configurables en `.env`. |
-| **R8** | **Fallas en OCR / Visión:** Ilegibilidad o errores en capturas fotográficas borrosas de comprobantes. | 🟡 **Medio** | Paso obligatorio de previsualización para que el usuario confirme o corrija los datos extraídos antes de procesarlos. |
 
 ---
 
