@@ -66,10 +66,10 @@ Los consumidores ecuatorianos enfrentan con frecuencia problemas de garantías, 
 
 | Componente | Tecnología Seleccionada | Justificación Técnica y de Proyecto |
 | :--- | :--- | :--- |
-| **Backend** | `Spring Boot` + `Spring AI` | Stack base del seminario; `BeanOutputConverter` de Spring AI combinado con Java Records/POJOs garantiza validación y tipado estricto de entradas y salidas estructuradas. |
+| **Backend** | `Spring Boot` + `Spring AI` | Alternativa justificada al stack base del seminario; `BeanOutputConverter` de Spring AI combinado con Java Records/POJOs garantiza validación y tipado estricto de entradas y salidas estructuradas. |
 | **Modelo Generativo** | `DeepSeek-R1` | Especializado en razonamiento profundo (*Chain-of-Thought*); ideal para análisis legal riguroso, desglosando lógicamente el relato frente a los artículos de la LODC y evitando saltos de asociación en el RAG. |
 | **Embeddings** | `sentence-transformers` (Multilingüe local) | Optimizado para capturar semánticamente tanto el lenguaje jurídico como el coloquial ecuatoriano; opera localmente sin costo ni dependencia de cuotas de API externa. |
 | **Base Vectorial** | `ChromaDB` (Persistente en disco) | Stack oficial del seminario; ligero, rápido y permite filtrado eficiente por metadatos (vigencia, capítulo, artículo). |
 | **Frontend** | `React` + `TypeScript` (`Vite`)<br>*(Alt.: Streamlit)* | Formulario interactivo guiado paso a paso con informe estructurado por secciones; arquitectura desacoplada comunicada vía API REST con el backend. |
-| **Despliegue** | `Render` / `Railway` / `Hugging Face Spaces` | Planes gratuitos estables y adecuados para prototipos académicos y evaluación continua. |
-| **Control de Versiones** | `GitHub` | Acceso de lectura para el docente desde la semana 1; cumplimiento estricto de la rúbrica de commits, ramas por integrante y revisiones cruzadas vía PR. |
+| **Despliegue** | `Render` / `Railway` / `Hugging Face Spaces` | adecuados para prototipos |
+| **Control de Versiones** | `GitHub` | Acceso de lectura para el docente desde la semana 1; cumplimiento estricto de la rúbrica de commits, ramas por funcionalidad y revisiones cruzadas vía PR. |
