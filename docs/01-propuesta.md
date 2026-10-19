@@ -71,5 +71,5 @@ Los consumidores ecuatorianos enfrentan con frecuencia problemas de garantías, 
 | **Embeddings** | `sentence-transformers` (Multilingüe local) | Optimizado para capturar semánticamente tanto el lenguaje jurídico como el coloquial ecuatoriano; opera localmente sin costo ni dependencia de cuotas de API externa. |
 | **Base Vectorial** | `ChromaDB` (Persistente en disco) | Stack oficial del seminario; ligero, rápido y permite filtrado eficiente por metadatos (vigencia, capítulo, artículo). |
 | **Frontend** | `React` + `TypeScript` (`Vite`)<br>*(Alt.: Streamlit)* | Formulario interactivo guiado paso a paso con informe estructurado por secciones; arquitectura desacoplada comunicada vía API REST con el backend. |
-| **Despliegue** | `Render` / `Railway` / `Hugging Face Spaces` | adecuados para prototipos |
+| **Despliegue** | `Render` / `Railway` / `Hugging Face Spaces` | Adecuados para prototipos. |
 | **Control de Versiones** | `GitHub` | Acceso de lectura para el docente desde la semana 1; cumplimiento estricto de la rúbrica de commits, ramas por funcionalidad y revisiones cruzadas vía PR. |
