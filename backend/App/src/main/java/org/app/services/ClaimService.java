@@ -2,13 +2,18 @@ package org.app.services;
 
 import lombok.extern.log4j.Log4j2;
 import org.app.advisors.TokenUsageLoggingAdvisor;
+import org.app.exceptions.ClientException;
 import org.app.schemas.requests.ClaimRequestDto;
 import org.app.schemas.responses.ClaimAnalysisResponseDto;
 import org.app.schemas.responses.LlmMetrics;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.retry.TransientAiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -43,6 +48,16 @@ public class ClaimService {
         this.jsonMapper = jsonMapper;
     }
 
+    @Retryable(
+            value = {
+                    TransientAiException.class, // Cubre límites de tasa (429) y errores transitorios del proveedor
+                    ResourceAccessException.class, // Cubre tiempos de espera agotados (Timeouts de red/conexión)
+                    RuntimeException.class // Captura excepciones de validación por respuesta vacía
+            },
+            maxRetries = 4,      // Política de acotamiento de intentos (hasta 4 ejecuciones totales)
+            delay = 1000L,       // Tiempo base de espera inicial (1000 milisegundos = 1 segundo)
+            multiplier = 2.0     // Factor multiplicador para la progresión de espera exponencial
+    )
     public String analyzeClaimRaw(ClaimRequestDto request, String version) {
         Resource selectedPrompt = resolvePromptResource(version);
         String anonymizedUserContent = buildAnonymizedUserPrompt(request);
@@ -55,13 +70,30 @@ public class ClaimService {
                 .call()
                 .content();
 
-        // Guardamos las metricas para que el controlador las lea
+        // MANEJO EXPLÍCITO A NIVEL DE CÓDIGO (Validación de vacío)
+        if (rawContent == null || rawContent.trim().isEmpty()) {
+            throw ClientException.error("El proveedor LLM retornó una respuesta vacía.");
+        }
+
         this.lastMetrics = TokenUsageLoggingAdvisor.getCurrentMetrics();
         TokenUsageLoggingAdvisor.clear();
 
         return rawContent;
     }
 
+    //Manejo de errores del proveedor
+    // Implementacion de mecanismo de resieliencia a traves de esta anotacion
+    // con manejo de reintentos y espera exponencial, tiempo de espera agotado y respuesta vacía.
+    @Retryable(
+            value = {
+                    TransientAiException.class, // Error 429
+                    ResourceAccessException.class, // Timeouts de red o conexión caída
+                    RuntimeException.class // Capturará nuestra excepción de respuesta vacía
+            },
+            maxRetries = 4,      // Intentará hasta 4 veces en total
+            delay = 1000L,       // Espera inicial de 1000 ms (1 segundo)
+            multiplier = 2.0     // Multiplicador para la espera exponencial (1s, 2s, 4s...)
+    )
     public ClaimAnalysisResponseDto analyzeClaimStructured(ClaimRequestDto request) {
         String anonymizedUserContent = buildAnonymizedUserPrompt(request);
 
@@ -73,12 +105,17 @@ public class ClaimService {
                 .call()
                 .content();
 
+        // MANEJO EXPLÍCITO A NIVEL DE CÓDIGO (Validación de vacío)
+        if (jsonResponseContent == null || jsonResponseContent.trim().isEmpty()) {
+            throw ClientException.error("El proveedor LLM retornó una respuesta vacía.");
+        }
+
         ClaimAnalysisResponseDto response;
         try {
             response = jsonMapper.readValue(jsonResponseContent, ClaimAnalysisResponseDto.class);
         } catch (JacksonException e) {
             log.error("Error deserializing structured LLM response: {}", jsonResponseContent, e);
-            throw new RuntimeException("Failed to parse structured response from LLM", e);
+            throw ClientException.error("Failed to parse structured response from LLM : "+ e.getMessage());
         }
 
         if (response != null) {

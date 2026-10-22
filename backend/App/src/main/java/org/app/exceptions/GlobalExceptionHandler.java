@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.ai.retry.NonTransientAiException;
 import org.springframework.ai.retry.TransientAiException;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.retry.RetryException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -176,16 +177,28 @@ public class GlobalExceptionHandler {
         return status(HttpStatus.NOT_FOUND).body(of(ex.getResourcePath(), HttpStatus.NOT_FOUND));
     }
 
-    @ExceptionHandler(TransientAiException.class)
-    public ResponseEntity<ErrorResponse> handleTransientAiException(TransientAiException ex) {
-        // TransientAiException representa errores temporales que fallaron después de los reintentos (incluyendo 429)
-        String message = ex.getMessage();
-        if (message != null && message.contains("429")) {
-            return status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body(of(resolver.get("exception.too-many-requests"), HttpStatus.TOO_MANY_REQUESTS));
+    //Manejo de errores de reintentos agotados de Spring Retry
+    @ExceptionHandler(RetryException.class)
+    public ResponseEntity<String> handleRetryExhausted(RetryException ex) {
+        // Obtenemos la excepción real que causó que se agotaran los intentos
+        Throwable rootCause = ex.getCause();
+
+        if (rootCause instanceof TransientAiException) {
+            return ResponseEntity
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("El proveedor de IA sigue saturado tras 4 intentos. Por favor, espera un momento.");
         }
-        return status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(of(resolver.get("exception.internal-server-error"), HttpStatus.INTERNAL_SERVER_ERROR));
+
+        if (rootCause instanceof ResourceAccessException) {
+            return ResponseEntity
+                    .status(HttpStatus.GATEWAY_TIMEOUT)
+                    .body("No se pudo establecer conexión con el servicio de IA después de múltiples intentos.");
+        }
+
+        // Fallback genérico para cualquier otra RuntimeException
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("La operación falló definitivamente: " + rootCause.getMessage());
     }
 
     @ExceptionHandler(NonTransientAiException.class)

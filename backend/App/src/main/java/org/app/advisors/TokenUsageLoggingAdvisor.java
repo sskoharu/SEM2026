@@ -51,6 +51,8 @@ public class TokenUsageLoggingAdvisor implements CallAdvisor {
             metrics.setCompletionTokens(usage.getCompletionTokens());
             metrics.setTotalTokens(usage.getTotalTokens());
 
+            //Registro (log) por solicitud con tokens consumidos y tiempo de respuesta.
+
             log.info("OBSERVABILIDAD | Modelo: {} | Tiempo: {} ms | Tokens Entrada: {} | Tokens Salida: {} | Tokens Totales: {}",
                     model, duration, usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());
         } else {
