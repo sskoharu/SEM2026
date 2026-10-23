@@ -38,5 +38,13 @@ public class ClaimAnalysisResponseDto {
 
     private LocalDateTime analizedAt;
 
+    private String preliminaryCategory;
 
+    public String getPreliminaryCategory() {
+        return preliminaryCategory;
+    }
+
+    public void setPreliminaryCategory(String preliminaryCategory) {
+        this.preliminaryCategory = preliminaryCategory;
+    }
 }
