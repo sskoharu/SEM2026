@@ -1,0 +1,24 @@
+Prompt para generación de las primeras pruebas automatizadas
+Historia de Usuario (US-04): Validación Integral y Resiliente del Endpoint de Reclamos con Doblajes de Prueba (Mocking)
+Como Ingeniero de Software Evaluador del Backend,
+Quiero ejecutar pruebas de integración y unidad sobre el controlador ClaimController y los servicios asociados utilizando doblajes de prueba (@MockBean),
+Para verificar la validez técnica de los contratos de entrada/salida en sus tres modalidades (versión estructurada v3, versión de texto plano v1/v2 y la política de resiliencia y reintentos exponenciales ante errores 429, timeouts y respuestas vacías), garantizando un comportamiento robusto sin incurrir en consumo real de créditos de la API externa.
+2. Criterios de Aceptación en Formato Gherkin
+# language: es
+Característica: Validación Integral del Servicio de Análisis de Reclamos (Contratos y Resiliencia)
+•	Escenario: Evaluación exitosa en versión estructurada v3 devolviendo DTO mapeado
+o	Dado que el servicio de análisis LLM está simulado mediante un Mock
+o	Y el Mock está configurado para devolver un DTO "ClaimAnalysisResponseDto" con la categoría "Garantía de bienes"
+o	Cuando se envía una solicitud POST a "/api/v1/claims/analyze?version=v3" con un payload válido de reclamo
+o	Entonces la respuesta HTTP debe tener un código de estado 200 OK Y el cuerpo JSON debe contener la propiedad "preliminaryCategory" igual a "Garantía de bienes" Y la API del proveedor externo no debe recibir ninguna llamada real.
+
+•	Escenario: Evaluación exitosa en versiones legado v1 o v2 devolviendo texto plano
+o	Dado que el servicio de análisis LLM está simulado mediante un Mock
+Y el Mock está configurado para devolver un String con el resumen del análisis para la versión "v1"
+o	Cuando se envía una solicitud POST a "/api/v1/claims/analyze?version=v1" con un payload válido de reclamo
+o	Entonces la respuesta HTTP debe tener un código de estado 200 OK Y el cuerpo de la respuesta debe ser de tipo texto plano conteniendo "Análisis preliminar" Y la API del proveedor externo no debe recibir ninguna llamada real.
+
+•	Escenario: Activación de reintentos con espera exponencial ante errores transitorios (429 / Timeouts / Vacío)
+o	Dado que el servicio de análisis LLM simula fallos temporales consecutivos (error 429 o respuesta vacía) Y se ha configurado una política de reintentos con un máximo de 4 intentos y espera exponencial
+o	Cuando se invoca el análisis del reclamo
+o	Entonces el sistema ejecuta la progresión de reintentos aplicando el factor multiplicador de retroceso Y si los intentos se agotan, recupera la ejecución lanzando una excepción controlada con un mensaje de servicio no disponible.
