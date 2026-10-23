@@ -382,6 +382,11 @@ small {
   color: #1a4d87;
 }
 
+.inconsistencies {
+  background: #fff4e5;
+  color: #8a4b08;
+}
+
 .completed {
   background: #eaf7ef;
   color: #1e6341;

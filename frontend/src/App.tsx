@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import './App.css'
-import type { Analisis, Estado, Reclamo, Tipo } from './modules/reclamos/types/reclamo.types'
+import type { Analisis, ClaimType, Estado, Reclamo } from './modules/reclamos/types/reclamo.types'
 import { inicial } from './modules/reclamos/constants/reclamo.constants'
 import { validarReclamo } from './modules/reclamos/utils/validarReclamo'
 import { incorporarRespuestas } from './modules/reclamos/utils/simularAnalisis'
@@ -8,11 +8,13 @@ import { FormularioReclamo } from './modules/reclamos/components/FormularioRecla
 import { AnalisisInicial } from './modules/reclamos/components/AnalisisInicial'
 
 import { analizarReclamo } from './modules/reclamos/services/reclamosService'
+import { analizarConApi } from './modules/reclamos/services/reclamosApi'
 import { normalizarError } from './shared/http/httpErrors'
 import { obtenerMetricas } from './shared/metrics/metricasService'
 import type { MetricaSolicitud } from './shared/metrics/metricas.types'
 
 function App() {
+  const modoApi = import.meta.env.MODE !== 'test' && import.meta.env.VITE_RECLAMOS_MODE === 'api'
   const [form, setForm] = useState<Reclamo>(inicial)
   const [errores, setErrores] = useState<string[]>([])
   const [estado, setEstado] = useState<Estado>('inicio')
@@ -40,10 +42,10 @@ function App() {
     setMensaje('')
   }
 
-  function cambiarTipo(tipo: Tipo) {
+  function cambiarTipo(tipo: ClaimType) {
     if (solicitudActiva.current) return
     invalidarAnalisis()
-    setForm(actual => ({ ...actual, tipo, solucion: '', otraSolucion: '' }))
+    setForm(actual => ({ ...actual, claimType: tipo, requestedSolution: '', otherSolution: '' }))
     setMensaje('')
   }
 
@@ -59,14 +61,18 @@ function App() {
     setEstado('cargando')
     setErrorSolicitud('')
     setMetrica(null)
-    setMensaje('Preparando análisis simulado. No se está llamando al backend.')
+    setMensaje(modoApi ? 'Enviando reclamo al backend para análisis.' : 'Preparando análisis simulado. No se está llamando al backend.')
     try {
-      const resultado = await analizarReclamo(form, controlador.signal)
+    const resultado = await analizarReclamo(
+      form,
+      controlador.signal,
+      modoApi ? { modo: 'api', analizar: analizarConApi } : { modo: 'demostracion' },
+    )
       if (controlador.signal.aborted || solicitudActiva.current !== controlador) return
       setAnalisis(resultado)
       setRespuestas({})
       setEstado('preguntas')
-      setMensaje('Análisis simulado listo. Revise las preguntas complementarias.')
+      setMensaje(modoApi ? 'Análisis del backend listo. Revise la información extraída.' : 'Análisis simulado listo. Revise las preguntas complementarias.')
     } catch (error) {
       if (controlador.signal.aborted || solicitudActiva.current !== controlador) return
       setEstado('error')
@@ -138,8 +144,8 @@ function App() {
               Asistencia para reclamos de consumo en Ecuador
             </p>
           </div>
-          <span className="environment" title="Modo API pendiente de integración con Spring Boot">
-            Modo demostración · Sin IA real
+          <span className="environment" title={modoApi ? 'Análisis conectado al backend Spring Boot' : 'Análisis local sin conexión al backend'}>
+            {modoApi ? 'Modo API · Backend conectado' : 'Modo demostración · Sin IA real'}
           </span>
         </header>
         <section className="steps" aria-label="Etapas del proceso">
@@ -151,8 +157,8 @@ function App() {
           ))}
         </section>
         <div className="content-grid">
-          <FormularioReclamo form={form} errores={errores} estado={estado} cambiar={cambiar} cambiarTipo={cambiarTipo} analizar={analizar} reiniciar={reiniciar} />
-          <AnalisisInicial errorSolicitud={errorSolicitud} metrica={metrica} estado={estado} analisis={analisis} respuestas={respuestas} mensaje={mensaje} cambiarRespuesta={cambiarRespuesta} completar={completar} />
+          <FormularioReclamo form={form} errores={errores} estado={estado} cambiar={cambiar} cambiarTipo={cambiarTipo} analizar={analizar} reiniciar={reiniciar} modoApi={modoApi} />
+          <AnalisisInicial errorSolicitud={errorSolicitud} metrica={metrica} estado={estado} analisis={analisis} respuestas={respuestas} mensaje={mensaje} cambiarRespuesta={cambiarRespuesta} completar={completar} modoApi={modoApi} />
         </div>
         <footer className="page-footer">UNIANDES · Proyecto académico · Prototipo sin almacenamiento ni asesoría legal</footer>
       </main>

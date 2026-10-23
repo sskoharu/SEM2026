@@ -5,9 +5,10 @@ type Propiedades = {
   respuestas: Record<string, string>
   cambiarRespuesta: (id: string, respuesta: string) => void
   completar: () => void
+  modoApi: boolean
 }
 
-export function PreguntasComplementarias({ analisis, respuestas, cambiarRespuesta, completar }: Propiedades) {
+export function PreguntasComplementarias({ analisis, respuestas, cambiarRespuesta, completar, modoApi }: Propiedades) {
   return (
     <div className="analysis-card questions">
       <h3>
@@ -23,7 +24,7 @@ export function PreguntasComplementarias({ analisis, respuestas, cambiarRespuest
         </label>
       ))}
       <button type="button" className="btn btn-primary" onClick={completar}>
-        Actualizar resultado (simulación)
+        {modoApi ? 'Continuar con la información' : 'Actualizar resultado (simulación)'}
       </button>
     </div>
   )
