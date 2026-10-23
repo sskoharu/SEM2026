@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import type { Estado, Reclamo, Tipo } from '../types/reclamo.types'
+import type { ClaimType, Estado, Reclamo } from '../types/reclamo.types'
 import { opcionesProducto, opcionesServicio } from '../constants/reclamo.constants'
 
 type Propiedades = {
@@ -7,13 +7,14 @@ type Propiedades = {
   errores: string[]
   estado: Estado
   cambiar: <K extends keyof Reclamo>(campo: K, valor: Reclamo[K]) => void
-  cambiarTipo: (tipo: Tipo) => void
+  cambiarTipo: (tipo: ClaimType) => void
   analizar: (evento: FormEvent<HTMLFormElement>) => void
   reiniciar: () => void
+  modoApi: boolean
 }
 
-export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo, analizar, reiniciar }: Propiedades) {
-  const soluciones = form.tipo === 'servicio' ? opcionesServicio : opcionesProducto
+export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo, analizar, reiniciar, modoApi }: Propiedades) {
+  const soluciones = form.claimType === 'servicio' ? opcionesServicio : opcionesProducto
   return (
     <section className="panel">
       <div className="panel-heading">
@@ -31,19 +32,19 @@ export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo,
         <div className="form-grid">
           <label>
             Nombre completo *
-            <input disabled={estado === 'cargando'} value={form.nombre} onChange={e => cambiar('nombre', e.target.value)} placeholder="Nombre y apellido" />
+            <input disabled={estado === 'cargando'} value={form.fullName} onChange={e => cambiar('fullName', e.target.value)} placeholder="Nombre y apellido" />
           </label>
           <label>
-            Correo electrónico *
-            <input disabled={estado === 'cargando'} type="email" value={form.correo} onChange={e => cambiar('correo', e.target.value)} placeholder="correo@ejemplo.com" />
+            Correo electrónico (opcional)
+            <input disabled={estado === 'cargando'} type="email" value={form.email} onChange={e => cambiar('email', e.target.value)} placeholder="correo@ejemplo.com" />
           </label>
           <label>
             Teléfono (opcional)
-            <input disabled={estado === 'cargando'} value={form.telefono} onChange={e => cambiar('telefono', e.target.value)} placeholder="099..." />
+            <input disabled={estado === 'cargando'} value={form.phone} onChange={e => cambiar('phone', e.target.value)} placeholder="099..." />
           </label>
           <label>
-            Cédula (opcional)
-            <input disabled={estado === 'cargando'} value={form.cedula} onChange={e => cambiar('cedula', e.target.value)} placeholder="Número de identificación" />
+            Cédula *
+            <input disabled={estado === 'cargando'} inputMode="numeric" maxLength={10} value={form.idCard} onChange={e => cambiar('idCard', e.target.value)} placeholder="10 dígitos" />
           </label>
         </div>
         <h3 className="section-heading">
@@ -52,7 +53,7 @@ export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo,
         <div className="form-grid">
           <label>
             Tipo de reclamo *
-            <select disabled={estado === 'cargando'} value={form.tipo} onChange={e => cambiarTipo(e.target.value as Tipo)}>
+            <select disabled={estado === 'cargando'} value={form.claimType} onChange={e => cambiarTipo(e.target.value as ClaimType)}>
               <option value="producto">Producto defectuoso</option>
               <option value="servicio">Problema con un servicio</option>
               <option value="garantia">Problema de garantía</option>
@@ -61,48 +62,32 @@ export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo,
           </label>
           <label>
             Producto o servicio *
-            <input disabled={estado === 'cargando'} value={form.producto} onChange={e => cambiar('producto', e.target.value)} placeholder="Ej. computadora portátil" />
+            <input disabled={estado === 'cargando'} value={form.productOrService} onChange={e => cambiar('productOrService', e.target.value)} placeholder="Ej. computadora portátil" />
           </label>
           <label>
             Proveedor o establecimiento *
-            <input disabled={estado === 'cargando'} value={form.proveedor} onChange={e => cambiar('proveedor', e.target.value)} placeholder="Nombre del proveedor" />
+            <input disabled={estado === 'cargando'} value={form.provider} onChange={e => cambiar('provider', e.target.value)} placeholder="Nombre del proveedor" />
           </label>
           <label>
-            Fecha de compra (opcional)
-            <input disabled={estado === 'cargando'} type="date" value={form.fecha} onChange={e => cambiar('fecha', e.target.value)} />
+            Ciudad del proveedor *
+            <input disabled={estado === 'cargando'} value={form.providerCity} onChange={e => cambiar('providerCity', e.target.value)} placeholder="Ej. Quito" />
           </label>
           <label>
-            Valor pagado USD (opcional)
-            <input disabled={estado === 'cargando'} type="number" min="0" step="0.01" value={form.valor} onChange={e => cambiar('valor', e.target.value)} placeholder="0.00" />
+            Fecha de compra *
+            <input disabled={estado === 'cargando'} type="date" value={form.purchaseDate} onChange={e => cambiar('purchaseDate', e.target.value)} />
           </label>
-        </div>
-        <div className="receipt-panel">
-          <label className="checkbox-label">
-            <input disabled={estado === 'cargando'} type="checkbox" checked={form.comprobante} onChange={e => cambiar('comprobante', e.target.checked)} /> Dispongo de factura o nota de venta (opcional)</label>
-          <p>
-            No es obligatorio disponer de comprobante. No se adjuntarán archivos ni se utilizará OCR.
-          </p>
-          {form.comprobante && <div className="form-grid">
-            <label>
-              Tipo de comprobante
-              <select disabled={estado === 'cargando'} value={form.tipoComprobante} onChange={e => cambiar('tipoComprobante', e.target.value)}>
-                <option value="factura">Factura</option>
-                <option value="nota">Nota de venta</option>
-              </select>
-            </label>
-            <label>
-              Número (opcional)
-              <input disabled={estado === 'cargando'} value={form.numeroComprobante} onChange={e => cambiar('numeroComprobante', e.target.value)} placeholder="Número del comprobante" />
-            </label>
-          </div>}
+          <label>
+            Valor pagado USD *
+            <input disabled={estado === 'cargando'} type="number" min="0" step="0.01" value={form.paidAmount} onChange={e => cambiar('paidAmount', e.target.value)} placeholder="0.00" />
+          </label>
         </div>
         <h3 className="section-heading">
           3. Detalle del reclamo
         </h3>
         <label className="full-field">
           Describa qué ocurrió *
-          <textarea disabled={estado === 'cargando'} rows={5} maxLength={5000} value={form.descripcion} onChange={e => cambiar('descripcion', e.target.value)} placeholder="Explique qué sucedió y qué respuesta recibió del proveedor..." />
-          <small>{form.descripcion.length}/5000 caracteres</small>
+          <textarea disabled={estado === 'cargando'} rows={5} maxLength={2000} value={form.incidentDescription} onChange={e => cambiar('incidentDescription', e.target.value)} placeholder="Explique qué sucedió y qué respuesta recibió del proveedor..." />
+          <small>{form.incidentDescription.length}/2000 caracteres</small>
         </label>
         <fieldset className="solution-fieldset">
           <legend>
@@ -111,12 +96,12 @@ export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo,
           <div className="solution-options">
             {soluciones.map(([valor, texto]) => (
               <label key={valor}>
-                <input disabled={estado === 'cargando'} type="radio" name="solucion" checked={form.solucion === valor} onChange={() => cambiar('solucion', valor)} />
+                <input disabled={estado === 'cargando'} type="radio" name="solucion" checked={form.requestedSolution === valor} onChange={() => cambiar('requestedSolution', valor)} />
                 {texto}
               </label>
             ))}
           </div>
-          {form.solucion === 'otra' && <input disabled={estado === 'cargando'} aria-label="Describa otra solución" value={form.otraSolucion} onChange={e => cambiar('otraSolucion', e.target.value)} placeholder="Describa la solución solicitada" />}
+          {form.requestedSolution === 'otra' && <input disabled={estado === 'cargando'} aria-label="Describa otra solución" value={form.otherSolution} onChange={e => cambiar('otherSolution', e.target.value)} placeholder="Describa la solución solicitada" />}
         </fieldset>
         {errores.length > 0 && <div id="errores-reclamo" className="error-message" role="alert">
           <strong>
@@ -135,7 +120,7 @@ export function FormularioReclamo({ form, errores, estado, cambiar, cambiarTipo,
           <button type="button" className="btn btn-outline" disabled title="Requiere persistencia del backend">
             Guardar borrador (pendiente)
           </button>
-          <button type="submit" className="btn btn-primary" disabled={estado === 'cargando'}>{estado === 'cargando' ? 'Analizando...' : 'Analizar (simulación)'}</button>
+          <button type="submit" className="btn btn-primary" disabled={estado === 'cargando'}>{estado === 'cargando' ? 'Analizando...' : modoApi ? 'Analizar con IA' : 'Analizar (simulación)'}</button>
         </div>
       </form>
     </section>

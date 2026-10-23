@@ -146,6 +146,7 @@ public class ClaimService {
      */
     private String buildAnonymizedUserPrompt(ClaimRequestDto request) {
         return String.format("""
+                <relato_usuario>
                 Claim Type: %s
                 Product/Service: %s
                 Provider: %s
@@ -158,6 +159,7 @@ public class ClaimService {
                 
                 Requested Solution:
                 %s
+                </relato_usuario>
                 """,
                 request.getClaimType(),
                 request.getProductOrService(),

@@ -9,20 +9,20 @@ afterEach(() => { vi.useRealTimers(); limpiarMetricas() })
 describe('Servicios y simulación local sin backend', () => {
   it('conserva hechos y preguntas según campos faltantes', () => {
     const analisis = generarSimulacion(reclamoValido)
-    expect(analisis.preguntas.map(p => p.id)).toEqual(['fecha', 'valor', 'contacto', 'detalle'])
+    expect(analisis.preguntas.map(p => p.id)).toEqual(['contacto', 'detalle'])
     expect(analisis.hechos).toContain('El consumidor identifica a Proveedor de prueba como proveedor.')
   })
-  it('respeta datos opcionales y comprobante', () => {
-    const analisis = generarSimulacion({ ...reclamoValido, fecha: '2026-10-01', valor: '10', comprobante: true, tipoComprobante: 'nota', numeroComprobante: '123', descripcion: 'Detalle '.repeat(20) })
+  it('usa los datos obligatorios del backend', () => {
+    const analisis = generarSimulacion({ ...reclamoValido, incidentDescription: 'Detalle '.repeat(20) })
     expect(analisis.preguntas.map(p => p.id)).toEqual(['contacto'])
-    expect(analisis.hechos.at(-1)).toContain('nota de venta, número 123')
+    expect(analisis.hechos.at(-1)).toContain('Valor declarado: USD 10.')
   })
   it('incorpora respuestas sin mutar el análisis y permite preguntas sin contestar', () => {
     const analisis = generarSimulacion(reclamoValido)
-    const resultado = incorporarRespuestas(analisis, { contacto: '  Sin solución  ', fecha: ' ' })
+    const resultado = incorporarRespuestas(analisis, { contacto: '  Sin solución  ' })
     expect(resultado.hechos.at(-1)).toContain('Respuesta: Sin solución')
-    expect(resultado.preguntas.map(p => p.id)).toContain('fecha')
-    expect(analisis.preguntas).toHaveLength(4)
+    expect(resultado.preguntas.map(p => p.id)).toContain('detalle')
+    expect(analisis.preguntas).toHaveLength(2)
   })
   it('mide la simulación y deja tokens no disponibles', async () => {
     vi.useFakeTimers()

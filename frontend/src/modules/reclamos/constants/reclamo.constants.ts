@@ -1,10 +1,9 @@
 import type { Reclamo } from '../types/reclamo.types'
 
 export const inicial: Reclamo = {
-  nombre: '', correo: '', telefono: '', cedula: '', tipo: 'producto',
-  producto: '', proveedor: '', fecha: '', valor: '', comprobante: false,
-  tipoComprobante: 'factura', numeroComprobante: '', descripcion: '',
-  solucion: '', otraSolucion: '',
+  fullName: '', email: '', phone: '', idCard: '', claimType: 'producto',
+  productOrService: '', provider: '', providerCity: '', purchaseDate: '', paidAmount: '',
+  incidentDescription: '', requestedSolution: '', otherSolution: '',
 }
 
 export const opcionesProducto = [

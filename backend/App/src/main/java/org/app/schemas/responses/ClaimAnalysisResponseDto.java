@@ -10,6 +10,7 @@ import java.util.List;
 public class ClaimAnalysisResponseDto {
 
     private String estado; // "extraido", "datos_insuficientes", "fuera_de_alcance", "solicitud_rechazada"
+    @JsonAlias("que_paso")
     private String quePaso; // Descripción de lo que pasó, puede ser null
     private String cuando; // Fecha o momento, puede ser null
     private String proveedor; // Nombre del proveedor, puede ser null
@@ -21,6 +22,9 @@ public class ClaimAnalysisResponseDto {
 
     @JsonAlias("datos_faltantes")
     private List<String> datosFaltantes; // Lista de datos faltantes
+
+    @JsonAlias("incongruencias")
+    private List<String> incongruencias; // Diferencias entre campos del formulario y el relato
 
     @JsonAlias("motivo_abstencion")
     private String motivoAbstencion; // Motivo de abstención, puede ser null
