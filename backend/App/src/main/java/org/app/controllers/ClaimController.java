@@ -2,53 +2,131 @@ package org.app.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.app.schemas.requests.ClaimRequestDto;
-import org.app.schemas.responses.ClaimAnalysisResponseDto;
-import org.app.schemas.responses.LlmMetrics;
-import org.app.services.ClaimService;
-import org.springframework.http.HttpHeaders;
+import lombok.extern.log4j.Log4j2;
+import org.app.repositories.SessionRepository;
+import org.app.schemas.requests.AnswerRequest;
+import org.app.schemas.requests.ClarificationRequest;
+import org.app.schemas.requests.StartClaimRequest;
+import org.app.schemas.session_object.SessionObject;
+import org.app.schemas.session_object.enums.Layer1InternalState;
+import org.app.schemas.session_object.enums.Layer2InternalState;
+import org.app.services.layer_1.Layer1Orchestrator;
+import org.app.services.layer_1.components.c1.InitialAnalysisService;
+import org.app.services.layer_2.components.Layer2Orchestrator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/claims")
 @RequiredArgsConstructor
+@Log4j2
 public class ClaimController {
 
-    private final ClaimService claimService;
+    private final InitialAnalysisService initialAnalysisService;
+    private final Layer1Orchestrator layer1Orchestrator;
+    private final Layer2Orchestrator layer2Orchestrator;
+    private final SessionRepository sessionRepository;
+
+    // ==========================================
+    // ENDPOINTS DE LA CAPA 1 (Triaje y Clasificación)
+    // ==========================================
 
     /**
-     * Unified endpoint to support prompt version benchmarking (v1, v2, v3).
-     * Returns raw text for v1/v2 and structured JSON for v3.
+     * 1. Iniciar un reclamo (Portero + Orquestador Capa 1)
      */
-    @PostMapping("/analyze")
-    public ResponseEntity<?> analyzeClaim(
-            @Valid @RequestBody ClaimRequestDto request,
-            @RequestParam(name = "version", defaultValue = "v3") String version) {
+    @PostMapping("/start")
+    public ResponseEntity<?> startClaim(@Valid @RequestBody StartClaimRequest request) {
+        try {
+            // A. Pasa por el Portero (Filtro semántico)
+            SessionObject session = initialAnalysisService.processInitialRequest(request.getIncidentDescription());
 
-        if ("v3".equalsIgnoreCase(version) || "system_v3".equalsIgnoreCase(version)) {
-            ClaimAnalysisResponseDto structuredResponse = claimService.analyzeClaimStructured(request);
-            return ResponseEntity.ok(structuredResponse);
+            // B. Si el Portero pidió aclaración, devolvemos las preguntas y no gastamos tokens en RAG
+            if (session.getLayer1State() == Layer1InternalState.SOLICITANDO_ACLARACION) {
+                return ResponseEntity.ok(session);
+            }
+
+            // C. Si el relato es válido, arranca el Orquestador (Traducción, Búsqueda, Clasificación)
+            session = layer1Orchestrator.process(session);
+
+            // D. Devolvemos la sesión (puede haber terminado en DONE o en SOLICITANDO_ACLARACION por el RAG)
+            return ResponseEntity.ok(session);
+
+        } catch (IllegalArgumentException e) {
+            // El Portero rechazó el texto (No es un reclamo de consumo)
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error en /start", e);
+            return ResponseEntity.internalServerError().body(Map.of("error", "Error interno procesando el reclamo."));
+        }
+    }
+
+    /**
+     * 2. Responder a una aclaración de la Capa 1 (Ej. el RAG no encontró relación)
+     */
+    @PostMapping("/{sessionId}/layer1/clarify")
+    public ResponseEntity<?> clarifyLayer1(
+            @PathVariable String sessionId,
+            @Valid @RequestBody ClarificationRequest request) {
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        // Actualizamos el relato original con la nueva información
+        String newDescription = session.getConflictDetails().getDescription() + " | Aclaración: " + request.getAdditionalInfo();
+        session.getConflictDetails().setDescription(newDescription);
+
+        // Reiniciamos el flujo de la Capa 1
+        session.setLayer1State(Layer1InternalState.TRADUCIENDO_QUERY);
+        session.setRagRetryCount(0);
+
+        SessionObject updatedSession = layer1Orchestrator.process(session);
+        return ResponseEntity.ok(updatedSession);
+    }
+
+    // ==========================================
+    // ENDPOINTS DE LA CAPA 2 (Recolección de Parámetros)
+    // ==========================================
+
+    /**
+     * 3. Iniciar la Capa 2 (Una vez que la Capa 1 terminó en DONE)
+     */
+    @PostMapping("/{sessionId}/layer2/start")
+    public ResponseEntity<?> startLayer2(@PathVariable String sessionId) {
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        // Validación de seguridad: Solo se puede entrar a Capa 2 si la Capa 1 terminó
+        if (session.getLayer1State() != Layer1InternalState.DONE) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La Capa 1 no ha finalizado. No se puede iniciar la Capa 2."));
         }
 
-        // v1 y v2: Se mantiene el String puro
-        String rawResponse = claimService.analyzeClaimRaw(request, version);
+        // Iniciamos el orquestador sin input del usuario (null)
+        SessionObject updatedSession = layer2Orchestrator.process(session, null);
 
-        // Obtenemos las metricas y las inyectamos en los headers
-        LlmMetrics metrics = claimService.getLastMetrics();
+        return ResponseEntity.ok(updatedSession);
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        if (metrics != null) {
-            headers.add("X-LLM-Model", metrics.getModel());
-            headers.add("X-LLM-Time-Ms", String.valueOf(metrics.getDurationMs()));
-            headers.add("X-LLM-Tokens-Prompt", String.valueOf(metrics.getPromptTokens()));
-            headers.add("X-LLM-Tokens-Completion", String.valueOf(metrics.getCompletionTokens()));
-            headers.add("X-LLM-Tokens-Total", String.valueOf(metrics.getTotalTokens()));
+    /**
+     * 4. Responder a una pregunta de la Capa 2
+     */
+    @PostMapping("/{sessionId}/layer2/answer")
+    public ResponseEntity<?> answerLayer2(
+            @PathVariable String sessionId,
+            @Valid @RequestBody AnswerRequest request) {
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        // Validación de seguridad: Solo se puede responder si está esperando al usuario
+        if (session.getLayer2State() != Layer2InternalState.WAITING_FOR_USER) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La sesión no está esperando una respuesta."));
         }
 
-        // Devolvemos el String original, pero con los headers de observabilidad
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(rawResponse);
+        // Pasamos la respuesta del usuario al Orquestador de la Capa 2
+        SessionObject updatedSession = layer2Orchestrator.process(session, request.getUserInput());
+
+        return ResponseEntity.ok(updatedSession);
     }
 }

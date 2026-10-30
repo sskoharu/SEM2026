@@ -1,0 +1,80 @@
+[
+  {
+    "id": "lodc_ley_art_9",
+    "document": "Art. 9.- Información Pública.- Todos los bienes a ser comercializados deberán exhibir sus respectivos precios, peso y medidas, de acuerdo a la naturaleza del producto. Toda información relacionada al valor de los bienes y servicios deberá incluir, además del precio total, los montos adicionales correspondientes a impuestos y otros recargos, de tal manera que el consumidor pueda conocer el valor final. Además del precio total del bien, deberá incluirse en los casos en que la naturaleza del producto lo permita, el precio unitario expresado en medidas de peso y/o volumen.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "9",
+      "capitulo": "Capítulo IV: Información Básica Comercial",
+      "tema_principal": "Exhibición de Precios, Peso y Medidas",
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["missingWeightOrMeasure", "missingUnitPrice", "displayedPriceWithTaxes", "chargedPrice"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_12",
+    "document": "Art. 12.- Productos Deficientes o Usados.- Cuando se oferten o expendan al consumidor productos con alguna deficiencia, usados o reconstruidos, tales circunstancias deberán indicarse de manera visible, clara y precisa, en los anuncios, facturas o comprobantes.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "12",
+      "capitulo": "Capítulo IV: Información Básica Comercial",
+      "tema_principal": "Advertencia de Productos Usados o Deficientes",
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["isUsedOrDeficientProduct", "missingUsedDeficientWarning"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_13",
+    "document": "Art. 13.- Producción y Transgénica.- Si los productos de consumo humano o pecuario a comercializarse han sido obtenidos o mejorados mediante transplante de genes o, en general, manipulación genética, se advertirá de tal hecho en la etiqueta del producto, en letras debidamente resaltadas.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "13",
+      "capitulo": "Capítulo IV: Información Básica Comercial",
+      "tema_principal": "Advertencia de Productos Transgénicos",
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["isGeneticallyModified", "missingGmoWarning"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_14",
+    "document": "Art. 14.- Rotulado Mínimo de Alimentos.- Sin perjuicio de lo que dispongan las normas técnicas al respecto, los proveedores de productos alimenticios consumo humano deberán exhibir en el rotulado de los productos, obligatoriamente, la siguiente información: a) Nombre del producto; b) Marca comercial; c) Identificación del lote; d) Razón social de la empresa; e) Contenido neto; f) Número de registro sanitario; g) Valor nutricional; h) Fecha de expiración o tiempo máximo de consumo; i) Lista de ingredientes, con sus respectivas especificaciones; j) Precio de venta al público; k) País de origen; y, l) Indicación si se trata de alimento artificial, irradiado o genéticamente modificado.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "14",
+      "capitulo": "Capítulo IV: Información Básica Comercial",
+      "tema_principal": "Rotulado Mínimo de Alimentos",
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["rotuladoAlimentos"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_15",
+    "document": "Art. 15.- Rotulado Mínimo de Medicamentos.- Sin perjuicio de lo establecido en las normas especiales, los medicamentos en general y los productos naturales procesados, deberán contener información sobre: a) Nombre del producto, genérico o de marca; b) Marca comercial; c) Identificación del lote; d) Razón social de la empresa; e) Contenido neto; f) Número de registro sanitario; g) Fecha de expiración o tiempo máximo de consumo; h) Lista de componentes, con sus respectivas especificaciones; i) Precio de venta al público; j) País de origen; k) Contraindicaciones; y, l) En cuanto a productos naturales, debe identificarse la procedencia, y si hay elementos culturales o étnicos en el origen.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "15",
+      "capitulo": "Capítulo IV: Información Básica Comercial",
+      "tema_principal": "Rotulado Mínimo de Medicamentos",
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["rotuladoMedicamentos"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_16",
+    "document": "Art. 16.- Información de Bienes de Naturaleza Durable.- A más de la información que el proveedor debe hacer constar para dar cumplimiento a lo dispuesto en los artículos anteriores, cuando se trate de bienes de naturaleza durable, se deberá informar sobre la seguridad de uso, instrucciones sobre un adecuado manejo y advertencias.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "16",
+      "capitulo": "Capítulo IV: Información Básica Comercial",
+      "tema_principal": "Información de Bienes Durables",
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["bienDurable"]
+    }
+  }
+]

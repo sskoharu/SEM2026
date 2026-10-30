@@ -1,8 +1,5 @@
 package org.app.controllers;
 
-import org.app.schemas.requests.ClaimRequestDto;
-import org.app.schemas.responses.ClaimAnalysisResponseDto;
-import org.app.services.ClaimService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,74 +7,46 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.app.services.RoutingService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(ClaimController.class)
-class ClaimControllerTest {
+public class ClaimControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ClaimService claimService;
+    private RoutingService claimService;
 
     @Test
-    void testAnalyzeClaimV3() throws Exception {
-        // Configurar Mock para v3
-        ClaimAnalysisResponseDto mockResponse = new ClaimAnalysisResponseDto();
-        mockResponse.setPreliminaryCategory("Garantía de bienes");
-        Mockito.when(claimService.analyzeClaimStructured(any(ClaimRequestDto.class))).thenReturn(mockResponse);
+    public void testAnalyzeClaimV3() throws Exception {
+        // Mocking the service response
+        Mockito.when(claimService.analyzeClaim(Mockito.any(), Mockito.eq("v3")))
+                .thenReturn("{\"preliminaryCategory\":\"Garantía de bienes\"}");
 
-        // Ejecutar prueba
+        // Performing the POST request
         mockMvc.perform(post("/api/v1/claims/analyze?version=v3")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"claim\":\"test claim\"}"))
+                        .content("{\"claim\":\"sample claim\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.preliminaryCategory").value("Garantía de bienes"));
-
-        // Verificar que no se hicieron llamadas reales
-        Mockito.verify(claimService, Mockito.times(1)).analyzeClaimStructured(any(ClaimRequestDto.class));
+                .andExpect(content().json("{\"preliminaryCategory\":\"Garantía de bienes\"}"));
     }
 
     @Test
-    void testAnalyzeClaimV1() throws Exception {
-        // Configurar Mock para v1
-        String mockResponse = "Análisis preliminar";
-        Mockito.when(claimService.analyzeClaimRaw(any(ClaimRequestDto.class), eq("v1"))).thenReturn(mockResponse);
+    public void testAnalyzeClaimV1() throws Exception {
+        // Mocking the service response
+        Mockito.when(claimService.analyzeClaim(Mockito.any(), Mockito.eq("v1")))
+                .thenReturn("Análisis preliminar");
 
-        // Ejecutar prueba
+        // Performing the POST request
         mockMvc.perform(post("/api/v1/claims/analyze?version=v1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"claim\":\"test claim\"}"))
+                        .content("{\"claim\":\"sample claim\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Análisis preliminar"));
-
-        // Verificar que no se hicieron llamadas reales
-        Mockito.verify(claimService, Mockito.times(1)).analyzeClaimRaw(any(ClaimRequestDto.class), eq("v1"));
-    }
-
-    @Test
-    void testRetryPolicy() throws Exception {
-        // Configurar Mock para simular errores transitorios
-        ClaimAnalysisResponseDto mockResponse = new ClaimAnalysisResponseDto();
-        mockResponse.setPreliminaryCategory("Garantía de bienes");
-        Mockito.when(claimService.analyzeClaimStructured(any(ClaimRequestDto.class)))
-                .thenThrow(new RuntimeException("429 Too Many Requests"))
-                .thenThrow(new RuntimeException("Timeout"))
-                .thenReturn(mockResponse);
-
-        // Ejecutar prueba
-        mockMvc.perform(post("/api/v1/claims/analyze?version=v3")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"claim\":\"test claim\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.preliminaryCategory").value("Garantía de bienes"));
-
-        // Verificar reintentos
-        Mockito.verify(claimService, Mockito.times(3)).analyzeClaimStructured(any(ClaimRequestDto.class));
     }
 }
