@@ -9,9 +9,13 @@ import { limpiarMetricas, obtenerMetricas } from '../../src/shared/metrics/metri
 
 function llenar() {
   fireEvent.change(screen.getByLabelText('Nombre completo *'), { target: { value: 'Consumidor de prueba' } })
-  fireEvent.change(screen.getByLabelText('Correo electrónico *'), { target: { value: 'prueba@example.test' } })
+  fireEvent.change(screen.getByLabelText('Correo electrónico (opcional)'), { target: { value: 'prueba@example.test' } })
+  fireEvent.change(screen.getByLabelText('Cédula *'), { target: { value: '0102030405' } })
   fireEvent.change(screen.getByLabelText('Producto o servicio *'), { target: { value: 'Computadora' } })
   fireEvent.change(screen.getByLabelText('Proveedor o establecimiento *'), { target: { value: 'Proveedor de prueba' } })
+  fireEvent.change(screen.getByLabelText('Ciudad del proveedor *'), { target: { value: 'Quito' } })
+  fireEvent.change(screen.getByLabelText('Fecha de compra *'), { target: { value: '2026-10-01' } })
+  fireEvent.change(screen.getByLabelText('Valor pagado USD *'), { target: { value: '10' } })
   fireEvent.change(screen.getByLabelText(/Describa qué ocurrió/), { target: { value: 'El equipo no funciona desde la primera utilización.' } })
   fireEvent.click(screen.getByLabelText('Cambio o reposición'))
 }
@@ -61,7 +65,7 @@ describe('Flujo React en DOM de prueba, sin backend', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Actualizar resultado (simulación)' }))
     expect(screen.getByText('Resultado final de demostración')).toBeDefined()
     expect(screen.getByText(/Respuesta: El proveedor no respondió/)).toBeDefined()
-    expect(screen.getByText(/Preguntas sin respuesta: 3/)).toBeDefined()
+    expect(screen.getByText(/Preguntas sin respuesta: 1/)).toBeDefined()
     fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
     expect(screen.getByText('Esperando análisis')).toBeDefined()
     expect((screen.getByLabelText('Nombre completo *') as HTMLInputElement).value).toBe('')
@@ -114,10 +118,12 @@ describe('Flujo React en DOM de prueba, sin backend', () => {
     await terminarEspera()
     expect(obtenerMetricas()[0].estado).toBe('cancelada')
   })
-  it('muestra comprobante opcional, cambia soluciones y señala borrador pendiente', () => {
+  it('muestra los campos alineados con el backend y cambia soluciones', () => {
     render(<App />)
-    fireEvent.click(screen.getByLabelText(/Dispongo de factura/))
-    expect(screen.getByLabelText('Tipo de comprobante')).toBeDefined()
+    expect(screen.getByLabelText('Ciudad del proveedor *')).toBeDefined()
+    expect(screen.getByLabelText('Cédula *')).toBeDefined()
+    expect(screen.getByLabelText('Fecha de compra *')).toBeDefined()
+    expect(screen.getByLabelText('Valor pagado USD *')).toBeDefined()
     fireEvent.change(screen.getByLabelText('Tipo de reclamo *'), { target: { value: 'servicio' } })
     expect(screen.getByLabelText('Corrección del servicio')).toBeDefined()
     expect(screen.queryByLabelText('Cambio o reposición')).toBeNull()

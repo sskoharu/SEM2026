@@ -2,25 +2,19 @@ import type { Analisis, Pregunta, Reclamo } from '../types/reclamo.types'
 
 export function generarSimulacion(reclamo: Reclamo): Analisis {
   const hechos = [
-    `El consumidor identifica a ${reclamo.proveedor} como proveedor.`,
-    `El reclamo se relaciona con: ${reclamo.producto}.`,
-    `Situación declarada: ${reclamo.descripcion.trim()}`,
+    `El consumidor identifica a ${reclamo.provider} como proveedor.`,
+    `El reclamo se relaciona con: ${reclamo.productOrService}.`,
+    `Situación declarada: ${reclamo.incidentDescription.trim()}`,
   ]
-  if (reclamo.fecha) hechos.push(`Fecha indicada: ${reclamo.fecha}.`)
-  if (reclamo.valor) hechos.push(`Valor declarado: USD ${reclamo.valor}.`)
-  if (reclamo.comprobante) {
-    const tipo = reclamo.tipoComprobante === 'factura' ? 'factura' : 'nota de venta'
-    hechos.push(`El consumidor declara disponer de ${tipo}${reclamo.numeroComprobante ? `, número ${reclamo.numeroComprobante}` : ''}.`)
-  }
+  hechos.push(`Fecha indicada: ${reclamo.purchaseDate}.`)
+  hechos.push(`Valor declarado: USD ${reclamo.paidAmount}.`)
   const preguntas: Pregunta[] = []
-  if (!reclamo.fecha) preguntas.push({ id: 'fecha', texto: '¿Recuerda aproximadamente cuándo adquirió el producto o contrató el servicio?' })
-  if (!reclamo.valor) preguntas.push({ id: 'valor', texto: '¿Conoce el valor pagado? Si no lo recuerda, puede indicarlo.' })
   preguntas.push({ id: 'contacto', texto: '¿Ya informó el problema al proveedor? ¿Qué respuesta recibió?' })
-  if (reclamo.descripcion.trim().length < 70) {
+  if (reclamo.incidentDescription.trim().length < 70) {
     preguntas.push({ id: 'detalle', texto: '¿Qué falla o incumplimiento ocurrió y cómo le afectó?' })
   }
   return {
-    hechos, preguntas,
+    hechos, preguntas, incongruencias: [],
     orientaciones: [
       'Revise que los hechos registrados sean correctos antes de continuar.',
       'Conserve los mensajes y otros antecedentes que tenga disponibles.',
