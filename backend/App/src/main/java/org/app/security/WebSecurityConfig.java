@@ -38,7 +38,8 @@ public class WebSecurityConfig {
         log.info("Configurando autorización de solicitudes HTTP");
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        HttpMethod.POST, "/api/v1/claims/analyze")
+                        HttpMethod.POST, "/api/v1/claims/**"
+                        )
                 .permitAll()
         );
 

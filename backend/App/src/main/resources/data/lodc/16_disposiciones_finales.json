@@ -1,0 +1,15 @@
+[
+  {
+    "id": "lodc_ley_disp_final_segunda",
+    "document": "SEGUNDA.- Sustitúyase el artículo 148 del Código de Comercio, por el siguiente: Art. 148.- Las ofertas públicas contenidas en circulares, catálogos, avisos publicitarios, proformas, obligan a quien las hace; salvo que en la misma oferta se señale un determinado plazo de validez de la misma o que las condiciones de la oferta original sean modificadas por una oferta posterior.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "148",
+      "capitulo": "Disposiciones Finales",
+      "tema_principal": "Ofertas Públicas Vinculantes",
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
+      "parametros_requeridos": ["isPublicOffer", "offerDetails"]
+    }
+  }
+]

@@ -2,6 +2,7 @@ package org.app.schemas.responses;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,12 +44,4 @@ public class ClaimAnalysisResponseDto {
     private LocalDateTime analizedAt;
 
     private String preliminaryCategory;
-
-    public String getPreliminaryCategory() {
-        return preliminaryCategory;
-    }
-
-    public void setPreliminaryCategory(String preliminaryCategory) {
-        this.preliminaryCategory = preliminaryCategory;
-    }
 }
