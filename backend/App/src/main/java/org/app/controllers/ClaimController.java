@@ -5,14 +5,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.app.repositories.SessionRepository;
 import org.app.schemas.requests.AnswerRequest;
+import org.app.schemas.requests.BatchUpdateRequest;
 import org.app.schemas.requests.ClarificationRequest;
 import org.app.schemas.requests.StartClaimRequest;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer1InternalState;
 import org.app.schemas.session_object.enums.Layer2InternalState;
+import org.app.schemas.session_object.enums.Layer3InternalState;
 import org.app.services.layer_1.Layer1Orchestrator;
 import org.app.services.layer_1.components.c1.InitialAnalysisService;
 import org.app.services.layer_2.components.Layer2Orchestrator;
+import org.app.services.layer_3.Layer3Orchestrator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,7 @@ public class ClaimController {
     private final InitialAnalysisService initialAnalysisService;
     private final Layer1Orchestrator layer1Orchestrator;
     private final Layer2Orchestrator layer2Orchestrator;
+    private final Layer3Orchestrator layer3Orchestrator;
     private final SessionRepository sessionRepository;
 
     // ==========================================
@@ -127,6 +131,71 @@ public class ClaimController {
         // Pasamos la respuesta del usuario al Orquestador de la Capa 2
         SessionObject updatedSession = layer2Orchestrator.process(session, request.getUserInput());
 
+        return ResponseEntity.ok(updatedSession);
+    }
+
+    // ==========================================
+    // ENDPOINTS DE LA CAPA 3 (Razonamiento Jurídico y Ruta de Acción)
+    // ==========================================
+
+    /**
+     * 1. Iniciar el razonamiento jurídico (Primera vez)
+     * El Orquestador evaluará el caso y pausará para presentar el informe.
+     */
+    @PostMapping("/evaluate/{sessionId}")
+    public ResponseEntity<?> evaluate(@PathVariable String sessionId) {
+        log.info("Endpoint /evaluate llamado para sesión: {}", sessionId);
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        // Validación: Solo se puede evaluar si la Capa 2 terminó
+        if (session.getLayer2State() == null || !session.getLayer2State().name().equals("DONE")) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La Capa 2 no ha finalizado."));
+        }
+
+        // Entra al contexto con Accepted=false y Batch=null
+        SessionObject updatedSession = layer3Orchestrator.process(session, false, null);
+        return ResponseEntity.ok(updatedSession);
+    }
+
+    /**
+     * 2. El usuario acepta el informe y solicita generar la Ruta de Acción.
+     */
+    @PostMapping("/accept/{sessionId}")
+    public ResponseEntity<?> accept(@PathVariable String sessionId) {
+        log.info("Endpoint /accept llamado para sesión: {}", sessionId);
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        // Validación: El usuario debe estar en el estado de decisión
+        if (session.getLayer3State() != Layer3InternalState.WAITING_FOR_DECISION) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La sesión no está esperando una decisión."));
+        }
+
+        // Entra al contexto con Accepted=true
+        SessionObject updatedSession = layer3Orchestrator.process(session, true, null);
+        return ResponseEntity.ok(updatedSession);
+    }
+
+    /**
+     * 3. El usuario envía correcciones en lote (Bucle de Mejora).
+     */
+    @PostMapping("/batch-update/{sessionId}")
+    public ResponseEntity<?> batchUpdate(@PathVariable String sessionId,
+                                         @Valid @RequestBody BatchUpdateRequest request) {
+        log.info("Endpoint /batch-update llamado para sesión: {}", sessionId);
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        if (request.getUpdatedParameters() == null || request.getUpdatedParameters().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "No se enviaron parámetros para actualizar."));
+        }
+
+        // Entra al contexto con el Mapa de correcciones
+        SessionObject updatedSession = layer3Orchestrator.process(session, false, request.getUpdatedParameters());
         return ResponseEntity.ok(updatedSession);
     }
 }

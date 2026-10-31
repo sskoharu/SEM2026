@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Component
 public class ValidationTools {
@@ -23,21 +24,21 @@ public class ValidationTools {
         }
     }
 
-    @Tool(description = "Valida si un texto corresponde a un monto económico (número positivo).")
-    public String validateAmount(String parameterName, String userInput) {
-        try {
-            String cleanInput = userInput.replace("$", "").replace(",", "").trim();
-            double amount = Double.parseDouble(cleanInput);
-            if (amount <= 0) return "ERROR: El monto debe ser mayor a cero.";
-            return "OK";
-        } catch (NumberFormatException e) {
-            return "ERROR: El monto no es válido. Ingresa solo números.";
-        }
-    }
-
-    @Tool(description = "Valida si un texto libre (descripción, nombre de bien, proveedor) no está vacío y tiene coherencia.")
+    @Tool(description = "Valida si un texto libre no está vacío y tiene coherencia.")
     public String validateText(String parameterName, String userInput) {
-        if (userInput == null || userInput.trim().length() < 3) {
+        if (userInput == null || userInput.trim().isEmpty()) {
+            return "ERROR: La respuesta no puede estar vacía.";
+        }
+
+        String cleanInput = userInput.trim().toLowerCase();
+
+        // SOLUCIÓN: Aceptar respuestas cortas booleanas comunes
+        List<String> shortAnswers = List.of("si", "sí", "no", "ok", "claro", "obvio", "nunca", "siempre", "tal vez");
+        if (shortAnswers.contains(cleanInput)) {
+            return "OK"; // Son válidas, no forzamos al usuario a escribir un párrafo
+        }
+
+        if (cleanInput.length() < 3) {
             return "ERROR: La respuesta es demasiado corta. Por favor, da más detalle.";
         }
         return "OK";

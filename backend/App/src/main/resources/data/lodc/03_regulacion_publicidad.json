@@ -22,7 +22,7 @@
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Supuestos Específicos de Publicidad Engañosa",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["advertisingInfractionType"]
+      "parametros_requeridos": ["advertisingInfractionType", "surchargePercentage", "surchargeDescription", "advertisedInfo", "actualInfoReceived"]
     }
   },
   {
