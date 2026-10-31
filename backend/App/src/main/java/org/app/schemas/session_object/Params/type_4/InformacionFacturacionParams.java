@@ -3,9 +3,7 @@ package org.app.schemas.session_object.Params.type_4;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Data
@@ -134,6 +132,11 @@ public class InformacionFacturacionParams {
     public static class PrecioExhibidoParams {
         private BigDecimal displayedPriceWithTaxes; // El valor final que vio el usuario
         private BigDecimal chargedPrice; // El valor realmente cobrado
+
+        // NUEVOS CAMPOS PARA PORCENTAJES
+        private BigDecimal surchargePercentage; // El recargo porcentual (ej. 15)
+        private String surchargeDescription; // Descripción del recargo (ej. "gastos administrativos")
+
         private Boolean priceNotDisplayed; // ¿Omitieron el precio por completo?
         private Boolean priceNotClearlyVisible; // ¿El precio no era visible antes de pagar?
         private Boolean notInLegalCurrency; // ¿El precio estaba en otra moneda o sin impuestos?

@@ -9,7 +9,7 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Exhibición de Precios, Peso y Medidas",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["missingWeightOrMeasure", "missingUnitPrice", "displayedPriceWithTaxes", "chargedPrice"]
+      "parametros_requeridos": ["missingWeightOrMeasure", "missingUnitPrice", "displayedPriceWithTaxes", "surchargePercentage"]
     }
   },
   {
