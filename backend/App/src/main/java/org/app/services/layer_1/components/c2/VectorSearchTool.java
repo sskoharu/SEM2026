@@ -19,7 +19,7 @@ public class VectorSearchTool {
         SearchRequest request = SearchRequest.builder()
                 .query(query)
                 .topK(topK)
-                .similarityThreshold(0.30) // Umbral bajo para no descartar nada al inicio
+                .similarityThreshold(0.75)
                 .build();
         return vectorStore.similaritySearch(request);
     }

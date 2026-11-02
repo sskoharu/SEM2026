@@ -1,6 +1,6 @@
 export type TipoError =
   | 'limite' | 'timeout' | 'vacia' | 'invalida' | 'conexion'
-  | 'servidor' | 'http' | 'cancelacion' | 'integracion' | 'simulacion'
+  | 'servidor' | 'http' | 'cancelacion'
 
 export type ErrorSolicitud = {
   tipo: TipoError
@@ -19,8 +19,6 @@ const mensajes: Record<TipoError, string> = {
   servidor: 'El servidor no está disponible en este momento. Intente nuevamente más tarde.',
   http: 'No se pudo completar la solicitud. Revise la información e intente nuevamente.',
   cancelacion: 'La solicitud fue cancelada.',
-  simulacion: 'No se pudo generar el análisis simulado. Sus datos se conservan; puede volver a intentarlo.',
-  integracion: 'El modo API está pendiente de integración con el backend. Utilice el modo demostración.',
 }
 
 export function crearError(

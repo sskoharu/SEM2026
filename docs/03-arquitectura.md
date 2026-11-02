@@ -1,22 +1,63 @@
-**Diagrama (Mermaid o imagen) con frontend, backend, modelo, base vectorial, herramientas del agente y fuentes**:  
-[![image1.png](https://i.postimg.cc/5ynP6mwc/image1.png)](https://postimg.cc/7JJ1R0sX)
-**2\. Descripción del flujo de una consulta de principio a fin**
+# Arquitectura implementada
 
-El ciclo de vida de un caso dentro del sistema sigue este proceso secuencial, separando estrictamente la interpretación semántica (IA) de la lógica de negocio procesal (Java):
+Este documento describe el código actual, no una arquitectura propuesta.
 
-1. **Recepción del caso:** El usuario ingresa el relato de su problema y sube la evidencia (adjuntos) desde el Frontend.
-2. **Anonimización:** El Backend (Spring Boot) recibe la petición y reemplaza los datos personales (PII) por marcadores para proteger la identidad antes de enviar datos a la IA.
-3. **Extracción estructurada:** El Agente envía el texto al Modelo (DeepSeek-R1) para extraer los hechos, fechas, montos y el nombre del proveedor en formato estructurado (JSON mapeado con BeanOutputConverter).
-4. **Verificación de evidencia:** El Agente utiliza la herramienta evidencia_faltante para comprobar si el relato y los adjuntos cumplen con los requisitos mínimos del tipo de reclamo. Si falta información, pregunta al usuario antes de avanzar.
-5. **Búsqueda semántica (RAG):** Con los hechos consolidados, el Agente invoca buscar_normativa para consultar en ChromaDB (Base Vectorial) los fragmentos exactos de la Ley Orgánica de Defensa del Consumidor (Fuentes) que aplican al caso.
-6. **Razonamiento legal:** El Modelo analiza los hechos frente a los fragmentos de la ley recuperados e identifica los derechos posiblemente vulnerados.
+## Componentes
 
-**7\. Ejecución de Reglas Deterministas (Código vs. Alucinación):** Dado que los LLMs son propensos a fallar en cálculos exactos, el Agente delega las decisiones procesales y matemáticas exclusivamente al backend en Java. Se ejecutan herramientas estáticas:
+- **Frontend:** React/TypeScript/Vite, en `frontend/`.
+- **API:** Spring Boot en `backend/App`, con controladores bajo
+  `org.app.controllers`.
+- **Modelo conversacional:** Gemini configurado mediante el cliente compatible
+  con OpenAI de Spring AI. El nombre vigente está en
+  `spring.ai.openai.chat.options.model`.
+- **Embeddings:** `gemini-embedding-001`, implementado por
+  `GoogleEmbeddingModel`.
+- **Base vectorial:** Qdrant, mediante `QdrantVectorStore`.
+- **Sesiones:** Redis.
+- **Corpus normalizado:** JSON bajo
+  `backend/App/src/main/resources/data/lodc/`.
 
-- calcular_plazos: Usa java.time.LocalDate para sumar días exactos desde el evento y define si el reclamo está vigente o prescrito.
-- resolver_instancia: Define la ruta jerárquica estricta (ej. Proveedor → Arcotel → Defensoría).
-- promedio_consumo: Realiza el cálculo matemático en BigDecimal de los últimos 6 meses para cobros excesivos. _El modelo no inventa fechas ni rutas de atención; el código las impone basándose en archivos de configuración YAML._
+Qdrant y el modelo se configuran mediante `LLM_API_KEY` y `QDRANT_API_KEY`;
+ninguna de esas claves debe escribirse en el repositorio.
 
-**8\. Validación del usuario (Human-in-the-loop y recolección de datos):** El Backend consolida todo (hechos extraídos por la IA + artículos del RAG + plazos exactos del código Java) y lo presenta en el Frontend como un "Informe Estructurado". Aquí ocurre la supervisión obligatoria: el usuario revisa, corrige si es necesario y confirma que la información es cierta. _Importante:_ Este informe visual no es el documento final, sino que actúa como la "lista de ingredientes validados" (los datos perfectos y confirmados) que habilitarán la redacción legal.
+## Flujo real de una consulta
 
-**9\. Confirmación y Generación (Plantillas estáticas, cero inventos):** Al presionar "Registrar y generar borrador", **el LLM no redacta el documento legal desde cero**. El Agente llama a la función Java generar_documento, la cual toma una plantilla legal prediseñada (un archivo .docx fijo y aprobado en el servidor) y simplemente inyecta los datos validados del Paso 8 en las variables correspondientes (ej. reemplaza \[HECHOS\] con el relato y \[PLAZO_CALCULADO\] con la fecha de Java). Esto devuelve un documento formal a prueba de alucinaciones, garantizando el indicador de calidad: "cero hechos inventados", listo para su descarga e impresión.
+1. El frontend envía el relato y los datos del reclamo al endpoint actual.
+2. El backend valida la entrada y anonimiza nombres y cédulas antes de enviar
+   información al modelo.
+3. Los agentes de extracción producen datos estructurados; el código Java
+   conserva las decisiones deterministas fuera del modelo.
+4. `LodcDataIngestionRunner` lee los JSON del classpath, crea documentos con
+   metadatos de artículo y los inserta en Qdrant al iniciar la aplicación.
+5. `VectorSearchTool` ejecuta `similaritySearch` con `topK` solicitado y
+   umbral de similitud `0.75`.
+6. La clasificación usa los metadatos recuperados y reglas del servicio de
+   clasificación. Los artículos aplicables se conservan en
+   `SessionObject.applicableArticles`.
+7. Si no se recuperan documentos, `EvaluandoPrecisionStep` dirige el flujo a
+   una aclaración en lugar de fabricar una fuente.
+8. Las herramientas de cálculo permitidas son:
+   `calculate_future_date`, `calculate_legal_interest` y
+   `calculate_percentage`. `CalculationExecutorService` limita cada plan a
+   tres tareas y registra `MAX_ITER_EXCEEDED` si se excede.
+9. El flujo puede quedar en `WAITING_FOR_DECISION`; el endpoint de aceptación
+   permite continuar después de la decisión del usuario.
+
+## Lo que no está implementado
+
+No forman parte de la implementación actual:
+
+- ChromaDB.
+- DeepSeek-R1.
+- Las herramientas con nombres `evidencia_faltante`, `buscar_normativa` o
+  `generar_documento`.
+- Un `ClaimAgentService` independiente con contador de todos los ciclos
+  internos de tool calling.
+- Un flujo completo de borrador pendiente, confirmación específica y envío a
+  una autoridad.
+- Un runner que ejecute automáticamente los 20 casos contra Qdrant y genere
+  métricas de recuperación y cita.
+
+Los PDF y HTML de `data/raw/` son fuentes originales disponibles en el repo,
+pero la ingesta implementada usa los JSON normalizados de
+`src/main/resources/data/lodc`.

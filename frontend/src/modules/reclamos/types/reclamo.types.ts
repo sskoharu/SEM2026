@@ -24,4 +24,12 @@ export type Analisis = {
   preguntas: Pregunta[]
   incongruencias: string[]
   orientaciones: string[]
+  etapa: 'aclaracion' | 'capa2' | 'capa3' | 'completo'
+  estadoCapa2: string | null
+  estadoCapa3: string | null
+  informeViabilidad: string | null
+  rutaAccion: string | null
+  fuentes: string[]
+  parametrosPendientes: string[]
+  progreso: { completados: number; total: number }
 }

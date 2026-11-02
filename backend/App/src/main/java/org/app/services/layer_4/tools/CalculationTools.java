@@ -1,5 +1,6 @@
 package org.app.services.layer_4.tools;
 
+import org.app.config.CalculationProperties;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,11 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class CalculationTools {
+    private final CalculationProperties calculationProperties;
+
+    public CalculationTools(CalculationProperties calculationProperties) {
+        this.calculationProperties = calculationProperties;
+    }
 
     /**
      * Suma un número de días a la fecha actual.
@@ -25,10 +31,10 @@ public class CalculationTools {
      * Calcula el interés legal por mora.
      * Se usa para el Art. 93.
      */
-    @Tool(description = "Calcula el interés legal por mora. Requiere el capital base (BigDecimal), los días de atraso (int) y la tasa anual (double). Devuelve un BigDecimal.")
-    public BigDecimal calculate_legal_interest(BigDecimal capital, int daysLate, double annualRate) {
+    @Tool(description = "Calcula el interés por mora usando la tasa anual configurada en el servidor. Requiere el capital base y los días de atraso.")
+    public BigDecimal calculate_legal_interest(BigDecimal capital, int daysLate) {
         // Formula: (Capital * Tasa * Dias) / 365
-        BigDecimal rate = BigDecimal.valueOf(annualRate);
+        BigDecimal rate = calculationProperties.getInteres().getTasaAnual();
         BigDecimal days = BigDecimal.valueOf(daysLate);
         BigDecimal daysInYear = BigDecimal.valueOf(365);
 

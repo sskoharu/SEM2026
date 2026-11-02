@@ -1,0 +1,20 @@
+{"id":"rag-001","question":"Que regula el ambito y objeto de la Ley Organica de Defensa del Consumidor?","expected_source_ids":["lodc_ley_art_1"],"expected_articles":["1"],"expected_silence":false}
+{"id":"rag-002","question":"Cuales son las definiciones legales basicas usadas por la Ley Organica de Defensa del Consumidor?","expected_source_ids":["lodc_ley_art_2"],"expected_articles":["2"],"expected_silence":false}
+{"id":"rag-003","question":"Que derechos complementarios reconoce la normativa de defensa del consumidor?","expected_source_ids":["lodc_ley_art_3"],"expected_articles":["3"],"expected_silence":false}
+{"id":"rag-004","question":"Que prohibe la normativa sobre publicidad enganosa o abusiva?","expected_source_ids":["lodc_ley_art_6"],"expected_articles":["6"],"expected_silence":false}
+{"id":"rag-005","question":"Que supuestos especificos de publicidad enganosa contempla la ley?","expected_source_ids":["lodc_ley_art_7"],"expected_articles":["7"],"expected_silence":false}
+{"id":"rag-006","question":"Quien debe justificar el incumplimiento en una controversia derivada de publicidad?","expected_source_ids":["lodc_ley_art_8"],"expected_articles":["8"],"expected_silence":false}
+{"id":"rag-007","question":"Que informacion debe exhibirse sobre precios, peso y medidas?","expected_source_ids":["lodc_ley_art_9"],"expected_articles":["9"],"expected_silence":false}
+{"id":"rag-008","question":"Que advertencia corresponde para productos usados o deficientes?","expected_source_ids":["lodc_ley_art_12"],"expected_articles":["12"],"expected_silence":false}
+{"id":"rag-009","question":"Que requisitos de rotulado minimo aplican a los alimentos?","expected_source_ids":["lodc_ley_art_14"],"expected_articles":["14"],"expected_silence":false}
+{"id":"rag-010","question":"Que informacion debe entregarse sobre bienes durables?","expected_source_ids":["lodc_ley_art_16"],"expected_articles":["16"],"expected_silence":false}
+{"id":"rag-011","question":"Que exige la ley respecto de la informacion veraz al consumidor?","expected_source_ids":["lodc_ley_art_17"],"expected_articles":["17"],"expected_silence":false}
+{"id":"rag-012","question":"Que reglas existen sobre la entrega oportuna y eficiente de bienes o servicios?","expected_source_ids":["lodc_ley_art_18"],"expected_articles":["18"],"expected_silence":false}
+{"id":"rag-013","question":"Que ocurre cuando existen defectos o vicios ocultos en un producto?","expected_source_ids":["lodc_ley_art_20"],"expected_articles":["20"],"expected_silence":false}
+{"id":"rag-014","question":"Que obligaciones existen sobre facturacion y comprobantes adicionales?","expected_source_ids":["lodc_ley_art_21"],"expected_articles":["21"],"expected_silence":false}
+{"id":"rag-015","question":"Que derechos tiene el consumidor frente a una reparacion defectuosa?","expected_source_ids":["lodc_ley_art_22"],"expected_articles":["22"],"expected_silence":false}
+{"id":"rag-016","question":"Cual es la tasa de impuesto a la renta aplicable a una empresa en Ecuador?","expected_source_ids":[],"expected_articles":[],"expected_silence":true}
+{"id":"rag-017","question":"Como se calcula el precio del petroleo ecuatoriano para el presupuesto nacional?","expected_source_ids":[],"expected_articles":[],"expected_silence":true}
+{"id":"rag-018","question":"Que requisitos exige la ley para constituir una sociedad anonima?","expected_source_ids":[],"expected_articles":[],"expected_silence":true}
+{"id":"rag-019","question":"Cual es el diagnostico medico de una persona con dolor abdominal?","expected_source_ids":[],"expected_articles":[],"expected_silence":true}
+{"id":"rag-020","question":"Que sentencia penal corresponde a una persona acusada de robo?","expected_source_ids":[],"expected_articles":[],"expected_silence":true}

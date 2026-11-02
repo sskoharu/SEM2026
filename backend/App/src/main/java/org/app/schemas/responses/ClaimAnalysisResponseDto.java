@@ -38,6 +38,4 @@ public class ClaimAnalysisResponseDto {
     private LlmMetrics metrics;
 
     private LocalDateTime analizedAt;
-
-    private String preliminaryCategory;
 }

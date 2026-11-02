@@ -16,6 +16,8 @@ import java.util.Map;
 @Log4j2
 public class CalculationExecutorService {
 
+    private static final int MAX_ITER = 3;
+
     private final CalculationTools calculationTools;
 
     /**
@@ -30,9 +32,17 @@ public class CalculationExecutorService {
         log.info("Ejecutando {} tareas de cálculo deterministas...", plan.getTasks().size());
         Map<String, Object> executionPlan = session.getExecutionPlan();
 
+        int executedTasks = 0;
         for (CalculationTask task : plan.getTasks()) {
+            if (executedTasks >= MAX_ITER) {
+                log.warn("Límite de {} tareas de cálculo alcanzado.", MAX_ITER);
+                executionPlan.put("calculationError", "MAX_ITER_EXCEEDED");
+                break;
+            }
+
             try {
                 Object result = executeTask(task);
+                executedTasks++;
 
                 if (result != null) {
                     // Inyectamos el resultado en el plan de ejecución
@@ -62,8 +72,7 @@ public class CalculationExecutorService {
             case "calculate_legal_interest":
                 BigDecimal capital = new BigDecimal(String.valueOf(args.get("capital")));
                 int daysLate = Integer.parseInt(String.valueOf(args.get("daysLate")));
-                double annualRate = Double.parseDouble(String.valueOf(args.get("annualRate")));
-                return calculationTools.calculate_legal_interest(capital, daysLate, annualRate);
+                return calculationTools.calculate_legal_interest(capital, daysLate);
 
             case "calculate_percentage":
                 BigDecimal amount = new BigDecimal(String.valueOf(args.get("amount")));

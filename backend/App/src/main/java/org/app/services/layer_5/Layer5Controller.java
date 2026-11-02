@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.app.repositories.SessionRepository;
 import org.app.schemas.session_object.SessionObject;
+import org.app.schemas.session_object.enums.Layer3InternalState;
 import org.app.services.layer_5.dto.Layer5RequestDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,6 +34,12 @@ public class Layer5Controller {
 
         SessionObject session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        if (session.getLayer3State() != Layer3InternalState.DONE) {
+            return ResponseEntity.status(409).body(java.util.Map.of(
+                    "error", "El documento solo puede generarse después de la confirmación del usuario."
+            ));
+        }
 
         // Validación de seguridad: La Capa 4 debió haber terminado
         // (Asumimos que la Capa 4 no tiene un estado propio, pero el executionPlan debe estar lleno)
