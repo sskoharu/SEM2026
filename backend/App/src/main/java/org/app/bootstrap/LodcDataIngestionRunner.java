@@ -2,10 +2,13 @@ package org.app.bootstrap;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qdrant.client.QdrantClient;
+import io.qdrant.client.grpc.Collections.PayloadSchemaType;
 import lombok.extern.log4j.Log4j2;
 import org.app.schemas.utils.ArticleJsonDto;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
@@ -27,10 +30,15 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
 
     private final VectorStore vectorStore;
     private final ObjectMapper objectMapper;
+    private final QdrantClient qdrantClient; // <-- NUEVO
 
-    public LodcDataIngestionRunner(VectorStore vectorStore, ObjectMapper objectMapper) {
+    @Value("${spring.ai.vectorstore.qdrant.collection-name}")
+    private String collectionName; // <-- NUEVO
+
+    public LodcDataIngestionRunner(VectorStore vectorStore, ObjectMapper objectMapper, QdrantClient qdrantClient) {
         this.vectorStore = vectorStore;
         this.objectMapper = objectMapper;
+        this.qdrantClient = qdrantClient;
     }
 
     @Override
@@ -38,6 +46,11 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
         log.info("======================================================");
         log.info("INICIANDO INGESTA DE LA LODC A QDRANT");
         log.info("======================================================");
+
+        // =======================================================
+        // 0. CREAR ÍNDICES EN QDRANT (Evita el error de filtrado)
+        // =======================================================
+        createIndexesSafely();
 
         // 1. Buscar todos los archivos .json dentro de la carpeta data/lodc
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
@@ -96,6 +109,63 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
             log.info("✅ ¡INGESTA COMPLETADA CON ÉXITO! Total de documentos en el corpus: {}", allDocuments.size());
         } else {
             log.warn("No se generaron documentos para insertar.");
+        }
+    }
+
+    /**
+     * Crea los índices necesarios en Qdrant para que los filtros exactos (==) funcionen.
+     * Si el índice ya existe, simplemente lanza un warning y continúa.
+     */
+    private void createIndexesSafely() {
+        // Índice para numero_articulo (necesario para el GeneratingActionRouteStep)
+        try {
+            log.info("Creando índice de payload para 'numero_articulo'...");
+            qdrantClient.createPayloadIndexAsync(
+                    collectionName,
+                    "numero_articulo",
+                    PayloadSchemaType.Keyword,
+                    null,                    // PayloadIndexParams (opcional)
+                    true,                    // wait: esperar a que se cree
+                    null,                    // WriteOrdering (opcional)
+                    null
+            ).get();
+            log.info("✅ Índice 'numero_articulo' listo.");
+        } catch (Exception e) {
+            log.warn("Nota: Índice 'numero_articulo' ya existe o no se pudo crear. Detalle: {}", e.getMessage());
+        }
+
+        // Índice para tipo_reclamo_asociado (útil para búsquedas filtradas de Capa 1)
+        try {
+            log.info("Creando índice de payload para 'tipo_reclamo_asociado'...");
+            qdrantClient.createPayloadIndexAsync(
+                    collectionName,
+                    "tipo_reclamo_asociado",
+                    PayloadSchemaType.Keyword,
+                    null,                    // PayloadIndexParams (opcional)
+                    true,                    // wait: esperar a que se cree
+                    null,                    // WriteOrdering (opcional)
+                    null
+            ).get();
+            log.info("✅ Índice 'tipo_reclamo_asociado' listo.");
+        } catch (Exception e) {
+            log.warn("Nota: Índice 'tipo_reclamo_asociado' ya existe o no se pudo crear. Detalle: {}", e.getMessage());
+        }
+
+        // Índice para original_id (útil para búsquedas de auditoría)
+        try {
+            log.info("Creando índice de payload para 'original_id'...");
+            qdrantClient.createPayloadIndexAsync(
+                    collectionName,
+                    "original_id",
+                    PayloadSchemaType.Keyword,
+                    null,                    // PayloadIndexParams (opcional)
+                    true,                    // wait: esperar a que se cree
+                    null,                    // WriteOrdering (opcional)
+                    null
+            ).get();
+            log.info("✅ Índice 'original_id' listo.");
+        } catch (Exception e) {
+            log.warn("Nota: Índice 'original_id' ya existe o no se pudo crear. Detalle: {}", e.getMessage());
         }
     }
 }

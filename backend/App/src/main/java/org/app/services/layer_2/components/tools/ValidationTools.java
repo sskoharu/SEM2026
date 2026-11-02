@@ -1,4 +1,4 @@
-package org.app.services.layer_2.components.c3;
+package org.app.services.layer_2.components.tools;
 
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;

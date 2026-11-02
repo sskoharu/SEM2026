@@ -9,7 +9,19 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Obligaciones Generales de Servicios Públicos",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["serviceNotEfficient", "serviceNotQuality", "serviceNotTimely", "serviceNotContinuous", "serviceNotPermanent", "priceNotJust"]
+      "parametros_requeridos": [
+        "serviceNotEfficient",
+        "serviceNotQuality",
+        "serviceNotTimely",
+        "serviceNotContinuous",
+        "serviceNotPermanent",
+        "priceNotJust",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["38", "78", "70"]
     }
   },
   {
@@ -22,7 +34,17 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Información, Contrato y Seguros Accesorios",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["lacksWrittenContract", "infoNotAvailableAtOffices", "segurosAccesorios", "negligenceCausedDamages", "damagesDescription"]
+      "parametros_requeridos": [
+        "lacksWrittenContract",
+        "infoNotAvailableAtOffices",
+        "segurosAccesorios",
+        "negligenceCausedDamages",
+        "damagesDescription",
+        "hasContract",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
@@ -35,7 +57,15 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Principio de Reciprocidad",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["recargoPorMoraAplicado", "reintegroNoAplicado", "reciprocityDetails"]
+      "parametros_requeridos": [
+        "recargoPorMoraAplicado",
+        "reintegroNoAplicado",
+        "reciprocityDetails",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["38", "70"]
     }
   },
   {
@@ -48,7 +78,15 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Registro y Plazos de Reclamos",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["hasComplaintOffice", "hasComplaintRegistry", "complaintNotRegistered", "complaintResolvedInTime"]
+      "parametros_requeridos": [
+        "hasComplaintOffice",
+        "hasComplaintRegistry",
+        "complaintNotRegistered",
+        "complaintResolvedInTime",
+        "hasComplaintBookRecord",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -61,7 +99,15 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Seguridad de Instalaciones",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["missingSafetyInfo", "safetyAccidentOccurred", "accidentDescription"]
+      "parametros_requeridos": [
+        "missingSafetyInfo",
+        "safetyAccidentOccurred",
+        "accidentDescription",
+        "hasPhotosOrVideos",
+        "hasWitnesses",
+        "otherEvidenceDescription"
+      ],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
@@ -74,7 +120,15 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Instrumentos de Medición y Facturación",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["measurementInstrumentNotCertified", "deniedIndividualConsumptionControl", "invoiceDeliveredLate"]
+      "parametros_requeridos": [
+        "measurementInstrumentNotCertified",
+        "deniedIndividualConsumptionControl",
+        "invoiceDeliveredLate",
+        "hasInvoice",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70", "40"]
     }
   },
   {
@@ -87,7 +141,20 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Interrupción de Servicio y Reintegros",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["serviceInterrupted", "interruptionCausedByProvider", "interruptionDate", "daysWithoutService", "refundRequested", "refundProcessed", "damagesCausedByInterruption"]
+      "parametros_requeridos": [
+        "serviceInterrupted",
+        "interruptionCausedByProvider",
+        "interruptionDate",
+        "daysWithoutService",
+        "refundRequested",
+        "refundProcessed",
+        "damagesCausedByInterruption",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["78", "75", "70"]
     }
   },
   {
@@ -100,7 +167,18 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Facturación de Consumo Excesivo",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["excessiveBillingClaimed", "averageOfLastSixMonths", "billingHistoryProvided", "providerJustifiedConsumption", "creditOwedToConsumer"]
+      "parametros_requeridos": [
+        "excessiveBillingClaimed",
+        "averageOfLastSixMonths",
+        "billingHistoryProvided",
+        "providerJustifiedConsumption",
+        "creditOwedToConsumer",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasComplaintBookRecord",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -113,20 +191,18 @@
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Valores de Planillas y Prohibición de Estimativos",
       "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["hasUnauthorizedCharges", "isEstimatedBilling", "meterDamaged", "providerFailedToRepairMeter", "technicalLossesCharged"]
-    }
-  },
-  {
-    "id": "lodc_ley_art_78",
-    "document": "Art. 78.- Cobro Durante la Suspensión del Servicio.- El proveedor de servicios públicos o privados, no podrá efectuar cobro alguno por el mismo, durante el tiempo en que se encuentre interrumpido y, en todo caso, estará obligado a descontar o reembolsar al consumidor el valor del servicio pagado y no devengado.",
-    "metadata": {
-      "documento_tipo": "LEY",
-      "ley": "LODC",
-      "numero_articulo": "78",
-      "capitulo": "Capítulo XIII: Infracciones y Sanciones",
-      "tema_principal": "Prohibición de Cobro Durante Suspensión",
-      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
-      "parametros_requeridos": ["chargedDuringInterruption", "refundOrDiscountApplied", "undevolvedAmount"]
+      "parametros_requeridos": [
+        "hasUnauthorizedCharges",
+        "isEstimatedBilling",
+        "meterDamaged",
+        "providerFailedToRepairMeter",
+        "technicalLossesCharged",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70", "78"]
     }
   }
 ]

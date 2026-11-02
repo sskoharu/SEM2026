@@ -53,4 +53,14 @@ public class Contratos {
     // ==========================================
     private List<String> attachedEvidenceUrls = new ArrayList<>();
     private Map<String, Object> dynamicParams = new HashMap<>();
+
+    // ==========================================
+    // 5. NUEVOS CAMPOS DE EVIDENCIA AGREGADOS
+    // ==========================================
+    private Boolean hasContract; // ¿Tiene el contrato de adhesión firmado? (Art. 41, 44)
+    private Boolean hasInvoice; // ¿Tiene facturas de los pagos realizados?
+    private Boolean hasPaymentReceipt; // ¿Tiene comprobantes de pago o transferencias?
+    private Boolean hasWrittenCommunication; // ¿Tiene la notificación por escrito o correos enviados al proveedor?
+    private Boolean hasWitnesses; // ¿Tiene testigos?
+    private String otherEvidenceDescription; // Texto libre para cualquier otra prueba
 }

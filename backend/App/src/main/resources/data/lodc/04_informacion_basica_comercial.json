@@ -9,7 +9,15 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Exhibición de Precios, Peso y Medidas",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["missingWeightOrMeasure", "missingUnitPrice", "displayedPriceWithTaxes", "surchargePercentage"]
+      "parametros_requeridos": [
+        "missingWeightOrMeasure",
+        "missingUnitPrice",
+        "displayedPriceWithTaxes",
+        "surchargePercentage",
+        "hasPriceTagEvidence",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -22,7 +30,15 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Advertencia de Productos Usados o Deficientes",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["isUsedOrDeficientProduct", "missingUsedDeficientWarning"]
+      "parametros_requeridos": [
+        "isUsedOrDeficientProduct",
+        "missingUsedDeficientWarning",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -35,7 +51,13 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Advertencia de Productos Transgénicos",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["isGeneticallyModified", "missingGmoWarning"]
+      "parametros_requeridos": [
+        "isGeneticallyModified",
+        "missingGmoWarning",
+        "hasLabelingEvidence",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -48,7 +70,12 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Rotulado Mínimo de Alimentos",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["rotuladoAlimentos"]
+      "parametros_requeridos": [
+        "rotuladoAlimentos",
+        "hasLabelingEvidence",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -61,7 +88,12 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Rotulado Mínimo de Medicamentos",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["rotuladoMedicamentos"]
+      "parametros_requeridos": [
+        "rotuladoMedicamentos",
+        "hasLabelingEvidence",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -74,7 +106,13 @@
       "capitulo": "Capítulo IV: Información Básica Comercial",
       "tema_principal": "Información de Bienes Durables",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["bienDurable"]
+      "parametros_requeridos": [
+        "bienDurable",
+        "hasUserManual",
+        "hasWarrantyDocument",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70", "71"]
     }
   }
 ]

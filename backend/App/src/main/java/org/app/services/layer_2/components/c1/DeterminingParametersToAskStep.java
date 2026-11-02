@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Log4j2
-public class DeterminingParametersStep implements Layer2Step {
+public class DeterminingParametersToAskStep implements Layer2Step {
 
     @Override
     public Layer2InternalState getState() {

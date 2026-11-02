@@ -1,5 +1,18 @@
 [
   {
+    "id": "lodc_ley_art_70",
+    "document": "Art. 70.- Sanción General.- Las infracciones a lo dispuesto en esta Ley, siempre que no tengan una sanción específica, serán sancionadas con multa de cien a mil dólares de los Estados Unidos de América o su equivalente en moneda de curso legal, y si es del caso, el comiso de los bienes, o la suspensión del derecho a ejercer actividades en el campo de la prestación del servicios o publicidad, sin perjuicio de las demás sanciones a las que hubiere lugar. El pago de las sanciones pecuniarias no libera al proveedor de cumplir con las obligaciones que le impone la Ley.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "70",
+      "capitulo": "Capítulo XIII: Infracciones y Sanciones",
+      "tema_principal": "Sanción General",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": []
+    }
+  },
+  {
     "id": "lodc_ley_art_71",
     "document": "Art. 71.- Indemnización, Reparación, Reposición y Devolución.- Los consumidores tendrán derecho, además de la indemnización por daños y perjuicios ocasionados, a la reparación gratuita del bien y, cuando no sea posible, a su reposición o a la devolución de la cantidad pagada, en un plazo no superior a treinta días, en los siguientes casos: 1. Cuando en el producto que se hubiere adquirido con determinada garantía y, dentro del plazo de ella, se pusiere de manifiesto la deficiencia o características del bien garantizado, siempre que se hubiere destinado al uso o consumo normal de acuerdo a la naturaleza de dicho bien. Este derecho se ejercerá siempre y cuando el proveedor haya incumplido con la garantía; 2. Cuando cualquier producto, por sus deficiencias de fabricación, elaboración, estructura, calidad o condiciones sanitarias, en su caso, no sea apto para el uso al cual está destinado; y, 3. Cuando considerados los límites de tolerancia permitidos, el contenido neto de un producto resulte inferior al que deben ser o la cantidad sea menor a la indicada en el envase o empaque. Sin perjuicio de las acciones civiles, penales o administrativas a que hubiere lugar, el proveedor que incurriere en uno de los casos contemplados en este artículo, e incumpliere su obligación una vez fenecido el plazo establecido, será sancionado con una multa equivalente al valor del bien o servicio, que en ningún caso será inferior a ciento veinte dólares de los Estados Unidos de América o su equivalente en moneda de curso legal, sin que ello se extinga su obligación de reparar o reponer el bien, o en su caso restituir lo pagado.",
     "metadata": {
@@ -35,7 +48,7 @@
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción por Deterioro en Custodia",
       "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
-      "parametros_requeridos": ["providerRefusedIndemnification", "custodyDamageDescription"]
+      "parametros_requeridos": ["providerRefusedIndemnification"]
     }
   },
   {
@@ -48,7 +61,7 @@
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Servicios Defectuosos y Restitución",
       "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
-      "parametros_requeridos": ["serviceManifestlyDefective", "serviceIneffective", "serviceCausedDamage", "serviceNotAsAgreed", "claimsRefundOfServiceCost", "claimsIndemnification"]
+      "parametros_requeridos": ["claimsRefundOfServiceCost", "claimsIndemnification"]
     }
   },
   {
@@ -74,7 +87,46 @@
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Suspensión Injustificada de Servicio",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": ["isServiceSuspension", "wasPaidUpToDate", "paidServiceRightType", "isStateOrConcessionaire", "civilDamagesDescription"]
+      "parametros_requeridos": ["civilDamagesDescription"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_78",
+    "document": "Art. 78.- Cobro Durante la Suspensión del Servicio.- El proveedor de servicios públicos o privados, no podrá efectuar cobro alguno por el mismo, durante el tiempo en que se encuentre interrumpido y, en todo caso, estará obligado a descontar o reembolsar al consumidor el valor del servicio pagado y no devengado.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "78",
+      "capitulo": "Capítulo XIII: Infracciones y Sanciones",
+      "tema_principal": "Prohibición de Cobro Durante Suspensión",
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
+      "parametros_requeridos": ["chargedDuringInterruption", "refundOrDiscountApplied", "undevolvedAmount"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_79",
+    "document": "Art. 79.- Requerimiento de Información.- Sin perjuicio de la facultad de las autoridades de asistirse por la fuerza pública, será sancionado con multa de quinientos a cinco mil dolares de los Estados Unidos de América o su equivalente en moneda de curso legal, el proveedor que se negare a proporcionar la información requerida por autoridad competente o que proporcionare información falsa. La misma pena será impuesta al proveedor que impida a la autoridad competente, por cualquier medio, la inspección de los lugares de prestación de servicios, producción, expendio o almacenamiento de bienes, productos o que se oponga a la verificación de la información proporcionada.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "79",
+      "capitulo": "Capítulo XIII: Infracciones y Sanciones",
+      "tema_principal": "Sanción por Negativa de Información a la Autoridad",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": []
+    }
+  },
+  {
+    "id": "lodc_ley_art_80",
+    "document": "Art. 80.- Reincidencia.- En caso de reincidencia en las infracciones que establece la presente Ley, la multa señalada podrá ser elevada al doble, además de la clausura temporal o definitiva del establecimiento; se considerará reincidente al proveedor que sea sancionado por una misma infracción a esta Ley, dos veces o más dentro del mismo año calendario. Para la aplicación de las multas, la autoridad competente tendrá en cuenta de manera especial, la gravedad de la infracción, la cuantía de lo disputado y las condiciones económicas del infractor.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "80",
+      "capitulo": "Capítulo XIII: Infracciones y Sanciones",
+      "tema_principal": "Sanción por Reincidencia",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": []
     }
   }
 ]

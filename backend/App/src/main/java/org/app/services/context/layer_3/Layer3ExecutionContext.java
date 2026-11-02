@@ -27,4 +27,8 @@ public class Layer3ExecutionContext {
      * Puede ser null si el usuario simplemente aceptó el informe.
      */
     private Map<String, Object> batchParameters;
+
+    private String selectedOptionId;
+
+    private Map<String, Object> proceduralFormData;
 }

@@ -12,4 +12,5 @@ import java.util.List;
 public class Layer1ExecutionContext {
     private SessionObject session;
     private List<Document> retrievedDocs; // Documentos recuperados en memoria
+    private LegalTranslationResult translationResult; // Resultado del análisis del LLM (incluye sugerencia de tipo)
 }

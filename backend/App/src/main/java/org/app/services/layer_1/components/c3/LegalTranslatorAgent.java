@@ -18,40 +18,138 @@ public class LegalTranslatorAgent {
 
     public LegalTranslationResult translateAndEvaluate(String originalNarrative, List<Document> failedDocs, int attempt) {
         String context = (failedDocs != null && !failedDocs.isEmpty())
-                ? "Artículos recuperados previamente (irrelevantes): " + failedDocs.stream().map(Document::getText).limit(2).collect(Collectors.joining(" | "))
+                ? "Artículos recuperados previamente (poco relevantes): " + failedDocs.stream().map(Document::getText).limit(2).collect(Collectors.joining(" | "))
                 : "Primer intento de búsqueda.";
 
         String prompt = """
             <ROL>
-            Eres un experto en la Ley Orgánica de Defensa del Consumidor (LODC) de Ecuador.
+            Eres un experto jurídico en la Ley Orgánica de Defensa del Consumidor (LODC) de Ecuador.
+            Tu misión es ANALIZAR LA CRONOLOGÍA del relato y determinar el tipo de reclamo más probable.
             </ROL>
-            
+
             <ESCENARIO>
-            Relato del usuario en lenguaje coloquial:
+            Relato del usuario:
             <RELATO>
             %s
             </RELATO>
-            
+
             Contexto de búsqueda anterior: %s (Intento #%d)
             </ESCENARIO>
-            
+
             <CONSIGNA>
-            1. COHERENCIA JURÍDICA: Evalúa si este relato tiene relación con la LODC (defensa del consumidor). 
-               Si el usuario habla de temas penales, laborales, de familia o civiles que NO son de consumo, marca is_legally_coherent como false.
-            2. TRADUCCIÓN: Si es coherente, traduce el relato a una única frase de búsqueda con terminología legal exacta de la LODC (ej. "vicios ocultos", "garantía", "suspensión de servicio", "facturación", etc.). Si no es coherente, devuelve una cadena vacía.
-                <REGLA_DE_DESEMPATE>
-                Si el relato menciona un producto nuevo que falló y el usuario tiene garantía, clasifícalo OBLIGATORIAMENTE como "VICIOS_OCULTOS_CALIDAD" (Tipo 1).\s
-                NO lo clasifiques como "SERVICIO_TECNICO_CUSTODIA" (Tipo 2) a menos que el problema principal sea que el taller de reparación dañó el equipo o usó repuestos falsos. El simple hecho de que el usuario haya consultado a un técnico NO convierte el caso en un reclamo de servicio técnico.
-                </REGLA_DE_DESEMPATE> 
-                
-                <REGLA_DE_DESEMPATE_CRITICA>
-                Si el usuario menciona un producto nuevo que falló, y además menciona que tiene factura o garantía, clasifícalo OBLIGATORIAMENTE como "VICIOS_OCULTOS_CALIDAD" (Tipo 1).\s
-                El simple hecho de que el usuario haya consultado a un "técnico independiente" para pedir una opinión NO convierte el caso en un reclamo de "SERVICIO_TECNICO_CUSTODIA". El Tipo 2 es exclusivo para cuando el taller hace una mala reparación o daña el equipo.
-                </REGLA_DE_DESEMPATE_CRITICA>
-            
+
+            PASO 1: ANÁLISIS CRONOLÓGICO Y ESTRUCTURAL
+
+            Identifica la SECUENCIA DE EVENTOS en el relato:
+
+            🔍 INDICADORES CLAVE:
+
+            A) ¿Hay una COMPRA inicial?
+               - Palabras: "compré", "adquirí", "me vendieron", "pagué por"
+               → has_purchase = true/false
+
+            B) ¿El PRODUCTO/BIEN falló o tiene defectos?
+               - Palabras: "falló", "se rompió", "defectuoso", "no funciona", "se quemó", "se apagó",
+                 "se hinchó", "se destiñó", "mala calidad", "dejó de funcionar"
+               → has_product_failure = true/false
+
+            C) ¿El usuario LLEVÓ el bien a un TALLER/TÉCNICO para reparación?
+               - Palabras EXPLÍCITAS: "llevé al taller", "dejé en reparación", "envié al técnico",
+                 "lo llevé a arreglar", "servicio técnico", "centro de reparación"
+               - ⚠️ NO CONFUNDIR "no me dan garantía" con "llevé a reparar"
+               → has_repair_service = true/false
+
+            D) ¿El daño/problema ocurrió DURANTE LA CUSTODIA del taller/técnico?
+               - Palabras: "me lo devolvieron rayado", "lo dañaron en el taller",
+                 "cuando lo recogí estaba peor", "me lo entregaron roto"
+               → damage_during_custody = true/false
+
+            E) ¿El problema es de INFORMACIÓN ENGAÑOSA (no de defecto del producto)?
+               - Palabras: "publicidad falsa", "precio diferente", "no me dieron factura",
+                 "me cobraron más", "no tiene etiqueta"
+               - ⚠️ El producto/servicio funciona, solo hay engaño de información
+               → has_misleading_info = true/false
+
+            ---
+
+            PASO 2: DETERMINACIÓN DEL TIPO DE RECLAMO
+
+            Basándote en los indicadores, determina el tipo más probable:
+
+            🟢 TIPO: VICIOS_OCULTOS_CALIDAD
+            Cronología: COMPRA → FALLA DEL PRODUCTO → NEGATIVA DE GARANTÍA (SIN TALLER INTERMEDIO)
+            Condiciones:
+            - has_purchase = true
+            - has_product_failure = true
+            - has_repair_service = false (CRÍTICO: el usuario NO llevó a reparar)
+            - damage_during_custody = false
+
+            Ejemplo: "Compré un TV, a las 3 semanas falló, la tienda no me da garantía"
+
+            🔵 TIPO: SERVICIO_TECNICO_CUSTODIA
+            Cronología: COMPRA/TENÍA UN BIEN → LLEVÓ A REPARAR → DAÑO EN TALLER o REPARACIÓN DEFECTUOSA
+            Condiciones:
+            - has_repair_service = true (CRÍTICO: menciona explícitamente taller/técnico)
+            - damage_during_custody = true (el daño ocurrió en custodia)
+
+            Ejemplo: "Llevé mi carro al taller, me lo devolvieron rayado"
+
+            🟠 TIPO: INFORMACION_PRECIOS_FACTURACION
+            Cronología: COMPRA/SERVICIO → INFORMACIÓN ENGAÑOSA (producto funciona bien)
+            Condiciones:
+            - has_misleading_info = true
+            - has_product_failure = false (el producto/servicio funciona)
+
+            Ejemplo: "Compré un celular, el precio en góndola era $500 pero me cobraron $600. El celular funciona bien"
+
+            ---
+
+            PASO 3: GENERACIÓN DEL QUERY DE BÚSQUEDA
+
+            Basándote en el tipo determinado, genera el query conceptual:
+
+            - Si es VICIOS_OCULTOS_CALIDAD:
+              → "producto defectuoso garantía vicios ocultos calidad responsabilidad proveedor bien inadecuado reposición negativa garantía"
+
+            - Si es SERVICIO_TECNICO_CUSTODIA:
+              → "servicio técnico deterioro custodia reparación defectuosa responsabilidad taller acondicionamiento menoscabo"
+
+            - Si es INFORMACION_PRECIOS_FACTURACION:
+              → "información deficiente publicidad engañosa precio facturación rotulado obligaciones proveedor información veraz"
+
+            ---
+
+            PASO 4: CONFIANZA
+
+            Asigna un nivel de confianza (1-5):
+            - 5: Cronología clara y explícita (ej. dice "llevé al taller" o "compré y falló")
+            - 4: Cronología clara pero con lenguaje ambiguo
+            - 3: Indicadores mixtos, caso frontera
+            - 2: Faltan datos clave
+            - 1: Muy ambiguo
+
+            ---
+
+            ⚠️ REGLAS CRÍTICAS:
+
+            1. La frase "no me dan garantía" o "se niegan a arreglar" NO significa que el usuario llevó al taller.
+               Solo significa que el PROVEEDOR ORIGINAL (tienda donde compró) rechaza cumplir la garantía.
+               → Esto es VICIOS_OCULTOS, no SERVICIO_TECNICO
+
+            2. Solo marca has_repair_service=true si el relato dice EXPLÍCITAMENTE:
+               - "llevé al taller"
+               - "dejé en reparación"
+               - "el técnico vino"
+               - "servicio técnico"
+
+            3. Si el relato dice "la batería se hinchó" o "la pantalla se levantó":
+               → Eso es has_product_failure=true (defecto del producto)
+               → NO es damage_during_custody (no hubo custodia)
+
+            4. NO uses palabras literales del relato en el query (ej. "Samsung", "De Prati", "celular").
+               Usa conceptos legales generales.
+
             </CONSIGNA>
-            
-            
             """.formatted(originalNarrative, context, attempt);
 
         return chatClient.prompt()

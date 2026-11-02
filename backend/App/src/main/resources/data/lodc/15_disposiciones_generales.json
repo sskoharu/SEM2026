@@ -9,7 +9,8 @@
       "capitulo": "Capítulo XV: Disposiciones Generales",
       "tema_principal": "Prohibición de Redondeo en Telefonía",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["telefonia"]
+      "parametros_requeridos": ["telefonia"],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
@@ -22,7 +23,8 @@
       "capitulo": "Capítulo XV: Disposiciones Generales",
       "tema_principal": "Cobro de Intereses por Mora",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["interesesMora"]
+      "parametros_requeridos": ["interesesMora"],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   }
 ]

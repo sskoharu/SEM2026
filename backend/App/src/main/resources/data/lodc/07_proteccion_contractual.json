@@ -9,7 +9,16 @@
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Terminación Anticipada de Contratos de Adhesión",
       "tipo_reclamo_asociado": ["CONTRATOS"],
-      "parametros_requeridos": ["wantsToTerminateEarly", "notifiedInWriting", "hasEarlyTerminationPenalty", "penaltyAmount"]
+      "parametros_requeridos": [
+        "wantsToTerminateEarly",
+        "notifiedInWriting",
+        "hasEarlyTerminationPenalty",
+        "penaltyAmount",
+        "hasContract",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -22,7 +31,15 @@
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Promociones y Ofertas Especiales",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": ["isOfferOrPromotion", "offerDetails", "isPublicOffer"]
+      "parametros_requeridos": [
+        "isOfferOrPromotion",
+        "offerDetails",
+        "isPublicOffer",
+        "hasPromotionEvidence",
+        "hasAdvertisingEvidence",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["72", "30"]
     }
   },
   {
@@ -35,7 +52,19 @@
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Sistemas de Crédito y Prohibición de Anatocismo",
       "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
-      "parametros_requeridos": ["informedCashPrice", "informedTotalInterest", "informedInterestRate", "informedMoratoriumRate", "informedInstallments", "informedTotalAmount", "providesReceiptForEachPayment"]
+      "parametros_requeridos": [
+        "informedCashPrice",
+        "informedTotalInterest",
+        "informedInterestRate",
+        "informedMoratoriumRate",
+        "informedInstallments",
+        "informedTotalAmount",
+        "providesReceiptForEachPayment",
+        "hasContractEvidence",
+        "hasPaymentProof",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
@@ -48,7 +77,16 @@
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Derecho a Pago Anticipado",
       "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
-      "parametros_requeridos": ["requestedEarlyPayment", "providerRefusedEarlyPayment", "earlyPaymentAmount", "interestChargedOnFullCapital"]
+      "parametros_requeridos": [
+        "requestedEarlyPayment",
+        "providerRefusedEarlyPayment",
+        "earlyPaymentAmount",
+        "interestChargedOnFullCapital",
+        "hasContractEvidence",
+        "hasPaymentProof",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
@@ -61,7 +99,18 @@
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Prohibición de Cobranza Abusiva",
       "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
-      "parametros_requeridos": ["abusiveCollectionMethods", "exposedToRidicule", "defamation", "illegalCoercion", "threats", "thirdPartiesContacted"]
+      "parametros_requeridos": [
+        "abusiveCollectionMethods",
+        "exposedToRidicule",
+        "defamation",
+        "illegalCoercion",
+        "threats",
+        "thirdPartiesContacted",
+        "hasCollectionEvidence",
+        "hasWrittenCommunication",
+        "hasWitnesses"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -74,7 +123,19 @@
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Igualdad de Precio con Tarjeta de Crédito",
       "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
-      "parametros_requeridos": ["paidWithCreditCard", "cashPrice", "creditCardPrice", "priceDifferenceCharged", "overpriceAmount", "promotionDeniedForCard", "exceptionInformedExpressly"]
+      "parametros_requeridos": [
+        "paidWithCreditCard",
+        "cashPrice",
+        "creditCardPrice",
+        "priceDifferenceCharged",
+        "overpriceAmount",
+        "promotionDeniedForCard",
+        "exceptionInformedExpressly",
+        "hasPromotionEvidence",
+        "hasPaymentProof",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70", "72"]
     }
   }
 ]

@@ -16,6 +16,7 @@ import org.app.services.layer_1.Layer1Orchestrator;
 import org.app.services.layer_1.components.c1.InitialAnalysisService;
 import org.app.services.layer_2.components.Layer2Orchestrator;
 import org.app.services.layer_3.Layer3Orchestrator;
+import org.app.services.mappers.layer_3.Layer3_Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class ClaimController {
     private final Layer2Orchestrator layer2Orchestrator;
     private final Layer3Orchestrator layer3Orchestrator;
     private final SessionRepository sessionRepository;
+    private final Layer3_Mapper layer3Mapper;
 
     // ==========================================
     // ENDPOINTS DE LA CAPA 1 (Triaje y Clasificación)
@@ -140,7 +142,6 @@ public class ClaimController {
 
     /**
      * 1. Iniciar el razonamiento jurídico (Primera vez)
-     * El Orquestador evaluará el caso y pausará para presentar el informe.
      */
     @PostMapping("/evaluate/{sessionId}")
     public ResponseEntity<?> evaluate(@PathVariable String sessionId) {
@@ -149,18 +150,17 @@ public class ClaimController {
         SessionObject session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
 
-        // Validación: Solo se puede evaluar si la Capa 2 terminó
         if (session.getLayer2State() == null || !session.getLayer2State().name().equals("DONE")) {
             return ResponseEntity.badRequest().body(Map.of("error", "La Capa 2 no ha finalizado."));
         }
 
-        // Entra al contexto con Accepted=false y Batch=null
-        SessionObject updatedSession = layer3Orchestrator.process(session, false, null);
+        // CORREGIDO: 5 argumentos (session, userAccepted, batch, selectedOption, formData)
+        SessionObject updatedSession = layer3Orchestrator.process(session, false, null, null, null);
         return ResponseEntity.ok(updatedSession);
     }
 
     /**
-     * 2. El usuario acepta el informe y solicita generar la Ruta de Acción.
+     * 2. El usuario acepta el informe (Pasa a generar opciones de proceder)
      */
     @PostMapping("/accept/{sessionId}")
     public ResponseEntity<?> accept(@PathVariable String sessionId) {
@@ -169,13 +169,12 @@ public class ClaimController {
         SessionObject session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
 
-        // Validación: El usuario debe estar en el estado de decisión
         if (session.getLayer3State() != Layer3InternalState.WAITING_FOR_DECISION) {
             return ResponseEntity.badRequest().body(Map.of("error", "La sesión no está esperando una decisión."));
         }
 
-        // Entra al contexto con Accepted=true
-        SessionObject updatedSession = layer3Orchestrator.process(session, true, null);
+        // CORREGIDO: 5 argumentos
+        SessionObject updatedSession = layer3Orchestrator.process(session, true, null, null, null);
         return ResponseEntity.ok(updatedSession);
     }
 
@@ -194,8 +193,83 @@ public class ClaimController {
             return ResponseEntity.badRequest().body(Map.of("error", "No se enviaron parámetros para actualizar."));
         }
 
-        // Entra al contexto con el Mapa de correcciones
-        SessionObject updatedSession = layer3Orchestrator.process(session, false, request.getUpdatedParameters());
+        // CORREGIDO: 5 argumentos
+        SessionObject updatedSession = layer3Orchestrator.process(session, false, request.getUpdatedParameters(), null, null);
         return ResponseEntity.ok(updatedSession);
+    }
+
+    /**
+     * 4. El usuario elige una opción de proceder (Subtarea 3)
+     */
+    @PostMapping("/select-action/{sessionId}")
+    public ResponseEntity<?> selectAction(@PathVariable String sessionId,
+                                          @RequestBody Map<String, String> body) {
+        log.info("Endpoint /select-action llamado para sesión: {}", sessionId);
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        if (session.getLayer3State() != Layer3InternalState.WAITING_FOR_ACTION_SELECTION) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La sesión no está esperando una selección de acción."));
+        }
+
+        String optionId = body.get("optionId");
+        if (optionId == null || optionId.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Debe enviar un 'optionId'."));
+        }
+
+        // Enviamos el selectedOptionId al Orquestador
+        SessionObject updatedSession = layer3Orchestrator.process(session, false, null, optionId, null);
+
+        // Si el sistema determinó que no necesita más datos y terminó de una vez
+        if (updatedSession.getLayer3State() == Layer3InternalState.DONE) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Opción seleccionada y procesada correctamente. No se requieren datos adicionales.",
+                    "status", "DONE"
+            ));
+        }
+
+        // Si requiere datos, devolvemos el DTO para que el frontend pinte el formulario
+        return ResponseEntity.ok(layer3Mapper.mapToDto(updatedSession));
+    }
+
+    /**
+     * 5. El usuario envía el formulario con los datos del proceder (Subtarea 4)
+     */
+    @PostMapping("/submit-procedural-form/{sessionId}")
+    public ResponseEntity<?> submitProceduralForm(
+            @PathVariable String sessionId,
+            @RequestBody Map<String, Object> formData) {
+        log.info("Endpoint /submit-procedural-form llamado para sesión: {}", sessionId);
+
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        if (session.getLayer3State() != Layer3InternalState.WAITING_FOR_PROCEDURAL_INPUT) {
+            return ResponseEntity.badRequest().body(Map.of("error", "No se está esperando el formulario."));
+        }
+
+        SessionObject updated = layer3Orchestrator.process(session, false, null, null, formData);
+
+        // VALIDACIÓN CRÍTICA:
+        // Si después de procesar sigue en WAITING_FOR_PROCEDURAL_INPUT, significa que
+        // algún dato falló la validación (ej. puso letras en el número de cuenta).
+        if (updated.getLayer3State() == Layer3InternalState.WAITING_FOR_PROCEDURAL_INPUT) {
+            log.warn("El formulario contiene errores. Devolviendo DTO para mostrar correcciones.");
+            // Devolvemos el DTO con las preguntas actualizadas (que ahora incluyen el "⚠️ Error...")
+            return ResponseEntity.ok(layer3Mapper.mapToDto(updated));
+        }
+
+        // Si llegó a DONE, todo salió perfecto y terminamos la Capa 3.
+        if (updated.getLayer3State() == Layer3InternalState.DONE) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Formulario validado y procesado exitosamente. Capa 3 finalizada.",
+                    "status", "DONE",
+                    "executionPlan", updated.getExecutionPlan() // Opcional: devolver el plan para que el front lo vea
+            ));
+        }
+
+        // Fallback en caso de error interno del Orquestador
+        return ResponseEntity.internalServerError().body(Map.of("error", "Error procesando el formulario."));
     }
 }

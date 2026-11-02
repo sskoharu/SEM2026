@@ -56,11 +56,21 @@ public class ServiciosPublicosParams {
     // 4. EVIDENCIA Y DINÁMICOS
     // ==========================================
     private List<String> attachedEvidenceUrls = new ArrayList<>();
+
+    // --- NUEVOS CAMPOS DE EVIDENCIA AGREGADOS (Basados en LODC) ---
+    private Boolean hasInvoice; // ¿Tiene las facturas o planillas?
+    private Boolean hasPaymentReceipt; // ¿Tiene comprobantes de pago?
+    private Boolean hasPhotosOrVideos; // ¿Tiene fotos del daño, del medidor o de la interrupción?
+    private Boolean hasWrittenCommunication; // ¿Tiene reclamos previos por escrito o correos?
+    private Boolean hasComplaintBookRecord; // ¿Tiene la copia del libro de reclamos?
+    private Boolean hasWitnesses; // ¿Tiene testigos?
+    private String otherEvidenceDescription; // Texto libre para otras pruebas
+
     private Map<String, Object> dynamicParams = new HashMap<>();
 
 
     // ==========================================
-    // SUBCLASES ESTÁTICAS
+    // SUBCLASES ESTÁTICAS (Sin cambios)
     // ==========================================
 
     @Data

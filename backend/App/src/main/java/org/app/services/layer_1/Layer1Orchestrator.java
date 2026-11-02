@@ -38,7 +38,7 @@ public class Layer1Orchestrator {
             return session;
         }
 
-        Layer1ExecutionContext context = new Layer1ExecutionContext(session, null);
+        Layer1ExecutionContext context = new Layer1ExecutionContext(session, null, null);
 
         while (session.getLayer1State() != Layer1InternalState.DONE
                 && session.getLayer1State() != Layer1InternalState.SOLICITANDO_ACLARACION
