@@ -23,4 +23,22 @@ public class VectorSearchTool {
                 .build();
         return vectorStore.similaritySearch(request);
     }
+
+    // Añade este método al existente
+    public List<Document> getArticlesByNumbers(List<String> articleNumbers) {
+        if (articleNumbers == null || articleNumbers.isEmpty()) return List.of();
+
+        // Construimos un filtro de Qdrant: numero_articulo == '71' || numero_articulo == '72'
+        String filter = articleNumbers.stream()
+                .map(num -> "numero_articulo == '" + num + "'")
+                .collect(java.util.stream.Collectors.joining(" || "));
+
+        SearchRequest request = SearchRequest.builder()
+                .query("Artículos de proceder")
+                .topK(articleNumbers.size())
+                .filterExpression(filter)
+                .build();
+
+        return vectorStore.similaritySearch(request);
+    }
 }

@@ -9,7 +9,13 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Deber de Información Veraz",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["informationDeficiencyType", "omissionDescription"]
+      "parametros_requeridos": [
+        "informationDeficiencyType",
+        "omissionDescription",
+        "hasWrittenCommunication",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -22,7 +28,15 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Entrega Oportuna y Eficiente",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": ["promisedDeliveryDate", "actualDeliveryDate", "breachDescription"]
+      "parametros_requeridos": [
+        "promisedDeliveryDate",
+        "actualDeliveryDate",
+        "breachDescription",
+        "hasContract",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["30", "70"]
     }
   },
   {
@@ -35,7 +49,12 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Indicación y Visibilidad del Precio Final",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["precioExhibido"]
+      "parametros_requeridos": [
+        "precioExhibido",
+        "hasPriceTagEvidence",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -48,7 +67,15 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Defectos y Vicios Ocultos",
       "tipo_reclamo_asociado": ["VICIOS_OCULTOS_CALIDAD"],
-      "parametros_requeridos": ["thirdPartyIntervention", "defectDescription", "isUnfitForUse"]
+      "parametros_requeridos": [
+        "thirdPartyIntervention",
+        "defectDescription",
+        "isUnfitForUse",
+        "hasInvoice",
+        "hasWarrantyDocument",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["71"]
     }
   },
   {
@@ -61,7 +88,17 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Facturación y Comprobantes Adicionales",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA", "INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["invoiceProvided", "providerRefusedInvoice", "hasAdditionalReceipt", "providerRefusedAdditionalReceipt", "providerRefusedServiceDetails"]
+      "parametros_requeridos": [
+        "invoiceProvided",
+        "providerRefusedInvoice",
+        "hasAdditionalReceipt",
+        "providerRefusedAdditionalReceipt",
+        "providerRefusedServiceDetails",
+        "hasInvoice",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70", "30"]
     }
   },
   {
@@ -74,7 +111,15 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Reparación Defectuosa",
       "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
-      "parametros_requeridos": ["repairDeliveryDate", "daysSinceRepairDelivery", "providerRefusedToFix"]
+      "parametros_requeridos": [
+        "repairDeliveryDate",
+        "daysSinceRepairDelivery",
+        "providerRefusedToFix",
+        "hasInvoice",
+        "hasEntryNote",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["75", "70"]
     }
   },
   {
@@ -87,7 +132,15 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Deterioro en Custodia",
       "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
-      "parametros_requeridos": ["custodyDamageDescription", "itemDeclaredValue", "hasEntryNote", "providerRefusedIndemnification"]
+      "parametros_requeridos": [
+        "custodyDamageDescription",
+        "itemDeclaredValue",
+        "hasEntryNote",
+        "providerRefusedIndemnification",
+        "hasPhotosOrVideos",
+        "hasWitnesses"
+      ],
+      "articulos_procedimentales_asociados": ["73", "70"]
     }
   },
   {
@@ -100,7 +153,12 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Repuestos Nuevos y Adecuados",
       "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
-      "parametros_requeridos": ["usedInadequateParts"]
+      "parametros_requeridos": [
+        "usedInadequateParts",
+        "hasInvoice",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["75", "70"]
     }
   },
   {
@@ -113,7 +171,15 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Suministro de Repuestos y Servicio Postventa",
       "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
-      "parametros_requeridos": ["requiresSparePartOrService", "providerRefusedSupply", "productWithinUsefulLife", "lackOfPartsMakesGoodUseless"]
+      "parametros_requeridos": [
+        "requiresSparePartOrService",
+        "providerRefusedSupply",
+        "productWithinUsefulLife",
+        "lackOfPartsMakesGoodUseless",
+        "hasInvoice",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["71", "70"]
     }
   },
   {
@@ -126,7 +192,12 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Reposición de Bienes Compuestos",
       "tipo_reclamo_asociado": ["VICIOS_OCULTOS_CALIDAD"],
-      "parametros_requeridos": ["isPartOfCompositeGood"]
+      "parametros_requeridos": [
+        "isPartOfCompositeGood",
+        "hasInvoice",
+        "hasWarrantyDocument"
+      ],
+      "articulos_procedimentales_asociados": ["71", "70"]
     }
   },
   {
@@ -139,7 +210,13 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Servicios Profesionales y Honorarios",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["servicioProfesional"]
+      "parametros_requeridos": [
+        "servicioProfesional",
+        "hasContract",
+        "hasInvoice",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["75", "70"]
     }
   },
   {
@@ -152,7 +229,12 @@
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Resolución del Contrato por Mora",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": []
+      "parametros_requeridos": [
+        "hasContract",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["71", "70"]
     }
   }
 ]

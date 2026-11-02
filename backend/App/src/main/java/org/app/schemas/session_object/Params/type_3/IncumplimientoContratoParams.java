@@ -48,15 +48,15 @@ public class IncumplimientoContratoParams {
     private Boolean wasPaidUpToDate; // ¿El consumidor estaba al día en los pagos?
     private String suspensionReasonGiven; // ¿Qué excusa dio el proveedor? (Para evaluar si es "sin justificación")
 
-    // NUEVO: Condición de pago específico (Conexión, instalación, mantenimiento, etc.)
+    // Condición de pago específico (Conexión, instalación, mantenimiento, etc.)
     // Valores esperados: "CONEXION", "INSTALACION", "INCORPORACION", "MANTENIMIENTO", "TARIFA_CONSUMO", "NINGUNO"
     private String paidServiceRightType;
     private Boolean paidRequiredServiceFees; // ¿Realizó el pago inicial o de mantenimiento requerido por el contrato?
 
-    // NUEVO: Naturaleza del proveedor (Para el segundo inciso del Art. 77)
+    // Naturaleza del proveedor (Para el segundo inciso del Art. 77)
     private Boolean isStateOrConcessionaire; // ¿Es una empresa pública, municipal o concesionaria del Estado?
 
-    // NUEVO: Descripción de los daños civiles por la suspensión
+    // Descripción de los daños civiles por la suspensión
     private String civilDamagesDescription; // Ej: "Pérdida de $200 en alimentos por corte de energía", "Pérdida de clientes por caída de internet"
     private BigDecimal civilDamagesEstimatedAmount; // Estimación económica del daño
 
@@ -66,13 +66,21 @@ public class IncumplimientoContratoParams {
     private Boolean wasDeniedEntry; // ¿No le permitieron el ingreso por sobreventa?
 
     // ==========================================
-    // 3. EVIDENCIA DOCUMENTAL (NUEVO)
+    // 3. EVIDENCIA DOCUMENTAL
     // ==========================================
     // Indican al Agente Evaluador (Capa 3) qué tan sólido es el caso.
 
+    // --- Evidencias Originales ---
     private Boolean hasContractEvidence; // ¿Tiene el contrato firmado o las bases de la promoción?
     private Boolean hasOfferEvidence; // ¿Tiene foto del catálogo, captura de la web o proforma? (Art. 148)
     private Boolean hasPaymentProof; // ¿Tiene transferencia, depósito o recibo de pago?
+
+    // --- NUEVOS CAMPOS AGREGADOS (Basados en la LODC) ---
+    private Boolean hasWrittenCommunication; // ¿Tiene correos, chats o cartas notificando el retraso o la suspensión?
+    private Boolean hasComplaintBookRecord; // ¿Registró el reclamo en el libro de reclamos del proveedor? (Art. 35)
+    private Boolean hasPhotosOrVideos; // ¿Tiene fotos del producto defectuoso o de la falta de entrega?
+    private Boolean hasWitnesses; // ¿Tiene testigos dispuestos a declarar?
+    private String otherEvidenceDescription; // Texto libre para cualquier otra prueba.
 
     // ==========================================
     // 4. PRETENSIONES (Lo que el usuario pide)

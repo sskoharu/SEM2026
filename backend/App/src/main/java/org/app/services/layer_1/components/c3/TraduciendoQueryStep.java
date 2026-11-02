@@ -34,6 +34,9 @@ public class TraduciendoQueryStep implements Layer1Step {
                 session.getRagRetryCount()
         );
 
+        // Guardar el resultado en el contexto para uso posterior (incluye suggestedClaimType)
+        context.setTranslationResult(result);
+
         if (!result.isLegallyCoherent()) {
             log.warn("   No es coherente con LODC: {}", result.legalReasoning());
             session.setClarificationMessage("El caso que describes parece no estar relacionado con la Defensa del Consumidor...");
@@ -42,6 +45,8 @@ public class TraduciendoQueryStep implements Layer1Step {
         }
 
         session.setCurrentSearchQuery(result.translatedQuery());
+        log.info("   🧠 LLM sugiere tipo de reclamo: {} (confianza: {})",
+                result.suggestedClaimType(), result.confidenceLevel());
         sessionRepository.save(session);
         return Layer1InternalState.BUSCANDO_FUENTES;
     }

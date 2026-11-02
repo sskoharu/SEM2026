@@ -9,7 +9,8 @@
       "capitulo": "Disposiciones Finales",
       "tema_principal": "Ofertas Públicas Vinculantes",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": ["isPublicOffer", "offerDetails"]
+      "parametros_requeridos": ["isPublicOffer", "offerDetails"],
+      "articulos_procedimentales_asociados": ["30", "72", "70"]
     }
   }
 ]

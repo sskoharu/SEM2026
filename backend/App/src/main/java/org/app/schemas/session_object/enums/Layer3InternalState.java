@@ -17,6 +17,14 @@ public enum Layer3InternalState {
     // 5. El usuario aceptó. El Agente genera la ruta de acción legal (procedimiento).
     GENERATING_ACTION_ROUTE,
 
+    WAITING_FOR_ACTION_SELECTION, // <-- NUEVO: Pausa para elegir la opción
+
+    VALIDATING_PROCEDURAL_INPUT, // (validar datos del formulario)
+
+    WAITING_FOR_PROCEDURAL_INPUT, // (pausa si faltan datos)
+
+    FINALIZING_PROCEDURE, // <-- NUEVO
+
     // 6. La Capa 3 terminó con éxito y pasa a la Capa 4.
     DONE,
 

@@ -9,7 +9,15 @@
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Prohibición de Publicidad Engañosa y Abusiva",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["isAbusiveAdvertising", "advertisedInfo", "actualInfoReceived"]
+      "parametros_requeridos": [
+        "isAbusiveAdvertising",
+        "advertisedInfo",
+        "actualInfoReceived",
+        "hasAdvertisingEvidence",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["72"]
     }
   },
   {
@@ -22,7 +30,18 @@
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Supuestos Específicos de Publicidad Engañosa",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["advertisingInfractionType"]
+      "parametros_requeridos": [
+        "advertisingInfractionType",
+        "surchargePercentage",
+        "surchargeDescription",
+        "advertisedInfo",
+        "actualInfoReceived",
+        "hasAdvertisingEvidence",
+        "hasPriceTagEvidence",
+        "hasLabelingEvidence",
+        "hasPhotosOrVideos"
+      ],
+      "articulos_procedimentales_asociados": ["72"]
     }
   },
   {
@@ -35,7 +54,12 @@
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Carga de la Prueba en Controversias Publicitarias",
       "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
-      "parametros_requeridos": ["providerFailedToJustifyAd"]
+      "parametros_requeridos": [
+        "providerFailedToJustifyAd",
+        "hasWrittenCommunication",
+        "hasWitnesses"
+      ],
+      "articulos_procedimentales_asociados": ["72"]
     }
   }
 ]

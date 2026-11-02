@@ -10,7 +10,18 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Venta Condicionada o Atada",
       "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
-      "parametros_requeridos": ["tiedSaleOfGoods", "tiedSaleOfServices", "mainProductDesired", "forcedAdditionalProduct", "legalRequirementException"]
+      "parametros_requeridos": [
+        "tiedSaleOfGoods",
+        "tiedSaleOfServices",
+        "mainProductDesired",
+        "forcedAdditionalProduct",
+        "legalRequirementException",
+        "hasInvoiceOrReceipt",
+        "hasContract",
+        "hasWrittenCommunication",
+        "hasWitnesses"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -24,7 +35,15 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Negativa Injustificada de Venta",
       "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
-      "parametros_requeridos": ["refusedToServe", "hadStockAvailable", "refusalReasonGiven"]
+      "parametros_requeridos": [
+        "refusedToServe",
+        "hadStockAvailable",
+        "refusalReasonGiven",
+        "hasWrittenCommunication",
+        "hasPhotosOrVideos",
+        "hasWitnesses"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -38,7 +57,16 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Envío de Productos No Solicitados",
       "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
-      "parametros_requeridos": ["receivedUnsolicitedProduct", "chargedForUnsolicitedProduct", "unsolicitedProductDescription"]
+      "parametros_requeridos": [
+        "receivedUnsolicitedProduct",
+        "chargedForUnsolicitedProduct",
+        "unsolicitedProductDescription",
+        "hasInvoiceOrReceipt",
+        "hasPaymentReceipt",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -52,7 +80,17 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Aprovechamiento de Vulnerabilidad",
       "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
-      "parametros_requeridos": ["exploitedAge", "exploitedHealth", "exploitedEducation", "exploitedCapacity", "exploitationDescription"]
+      "parametros_requeridos": [
+        "exploitedAge",
+        "exploitedHealth",
+        "exploitedEducation",
+        "exploitedCapacity",
+        "exploitationDescription",
+        "hasWitnesses",
+        "hasWrittenCommunication",
+        "hasInvoiceOrReceipt"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -66,7 +104,18 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Productos que Incumplen Normas Técnicas",
       "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
-      "parametros_requeridos": ["missingSanitaryRegistry", "failsTechnicalStandards", "serviceFailsQualityStandards", "technicalNonComplianceDescription"]
+      "parametros_requeridos": [
+        "missingSanitaryRegistry",
+        "failsTechnicalStandards",
+        "serviceFailsQualityStandards",
+        "technicalNonComplianceDescription",
+        "hasInvoiceOrReceipt",
+        "hasLabelingEvidence",
+        "hasPhotosOrVideos",
+        "hasWrittenCommunication",
+        "hasComplaintBookRecord"
+      ],
+      "articulos_procedimentales_asociados": ["70", "71"]
     }
   },
   {
@@ -80,7 +129,17 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Fórmulas de Reajuste Ilegales",
       "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
-      "parametros_requeridos": ["appliedIllegalAdjustmentFormula", "adjustmentNotInContract", "originalAmount", "adjustedAmount"]
+      "parametros_requeridos": [
+        "appliedIllegalAdjustmentFormula",
+        "adjustmentNotInContract",
+        "originalAmount",
+        "adjustedAmount",
+        "hasContract",
+        "hasInvoiceOrReceipt",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -94,7 +153,17 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Falta de Plazo en Obligaciones",
       "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": ["providerSetNoDeadline", "noDeadlineSet", "deadlineAtProviderDiscretion", "obligationWithoutDeadline"]
+      "parametros_requeridos": [
+        "providerSetNoDeadline",
+        "noDeadlineSet",
+        "deadlineAtProviderDiscretion",
+        "obligationWithoutDeadline",
+        "hasContract",
+        "hasInvoiceOrReceipt",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication"
+      ],
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
@@ -108,7 +177,15 @@
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Redondeo Ilegal de Tiempos",
       "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
-      "parametros_requeridos": ["appliedTimeRounding", "roundedAmount"]
+      "parametros_requeridos": [
+        "appliedTimeRounding",
+        "roundedAmount",
+        "hasInvoiceOrReceipt",
+        "hasPaymentReceipt",
+        "hasWrittenCommunication",
+        "hasComplaintBookRecord"
+      ],
+      "articulos_procedimentales_asociados": ["70", "91", "93"]
     }
   }
 ]

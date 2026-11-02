@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 public class GeneratingQuestionsStep implements Layer2Step {
 
     private final QuestionGeneratorAgent questionGeneratorAgent;
-    private final SessionRepository sessionRepository;
 
     @Override
     public Layer2InternalState getState() {
@@ -26,29 +25,20 @@ public class GeneratingQuestionsStep implements Layer2Step {
     public Layer2InternalState execute(Layer2ExecutionContext context) {
         SessionObject session = context.getSession();
 
-        // 1. Tomamos SOLO el parámetro que toca preguntar
         String parameter = session.getCurrentParameterBeingAsked();
+        String narrative = session.getConflictDetails().getDescription(); // <-- OBTENEMOS EL RELATO
 
-        if (parameter == null) {
-            log.error("No hay currentParameterBeingAsked. No se puede generar pregunta.");
-            return Layer2InternalState.ERROR;
-        }
-
-        // 2. Generamos UNA SOLA pregunta con el Agente (una llamada al LLM por ciclo)
-        log.info("Generando pregunta para el parámetro: {}", parameter);
         String question = questionGeneratorAgent.generateQuestion(
                 parameter,
                 session.getClaimType(),
-                session.getClarificationMessage() // Si hubo error previo, se lo pasamos
+                session.getClarificationMessage(),
+                session.getCurrentQuestionForUser(),
+                narrative // <-- LO PASAMOS AL AGENTE
         );
 
-        // 3. Guardamos la pregunta en la sesión
         session.setCurrentQuestionForUser(question);
-        sessionRepository.save(session);
+        log.info("Pregunta generada para el usuario: '{}'", question);
 
-        log.info("Pregunta generada y guardada: '{}'", question);
-
-        // 4. Pausamos el flujo para que el usuario responda
         return Layer2InternalState.WAITING_FOR_USER;
     }
 }

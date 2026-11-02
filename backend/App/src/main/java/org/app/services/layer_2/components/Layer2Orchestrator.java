@@ -32,10 +32,11 @@ public class Layer2Orchestrator {
 
         // 1. Lógica de entrada (Entry Point)
         if (session.getLayer2State() == null) {
-            log.info("Primera entrada a la Capa 2. Iniciando en DETERMINING_PARAMETERS.");
-            session.setLayer2State(Layer2InternalState.DETERMINING_PARAMETERS);
+            log.info("Primera entrada a la Capa 2. Iniciando en PRE_POPULATING_PARAMETERS.");
+            // CORRECCIÓN: Iniciamos en el nuevo estado de extracción previa
+            session.setLayer2State(Layer2InternalState.PRE_POPULATING_PARAMETERS);
 
-            // CAMBIO: Actualizamos el Phase macro para reflejar que estamos en Capa 2
+            // Actualizamos el Phase macro para reflejar que estamos en Capa 2
             session.setCurrentPhase(ClaimSessionState.DETERMINING_PARAMETERS);
 
         } else if (userInput != null && !userInput.trim().isEmpty()) {
@@ -70,7 +71,7 @@ public class Layer2Orchestrator {
             }
         }
 
-        // 3. CAMBIO: Si terminó la Capa 2, actualizamos el Phase macro para pasar a Capa 3
+        // 3. Si terminó la Capa 2, actualizamos el Phase macro para pasar a Capa 3
         if (session.getLayer2State() == Layer2InternalState.DONE) {
             log.info("Capa 2 completada. Preparando sesión para la Capa 3.");
             session.setCurrentPhase(ClaimSessionState.VIABILITY_EVALUATION); // O el Enum que tengas para Capa 3

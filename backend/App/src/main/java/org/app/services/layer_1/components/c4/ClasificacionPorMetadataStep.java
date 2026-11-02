@@ -28,7 +28,14 @@ public class ClasificacionPorMetadataStep implements Layer1Step {
         SessionObject session = context.getSession();
         log.info("-> CLASIFICACION_POR_METADATA");
 
-        classificationService.determineClaimTypes(session, context.getRetrievedDocs());
+        // Extraer la sugerencia del LLM del contexto (puede ser null si no hubo análisis previo)
+        String llmSuggestedType = null;
+        if (context.getTranslationResult() != null) {
+            llmSuggestedType = context.getTranslationResult().suggestedClaimType();
+        }
+
+        // Realizar clasificación híbrida: Qdrant + LLM + Reglas Semánticas
+        classificationService.determineClaimTypes(session, context.getRetrievedDocs(), llmSuggestedType);
 
         if (session.getClaimType() != null) {
             log.info("   Clasificación exitosa. Principal: {}, Secundario: {}", session.getClaimType(), session.getSecondaryClaimType());
