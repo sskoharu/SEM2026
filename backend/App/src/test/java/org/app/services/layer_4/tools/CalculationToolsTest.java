@@ -12,7 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CalculationToolsTest {
 
-    private final CalculationTools calculationTools = new CalculationTools(new CalculationProperties());
+    private final CalculationProperties properties = configuredProperties();
+    private final CalculationTools calculationTools = new CalculationTools(properties);
+
+    private static CalculationProperties configuredProperties() {
+        CalculationProperties properties = new CalculationProperties();
+        // Tasa de prueba explícita (12 %), independiente de la configuración de producción.
+        properties.getInteres().setTasaAnual(new BigDecimal("0.12"));
+        properties.getInteres().setVerificada(true); // Fixture sintético, no aprobación del corpus.
+        return properties;
+    }
 
     @Test
     void calculatesPercentageAndRoundsToTwoDecimals() {
@@ -36,18 +45,18 @@ class CalculationToolsTest {
 
     @Test
     void calculatesFutureDateUsingTheCurrentDate() {
-        String result = calculationTools.calculate_future_date(5);
+        String result = calculationTools.calculate_future_date("01/01/2026", 5);
         LocalDate parsedResult = LocalDate.parse(
                 result,
                 DateTimeFormatter.ofPattern("dd/MM/yyyy")
         );
 
-        assertEquals(LocalDate.now().plusDays(5), parsedResult);
+        assertEquals(LocalDate.of(2026, 1, 6), parsedResult);
     }
 
     @Test
     void futureDateUsesExpectedFormat() {
-        String result = calculationTools.calculate_future_date(0);
+        String result = calculationTools.calculate_future_date("01/01/2026", 0);
 
         assertTrue(result.matches("\\d{2}/\\d{2}/\\d{4}"));
     }

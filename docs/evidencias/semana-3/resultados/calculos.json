@@ -1,0 +1,81 @@
+{
+  "scope" : "Funciones deterministas con datos sintéticos; tasa de prueba, no certificación jurídica",
+  "executed" : 15,
+  "passed" : 15,
+  "cases" : [ {
+    "expected" : "15.00",
+    "observed" : "15.00",
+    "passed" : true,
+    "id" : "P01"
+  }, {
+    "expected" : "0.00",
+    "observed" : "0.00",
+    "passed" : true,
+    "id" : "P02"
+  }, {
+    "expected" : "99.99",
+    "observed" : "99.99",
+    "passed" : true,
+    "id" : "P03"
+  }, {
+    "expected" : "12.35",
+    "observed" : "12.35",
+    "passed" : true,
+    "id" : "P04"
+  }, {
+    "expected" : "0.00",
+    "observed" : "0.00",
+    "passed" : true,
+    "id" : "P05"
+  }, {
+    "expected" : "9.86",
+    "observed" : "9.86",
+    "passed" : true,
+    "id" : "I01"
+  }, {
+    "expected" : "120.00",
+    "observed" : "120.00",
+    "passed" : true,
+    "id" : "I02"
+  }, {
+    "expected" : "0.00",
+    "observed" : "0.00",
+    "passed" : true,
+    "id" : "I03"
+  }, {
+    "expected" : "0.00",
+    "observed" : "0.00",
+    "passed" : true,
+    "id" : "I04"
+  }, {
+    "expected" : "06/01/2026",
+    "observed" : "06/01/2026",
+    "passed" : true,
+    "id" : "D01"
+  }, {
+    "expected" : "29/02/2024",
+    "observed" : "29/02/2024",
+    "passed" : true,
+    "id" : "D02"
+  }, {
+    "expected" : "01/01/2027",
+    "observed" : "01/01/2027",
+    "passed" : true,
+    "id" : "D03"
+  }, {
+    "expected" : "REJECTED",
+    "observed" : "REJECTED",
+    "passed" : true,
+    "id" : "E01"
+  }, {
+    "expected" : "REJECTED",
+    "observed" : "REJECTED",
+    "passed" : true,
+    "id" : "E02"
+  }, {
+    "expected" : "REJECTED",
+    "observed" : "REJECTED",
+    "passed" : true,
+    "id" : "E03"
+  } ]
+}

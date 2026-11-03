@@ -48,7 +48,7 @@ public class NarrativeAnalysisAgent {
             </REGLA_DE_EXCEPCION_BIEN_SERVICIO>
             """.formatted(context.incidentDescription());
 
-        return chatClient.prompt()
+        return chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM)
                 .user(prompt)
                 .call()
                 .entity(NarrativeAnalysisResult.class);

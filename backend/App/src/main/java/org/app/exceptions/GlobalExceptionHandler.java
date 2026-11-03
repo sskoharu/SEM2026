@@ -206,7 +206,7 @@ public class GlobalExceptionHandler {
         // Fallback genérico para cualquier otra RuntimeException
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("La operación falló definitivamente: " + rootCause.getMessage());
+                .body("No fue posible completar la operación. Intente más tarde.");
     }
 
     @ExceptionHandler(NonTransientAiException.class)

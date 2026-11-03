@@ -18,7 +18,7 @@ export function FormularioReclamo({ form, errores, estado, cambiar, analizar, re
           Registrar nuevo reclamo
         </h2>
         <p>
-          Describe el problema para que la capa 1 del backend determine qué información necesita.
+          Describa los hechos sin nombres, identificaciones ni datos de contacto reales. El relato se procesa con IA; la identificación se completa después, fuera del modelo.
         </p>
       </div>
       <form onSubmit={analizar} noValidate aria-describedby={errores.length ? 'errores-reclamo' : undefined}>

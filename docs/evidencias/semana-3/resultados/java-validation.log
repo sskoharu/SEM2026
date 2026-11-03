@@ -1,0 +1,204 @@
+[INFO] Scanning for projects...
+[INFO] Loaded 24340 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] 
+[INFO] --------------------< org.example:Backend_Artifact >--------------------
+[INFO] Building Backend_Artifact 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ Backend_Artifact ---
+[INFO] Deleting C:\Users\User\Documents\Codex\2026-11-02\files-mentioned-by-the-user-sem2026\work\project\backend\App\target
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ Backend_Artifact ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 14 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ Backend_Artifact ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 134 source files with javac [debug parameters release 21] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ Backend_Artifact ---
+[INFO] skip non existing resourceDirectory C:\Users\User\Documents\Codex\2026-11-02\files-mentioned-by-the-user-sem2026\work\project\backend\App\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ Backend_Artifact ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 15 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ Backend_Artifact ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.app.controllers.ClaimControllerTest
+19:53:54.349 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [org.app.controllers.ClaimControllerTest]: ClaimControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:53:54.674 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration org.app.AppApplication for test class org.app.controllers.ClaimControllerTest
+19:53:54.683 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [org.app.controllers.ClaimControllerTest]: ClaimControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:53:54.707 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration org.app.AppApplication for test class org.app.controllers.ClaimControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-02 19:53:55 [main] INFO  o.a.controllers.ClaimControllerTest - Starting ClaimControllerTest using Java 21.0.12.1 with PID 21268 (started by User in C:\Users\User\Documents\Codex\2026-11-02\files-mentioned-by-the-user-sem2026\work\project\backend\App)
+2026-11-02 19:53:55 [main] INFO  o.a.controllers.ClaimControllerTest - No active profile set, falling back to 1 default profile: "default"
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\User\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.11\byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-11-02 19:54:08 [main] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-11-02 19:54:08 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-11-02 19:54:08 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 10 ms
+2026-11-02 19:54:09 [main] INFO  o.a.controllers.ClaimControllerTest - Started ClaimControllerTest in 14.187 seconds (process running for 16.565)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.23 s -- in org.app.controllers.ClaimControllerTest
+[INFO] Running org.app.eval.AcademicCalculationCasesTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.964 s -- in org.app.eval.AcademicCalculationCasesTest
+[INFO] Running org.app.eval.EvaluacionRagTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.161 s -- in org.app.eval.EvaluacionRagTest
+[INFO] Running org.app.security.SessionAuthorizationFilterTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.162 s -- in org.app.security.SessionAuthorizationFilterTest
+[INFO] Running org.app.security.SessionPersistenceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.361 s -- in org.app.security.SessionPersistenceTest
+[INFO] Running org.app.services.DocumentApprovalIntegrationTest
+2026-11-02 19:54:15 [main] INFO  o.a.s.l.c1.DocumentGeneratorService - Iniciando generación del documento Word...
+2026-11-02 19:54:18 [main] INFO  o.a.s.l.c1.DocumentGeneratorService - Documento Word generado exitosamente en memoria.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.394 s -- in org.app.services.DocumentApprovalIntegrationTest
+[INFO] Running org.app.services.FiveLayerWorkflowTest
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c1.InitialAnalysisService - Iniciando análisis previo (Gatekeeper) para un nuevo relato.
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c1.InitialAnalysisService - Relato válido y suficiente. Preparando sesión para evaluación jurídica en el Orquestador.
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c1.InitialAnalysisService - Sesión 59b845eb-63c9-4f87-b599-3e5a756115b6 lista para el Orquestador. Iniciando con evaluación jurídica.
+2026-11-02 19:54:19 [main] INFO  o.a.s.layer_1.Layer1Orchestrator - Iniciando Orquestador Capa 1 para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c3.TraduciendoQueryStep - -> TRADUCIENDO_QUERY (Intento 1)
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c3.TraduciendoQueryStep -    🧠 LLM sugiere tipo de reclamo: VICIOS_OCULTOS_CALIDAD (confianza: 5)
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c2.BuscandoFuentesStep - -> BUSCANDO_FUENTES
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c2.BuscandoFuentesStep -    Se recuperaron 1 documentos de Qdrant.
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c3.EvaluandoPrecisionStep - -> EVALUANDO_PRECISION
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c3.EvaluandoPrecisionStep -    Se encontraron documentos sobre el umbral de similitud. Pasando a Clasificación.
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.ClasificacionPorMetadataStep - -> CLASIFICACION_POR_METADATA
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.MetadataClassificationService - 🧠 LLM sugiere tipo: VICIOS_OCULTOS_CALIDAD (con peso +2)
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.MetadataClassificationService - 📊 Votación híbrida: [VICIOS_OCULTOS_CALIDAD=3]
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.MetadataClassificationService -    No se aplicó ninguna regla de desempate. Tipo votado: VICIOS_OCULTOS_CALIDAD
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.MetadataClassificationService - ✅ ClaimType Principal FINAL: VICIOS_OCULTOS_CALIDAD | Artículos base: [20]
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.MetadataClassificationService - 📝 Parámetros requeridos para la Capa 2: [pricePaid]
+2026-11-02 19:54:19 [main] INFO  o.a.s.l.c.c.ClasificacionPorMetadataStep -    Clasificación exitosa. Principal: VICIOS_OCULTOS_CALIDAD, Secundario: null
+2026-11-02 19:54:19 [main] INFO  o.a.s.layer_1.Layer1Orchestrator - Capa 1 finalizada exitosamente. Preparando el sistema para la Capa 2.
+2026-11-02 19:54:19 [main] INFO  o.a.s.layer_1.Layer1Orchestrator - Orquestador finalizado. Estado final Capa 1: DONE
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.Layer2Orchestrator - Iniciando/Reanudando Orquestador Capa 2 para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.Layer2Orchestrator - Primera entrada a la Capa 2. Iniciando en PRE_POPULATING_PARAMETERS.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.c.PrePopulatingParametersStep - -> PRE_POPULATING_PARAMETERS | Analizando el relato original...
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.c.PrePopulatingParametersStep - Usando agente especializado: ILayer2ExtractionAgent$MockitoMock$FCVId7Ko
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.c.PrePopulatingParametersStep - El relato ya contenía los siguientes parámetros: [pricePaid]
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.c.PrePopulatingParametersStep - El agente no marcó ningún parámetro como irrelevante.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.c.DeterminingParametersToAskStep - Todos los parámetros han sido recolectados. Pasando a Capa 3.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.Layer2Orchestrator - Capa 2 completada. Preparando sesión para la Capa 3.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.Layer2Orchestrator - Capa 2 pausada/finalizada. Estado final: DONE
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Iniciando/Reanudando Orquestador Capa 3 para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Primera entrada a la Capa 3. Iniciando en EVALUATING_VIABILITY.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c1.EvaluatingViabilityStep - -> EVALUATING_VIABILITY | Generando razonamiento jurídico...
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c1.EvaluatingViabilityStep - Razonamiento completado. Viabilidad: MEDIO
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c2.PresentingReportStep - -> PRESENTING_REPORT | Informe preparado para revisión
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Capa 3 pausada/finalizada. Estado final: WAITING_FOR_DECISION
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Iniciando/Reanudando Orquestador Capa 3 para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - El usuario aceptó el informe. Pasando a GENERATING_ACTION_ROUTE.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c3.GeneratingActionRouteStep - -> GENERATING_ACTION_ROUTE | Generando propuestas de proceder legal...
+2026-11-02 19:54:20 [main] WARN  o.a.s.l.c3.GeneratingActionRouteStep - No se encontraron artículos procedimentales. Usando los aplicables como respaldo.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c3.GeneratingActionRouteStep - Se generaron 1 opciones de proceder legal.
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Capa 3 pausada/finalizada. Estado final: WAITING_FOR_ACTION_SELECTION
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Iniciando/Reanudando Orquestador Capa 3 para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Opción de proceder seleccionada: choice. Pasando a VALIDATING_PROCEDURAL_INPUT.
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c5.FinalizingProcedureStep - -> FINALIZING_PROCEDURE | Consolidando datos para la Capa 4...
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c5.FinalizingProcedureStep - Plan de ejecución preparado para Capa 4.
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Capa 3 completada. Preparando sesión para la Capa 4.
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Capa 3 pausada/finalizada. Estado final: DONE
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_4.Layer4Orchestrator - Iniciando cálculos para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c.CalculationExecutorService - No hay tareas de cálculo pendientes.
+2026-11-02 19:54:20 [main] INFO  o.a.s.layer_4.Layer4Orchestrator - Cálculos completados para sesión: 59b845eb-63c9-4f87-b599-3e5a756115b6
+2026-11-02 19:54:20 [main] INFO  o.a.s.l.c1.DocumentGeneratorService - Iniciando generación del documento Word...
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c1.DocumentGeneratorService - Documento Word generado exitosamente en memoria.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.050 s -- in org.app.services.FiveLayerWorkflowTest
+[INFO] Running org.app.services.layer_2.components.tools.ValidationToolsTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in org.app.services.layer_2.components.tools.ValidationToolsTest
+[INFO] Running org.app.services.layer_4.c2.CalculationExecutorServiceTest
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] WARN  o.a.s.l.c.CalculationExecutorService - Tarea de cálculo rechazada por parámetros o destino inválidos.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] WARN  o.a.s.l.c.CalculationExecutorService - Tarea de cálculo rechazada por parámetros o destino inválidos.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] WARN  o.a.s.l.c.CalculationExecutorService - Tarea de cálculo rechazada por parámetros o destino inválidos.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] WARN  o.a.s.l.c.CalculationExecutorService - Tarea de cálculo rechazada por parámetros o destino inválidos.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Cálculo completado para un destino autorizado.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] ERROR o.a.s.l.c.CalculationExecutorService - Falló una tarea de cálculo validada: calculate_percentage
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 4 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Cálculo completado para un destino autorizado.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Cálculo completado para un destino autorizado.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Cálculo completado para un destino autorizado.
+2026-11-02 19:54:21 [main] WARN  o.a.s.l.c.CalculationExecutorService - Límite de 3 tareas de cálculo alcanzado.
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Ejecutando 1 tareas de cálculo deterministas...
+2026-11-02 19:54:21 [main] INFO  o.a.s.l.c.CalculationExecutorService - Cálculo completado para un destino autorizado.
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.142 s -- in org.app.services.layer_4.c2.CalculationExecutorServiceTest
+[INFO] Running org.app.services.layer_4.tools.CalculationToolsTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in org.app.services.layer_4.tools.CalculationToolsTest
+[INFO] Running org.app.services.LegalRuleRegistryTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s -- in org.app.services.LegalRuleRegistryTest
+[INFO] Running org.app.services.ParameterAndCitationPolicyTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in org.app.services.ParameterAndCitationPolicyTest
+[INFO] Running org.app.services.PromptConstructionTest
+2026-11-02 19:54:21 [main] INFO  o.a.s.layer_3.c1.LegalReasoningAgent - Iniciando razonamiento jurídico para sesión: null
+2026-11-02 19:54:21 [main] INFO  o.a.s.layer_3.c1.LegalReasoningAgent - Iniciando razonamiento jurídico para sesión: null
+2026-11-02 19:54:21 [main] WARN  o.a.s.layer_3.c1.LegalReasoningAgent - Sin fragmentos jurídicos recuperados para sesión null
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.384 s -- in org.app.services.PromptConstructionTest
+[INFO] Running org.app.services.RetrievalPolicyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 s -- in org.app.services.RetrievalPolicyTest
+[INFO] Running org.app.services.SessionTransitionsTest
+2026-11-02 19:54:22 [main] INFO  o.a.s.layer_4.Layer4Orchestrator - Iniciando cálculos para sesión: null
+2026-11-02 19:54:22 [main] INFO  o.a.s.layer_4.Layer4Orchestrator - Iniciando cálculos para sesión: null
+2026-11-02 19:54:22 [main] INFO  o.a.s.layer_4.Layer4Orchestrator - Cálculos completados para sesión: null
+2026-11-02 19:54:22 [main] INFO  o.a.s.layer_3.Layer3Orchestrator - Iniciando/Reanudando Orquestador Capa 3 para sesión: null
+2026-11-02 19:54:22 [main] WARN  o.a.s.layer_3.Layer3Orchestrator - Se rechazó continuar una evaluación detenida: null
+2026-11-02 19:54:22 [main] WARN  o.a.s.layer_3.c2.BatchValidatingStep - Lote rechazado por validación del parámetro 'purchaseDate'
+2026-11-02 19:54:22 [main] INFO  o.a.s.layer_3.c2.BatchValidatingStep - Se aplicaron 1 correcciones validadas
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s -- in org.app.services.SessionTransitionsTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 54, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ Backend_Artifact ---
+[INFO] Building jar: C:\Users\User\Documents\Codex\2026-11-02\files-mentioned-by-the-user-sem2026\work\project\backend\App\target\Backend_Artifact-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:4.1.1:repackage (repackage) @ Backend_Artifact ---
+[INFO] Loaded 50 auto-discovered prefixes for remote repository ow2-snapshot (prefixes-ow2-snapshot.txt)
+[INFO] Replacing main artifact C:\Users\User\Documents\Codex\2026-11-02\files-mentioned-by-the-user-sem2026\work\project\backend\App\target\Backend_Artifact-1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\User\Documents\Codex\2026-11-02\files-mentioned-by-the-user-sem2026\work\project\backend\App\target\Backend_Artifact-1.0-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:07 min
+[INFO] Finished at: 2026-11-02T19:54:25-05:00
+[INFO] ------------------------------------------------------------------------

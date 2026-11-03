@@ -25,7 +25,7 @@ public class ActionRouteAgent {
 
         String narrative = session.getConflictDetails().getDescription();
         String claimType = session.getClaimType().name();
-        String collectedParams = session.getCollectedParameters().toString();
+        String collectedParams = org.app.services.ModelInputPolicy.safeParameters(session.getCollectedParameters());
 
         String promptTemplate = """
             <ROL>
@@ -37,6 +37,9 @@ public class ActionRouteAgent {
             Hechos del usuario: "[NARRATIVA]"
             Datos ya recolectados del usuario: [COLLECTED_PARAMS]
             
+            Cada opción debe incluir sourceId y supportingQuote. supportingQuote debe ser
+            una cita textual exacta de al menos diez caracteres de la fuente sourceId.
+            No crees opciones sin respaldo. No decidas constantes jurídicas por memoria.
             Artículos de proceder aplicables (Sanciones/Acciones):
             [PROCEDURAL_ARTICLES]
             </ESCENARIO>
@@ -115,7 +118,7 @@ public class ActionRouteAgent {
                 .replace("[COLLECTED_PARAMS]", collectedParams)
                 .replace("[PROCEDURAL_ARTICLES]", proceduralArticlesText);
 
-        ActionRouteResult result = chatClient.prompt()
+        ActionRouteResult result = chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM)
                 .user(prompt)
                 .call()
                 .entity(ActionRouteResult.class);
@@ -188,7 +191,7 @@ public class ActionRouteAgent {
             Object existingValue = session.getCollectedParameters().get(param.getParameterName());
             if (existingValue != null) {
                 param.setCurrentValue(existingValue.toString());
-                log.debug("Parámetro '{}' inyectado desde Capa 2 con valor: {}", param.getParameterName(), existingValue);
+                log.debug("Parámetro recopilado incorporado a la opción: {}", param.getParameterName());
             }
         }
     }

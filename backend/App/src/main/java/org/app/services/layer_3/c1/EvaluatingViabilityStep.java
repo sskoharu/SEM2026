@@ -54,7 +54,17 @@ public class EvaluatingViabilityStep implements Layer3Step {
         // Opcional: Guardar los "parameterStrengths" en la sesión si quieres mostrarlos en detalle
         log.info("Razonamiento completado. Viabilidad: {}", report.overallViability());
 
-        // 4. Pasamos a presentar el informe
+        // Sin citas válidas no existe evaluación jurídica verificable.
+        // No confundir esta abstención con una viabilidad BAJO sustentada.
+        if (session.getCitedSourceIds() == null || session.getCitedSourceIds().isEmpty()) {
+            session.setClarificationMessage(
+                    "No se pudo emitir una evaluación jurídica respaldada por fuentes verificables. "
+                    + "No es posible aceptar el informe ni generar una ruta de acción.");
+            log.warn("Evaluación jurídica sin respaldo: sesión {}", session.getSessionId());
+            return Layer3InternalState.ERROR;
+        }
+
+        // 4. Solo presentamos informes respaldados por citas verificadas.
         return Layer3InternalState.PRESENTING_REPORT;
     }
 }

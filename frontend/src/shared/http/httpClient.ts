@@ -16,6 +16,7 @@ export type OpcionesHttp<T> = {
   idempotencia?: { clave: string; garantizadaPorServidor: true }
   validar: (datos: unknown) => datos is T
   leerTokens?: (datos: T) => Tokens
+  alRecibir?: (datos: T, cabeceras: Headers) => void
 }
 
 function validarOpciones<T>(opciones: OpcionesHttp<T>, politica: PoliticaReintentos, timeout: number) {
@@ -75,6 +76,7 @@ async function ejecutarIntento<T>(url: string, opciones: OpcionesHttp<T>, timeou
     } catch {
       throw crearError('invalida', respuesta.status)
     }
+    opciones.alRecibir?.(datos, respuesta.headers)
     return { datos, codigo: respuesta.status }
   } catch (error) {
     if (opciones.senal?.aborted) throw crearError('cancelacion', codigoHttp)

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name = "rag.smoke-test-on-start", havingValue = "true")
 @Order(2) // Se ejecuta después del IngestionRunner
 @Log4j2
 public class VectorSearchTestRunner implements CommandLineRunner {

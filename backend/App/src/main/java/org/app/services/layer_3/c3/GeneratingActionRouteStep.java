@@ -45,20 +45,55 @@ public class GeneratingActionRouteStep implements Layer3Step {
         }
 
         // 2. Buscar el texto completo en Qdrant
+        if (proceduralArticleNumbers == null || proceduralArticleNumbers.isEmpty()) {
+            session.setClarificationMessage("No se encontraron artículos jurídicos para fundamentar una acción. Aporta más detalles del reclamo.");
+            log.warn("Se detiene la generación de acciones: no hay artículos de respaldo.");
+            return Layer3InternalState.ERROR;
+        }
+
         List<Document> docs = vectorSearchTool.getArticlesByNumbers(proceduralArticleNumbers);
+        if (docs == null || docs.isEmpty()) {
+            session.setClarificationMessage("No se recuperaron fuentes jurídicas suficientes para proponer acciones. Revisa el relato y vuelve a intentarlo.");
+            log.warn("Se detiene la generación de acciones: Qdrant no devolvió documentos.");
+            return Layer3InternalState.ERROR;
+        }
         String proceduralText = docs.stream()
-                .map(Document::getText)
+                .map(doc -> "[FUENTE " + doc.getMetadata().get("original_id") + "]\n" + doc.getText())
                 .collect(Collectors.joining("\n\n---\n\n"));
 
         // 3. Llamar al Agente para generar las opciones
         ActionRouteResult result = actionRouteAgent.generateActionRoutes(session, proceduralText);
 
         // 4. VALIDACIÓN Y LIMPIEZA (Evitar duplicidad de tiempo/plazos)
-        if (result != null && result.getOptions() != null) {
+        if (result != null && result.getOptions() != null && !result.getOptions().isEmpty()) {
             for (ProceduralOption option : result.getOptions()) {
+                boolean supported = option != null && option.getSourceId() != null
+                        && option.getSupportingQuote() != null && option.getSupportingQuote().length() >= 10
+                        && docs.stream().anyMatch(doc -> option.getSourceId().equals(String.valueOf(doc.getMetadata().get("original_id")))
+                                && doc.getText().contains(option.getSupportingQuote())
+                                && String.valueOf(doc.getMetadata().get("numero_articulo")).equals(option.getBasedOnArticle()));
+                if (!supported) {
+                    session.setClarificationMessage("No se pudo verificar el respaldo textual de las opciones. Se requiere revisión.");
+                    return Layer3InternalState.ERROR;
+                }
                 removeDuplicateParameters(option);
             }
             session.setActionRouteOptions(result);
+            var sources = new java.util.ArrayList<>(session.getLegalSources());
+            for (Document document : docs) {
+                String id = String.valueOf(document.getMetadata().get("original_id"));
+                if (sources.stream().noneMatch(source -> id.equals(source.getId()))) {
+                    var source = new org.app.schemas.session_object.LegalSource(
+                            id,
+                            String.valueOf(document.getMetadata().getOrDefault("ley", "")),
+                            String.valueOf(document.getMetadata().getOrDefault("numero_articulo", "")),
+                            document.getText(),
+                            String.valueOf(document.getMetadata().getOrDefault("url", "")),
+                            String.valueOf(document.getMetadata().getOrDefault("vigencia", "No verificada")));
+                    sources.add(source);
+                }
+            }
+            session.setLegalSources(sources);
             log.info("Se generaron {} opciones de proceder legal.", result.getOptions().size());
         } else {
             log.error("El ActionRouteAgent no devolvió opciones válidas.");
@@ -91,9 +126,6 @@ public class GeneratingActionRouteStep implements Layer3Step {
                         (userParam.getParameterName().contains("plazo") && deterministicNames.stream().anyMatch(d -> d.contains("fecha")))
         );
 
-        // Si la lista queda vacía, la seteamos a null para limpiar el JSON
-        if (option.getUserInputsRequired().isEmpty()) {
-            option.setUserInputsRequired(null);
-        }
+        // Mantener lista vacía, no null: la validación posterior la recorre.
     }
 }

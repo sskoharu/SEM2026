@@ -1,0 +1,12 @@
+✔ sin observaciones no acredita ningún umbral y registra los veinte faltantes (113.7865ms)
+✔ los IDs duplicados se rechazan en lugar de sustituir observaciones (89.8023ms)
+✔ una cita adicional no recuperada invalida ese resultado (118.108ms)
+✔ sin revisión de citas el porcentaje no se declara acreditado (97.8135ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 544.9828

@@ -14,13 +14,25 @@ public class CalculationProperties {
     }
 
     public static class Interes {
-        private BigDecimal tasaAnual = new BigDecimal("0.12");
+        private BigDecimal tasaAnual;
+        private boolean verificada;
+
+        public boolean isVerificada() {
+            return verificada;
+        }
+
+        public void setVerificada(boolean verificada) {
+            this.verificada = verificada;
+        }
 
         public BigDecimal getTasaAnual() {
             return tasaAnual;
         }
 
         public void setTasaAnual(BigDecimal tasaAnual) {
+            if (tasaAnual == null || tasaAnual.signum() < 0 || tasaAnual.compareTo(BigDecimal.ONE) > 0) {
+                throw new IllegalArgumentException("La tasa anual debe estar entre 0 y 1.");
+            }
             this.tasaAnual = tasaAnual;
         }
     }

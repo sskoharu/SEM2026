@@ -1,0 +1,46 @@
+{
+  "status": "PARCIALMENTE_OPERATIVO",
+  "verified_at": "2026-11-03T00:55:28.237Z",
+  "source": "Directorio actual Downloads/SEM2026-feature-semana3-evidencias/SEM2026-feature-semana3-evidencias; copia de trabajo sin target/node_modules/.git/.idea",
+  "java": {
+    "command": "backend/App/mvnw.cmd -o -B clean verify (desde backend/App)",
+    "status": "PASO",
+    "tests": 54,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "artifact_packaged": true
+  },
+  "frontend": {
+    "build": "PASO",
+    "typescript": "PASO",
+    "command": "npm run build; npm test (desde frontend)",
+    "tests": 52,
+    "passed": 52
+  },
+  "evaluator": {
+    "command": "node --test eval/evaluador.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "scope": "Fixtures aislados, no respuestas reales de Gemini"
+  },
+  "deterministic_tools": {
+    "tested": 15,
+    "passed": 15,
+    "percentage": 100,
+    "scope": "Funciones deterministas con datos sintéticos; tasa de prueba, no certificación jurídica"
+  },
+  "rag": {
+    "expected": 20,
+    "executed": 0,
+    "status": "NO_VERIFICADO",
+    "reason": "No hay URL de una instancia de evaluación disponible. No se iniciaron servicios ni se modificó la base."
+  },
+  "classification": {
+    "prepared": 12,
+    "executed": 0,
+    "status": "NO_VERIFICADO"
+  },
+  "database_operations": "No se iniciaron servicios externos ni se ejecutó ingesta ni cambios en Redis/Qdrant.",
+  "dependencies": "Versiones preservadas. npm audit --omit=dev reportó cero vulnerabilidades; npm ci advirtió doce moderadas al incluir desarrollo. No se ejecutó audit fix."
+}

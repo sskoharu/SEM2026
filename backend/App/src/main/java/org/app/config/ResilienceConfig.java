@@ -20,7 +20,7 @@ public class ResilienceConfig implements RetryListener {
 
     // 2. Se ejecuta cuando la operación FALLA en uno de los intentos
     public void onRetryFailure(RetryPolicy retryPolicy, Retryable<?> retryable, Throwable throwable) {
-        log.error("❌ Fallo en la ejecución del método. Causa: {}", throwable.getMessage());
+        log.error("Fallo transitorio del proveedor: {}", throwable.getClass().getSimpleName());
     }
 
     // 3. Se ejecuta cuando la operación es EXITOSA en alguno de los reintentos

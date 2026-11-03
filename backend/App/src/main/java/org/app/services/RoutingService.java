@@ -13,7 +13,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Log4j2
 public class RoutingService {
 
-    @Value("classpath:/prompts/system_prompt_layer_1.st")
+    @Value("classpath:/prompts/system_v3.st")
     private Resource systemPrompt;
 
     private final ChatClient chatClient;

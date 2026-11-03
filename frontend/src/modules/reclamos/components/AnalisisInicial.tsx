@@ -16,9 +16,13 @@ type Propiedades = {
   completar: () => void
   aceptarCapa3: () => void
   evaluarCapa3: () => void
+  seleccionarAccion: (id: string) => void
+  enviarFormulario: () => void
+  datosProcedimiento: Record<string, string>
+  cambiarDato: (clave: string, valor: string) => void
 }
 
-export function AnalisisInicial({ estado, analisis, respuestas, mensaje, errorSolicitud, metrica, cambiarRespuesta, completar, evaluarCapa3, aceptarCapa3 }: Propiedades) {
+export function AnalisisInicial({ estado, analisis, respuestas, mensaje, errorSolicitud, metrica, cambiarRespuesta, completar, evaluarCapa3, aceptarCapa3, seleccionarAccion, enviarFormulario, datosProcedimiento, cambiarDato }: Propiedades) {
   return (
     <section className="panel analysis-panel" aria-live="polite">
       <div className="panel-heading">
@@ -77,7 +81,7 @@ export function AnalisisInicial({ estado, analisis, respuestas, mensaje, errorSo
         </div>}
         {estado === 'preguntas' && analisis.preguntas.length > 0 &&
           <PreguntasComplementarias analisis={analisis} respuestas={respuestas} cambiarRespuesta={cambiarRespuesta} completar={completar} />}
-        {estado === 'final' && <ResultadoFinal analisis={analisis} evaluar={evaluarCapa3} aceptar={aceptarCapa3} />}
+        {estado === 'final' && <ResultadoFinal analisis={analisis} evaluar={evaluarCapa3} aceptar={aceptarCapa3} seleccionarAccion={seleccionarAccion} enviarFormulario={enviarFormulario} datosProcedimiento={datosProcedimiento} cambiarDato={cambiarDato} />}
         <div className="analysis-card guidance">
           <h3>
             Orientaciones generales
@@ -95,6 +99,7 @@ export function AnalisisInicial({ estado, analisis, respuestas, mensaje, errorSo
           {' '}Tokens de entrada, salida y total: {`${metrica.tokensEntrada ?? 'no disponibles'}, ${metrica.tokensSalida ?? 'no disponibles'}, ${metrica.tokensTotal ?? 'no disponibles'}.`}
         </p>
       )}
+      {errorSolicitud && estado === 'final' && <MensajeError mensaje={errorSolicitud} />}
       {mensaje && <div className="feedback" role="status">{mensaje}</div>}
     </section>
   )

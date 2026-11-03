@@ -1,63 +1,33 @@
-# Arquitectura implementada
+# Arquitectura de las cinco capas
 
-Este documento describe el código actual, no una arquitectura propuesta.
+Se conserva Java 21, Spring Boot, Spring AI/Gemini, Qdrant, Redis y React/TypeScript. No se incorporan otros frameworks ni se sustituyen servicios.
 
-## Componentes
+React → filtro de autorización → controladores → orquestadores → pasos/DTO → repositorio de sesión Redis.
 
-- **Frontend:** React/TypeScript/Vite, en `frontend/`.
-- **API:** Spring Boot en `backend/App`, con controladores bajo
-  `org.app.controllers`.
-- **Modelo conversacional:** Gemini configurado mediante el cliente compatible
-  con OpenAI de Spring AI. El nombre vigente está en
-  `spring.ai.openai.chat.options.model`.
-- **Embeddings:** `gemini-embedding-001`, implementado por
-  `GoogleEmbeddingModel`.
-- **Base vectorial:** Qdrant, mediante `QdrantVectorStore`.
-- **Sesiones:** Redis.
-- **Corpus normalizado:** JSON bajo
-  `backend/App/src/main/resources/data/lodc/`.
+## Capa 1
 
-Qdrant y el modelo se configuran mediante `LLM_API_KEY` y `QDRANT_API_KEY`;
-ninguna de esas claves debe escribirse en el repositorio.
+InitialAnalysisService valida/minimiza la entrada; NarrativeAnalysisAgent analiza el dominio. Layer1Orchestrator coordina traducción, búsqueda híbrida y clasificación. CorpusPolicy excluye fuentes no aprobadas y texto con patrones adversariales. Sin fuentes, se solicita aclaración.
 
-## Flujo real de una consulta
+## Capa 2
 
-1. El frontend envía el relato y los datos del reclamo al endpoint actual.
-2. El backend valida la entrada y anonimiza nombres y cédulas antes de enviar
-   información al modelo.
-3. Los agentes de extracción producen datos estructurados; el código Java
-   conserva las decisiones deterministas fuera del modelo.
-4. `LodcDataIngestionRunner` lee los JSON del classpath, crea documentos con
-   metadatos de artículo y los inserta en Qdrant al iniciar la aplicación.
-5. `VectorSearchTool` ejecuta `similaritySearch` con `topK` solicitado y
-   umbral de similitud `0.75`.
-6. La clasificación usa los metadatos recuperados y reglas del servicio de
-   clasificación. Los artículos aplicables se conservan en
-   `SessionObject.applicableArticles`.
-7. Si no se recuperan documentos, `EvaluandoPrecisionStep` dirige el flujo a
-   una aclaración en lugar de fabricar una fuente.
-8. Las herramientas de cálculo permitidas son:
-   `calculate_future_date`, `calculate_legal_interest` y
-   `calculate_percentage`. `CalculationExecutorService` limita cada plan a
-   tres tareas y registra `MAX_ITER_EXCEEDED` si se excede.
-9. El flujo puede quedar en `WAITING_FOR_DECISION`; el endpoint de aceptación
-   permite continuar después de la decisión del usuario.
+ExtractionAgentFactory usa el extractor específico de vicios ocultos o GenericExtractionAgent. PrePopulatingParametersStep acepta únicamente claves requeridas validadas por ParameterValidator; no permite que el modelo retire requisitos. Las respuestas manuales y lotes usan validación determinista. Datos desconocidos permanecen pendientes.
 
-## Lo que no está implementado
+## Capa 3
 
-No forman parte de la implementación actual:
+LegalReasoningAgent entrega fragmentos delimitados con IDs. CitationPolicy exige citas textuales exactas y rechaza prosa jurídica sin respaldo. Esto verifica correspondencia textual, no sustituye revisión humana de aplicabilidad. La falta de citas produce ERROR terminal. Las opciones deben identificar su fuente y quote exacto. Las correcciones solo se admiten antes de la aceptación e invalidan resultados derivados.
 
-- ChromaDB.
-- DeepSeek-R1.
-- Las herramientas con nombres `evidencia_faltante`, `buscar_normativa` o
-  `generar_documento`.
-- Un `ClaimAgentService` independiente con contador de todos los ciclos
-  internos de tool calling.
-- Un flujo completo de borrador pendiente, confirmación específica y envío a
-  una autoridad.
-- Un runner que ejecute automáticamente los 20 casos contra Qdrant y genere
-  métricas de recuperación y cita.
+## Capa 4
 
-Los PDF y HTML de `data/raw/` son fuentes originales disponibles en el repo,
-pero la ingesta implementada usa los JSON normalizados de
-`src/main/resources/data/lodc`.
+El modelo propone un plan, sin ejecutar herramientas directamente. Java limita tres intentos, impide destinos nuevos o reservados, verifica argumentos confirmados y comprueba pendientes/errores antes de avanzar. Las fechas usan fecha inicial explícita. Interés no revisado y constantes jurídicas del modelo quedan bloqueados. LegalRuleRegistry permite únicamente reglas explícitas revisadas en config/reglas_juridicas.json; el registro entregado está vacío. Un marcador ERROR_CALCULO se restaura a pendiente para reintentar.
+
+## Capa 5
+
+El DTO valida datos documentales separados del modelo. La vista previa genera el DOCX una sola vez, extrae todo su texto y conserva sus bytes. Un snapshot vincula identidad aportada, relato, parámetros, fuentes, selección y plan. La descarga exige aprobación, previewId y snapshot iguales; no vuelve a redactar. Se marca COMPLETED y React cierra el flujo.
+
+## Autorización y concurrencia
+
+SessionAuthorizationFilter protege todas las rutas sensibles por token aleatorio de 256 bits separado del UUID. SessionAccess compara hashes en tiempo constante. El token no se persiste en el navegador ni aparece en cuerpos de respuesta. El mapper Redis conserva hash y bytes; JSON de API los excluye. Los locks locales serializan solicitudes de la misma sesión en una instancia. La coordinación entre réplicas no está implementada.
+
+## Límites acreditados
+
+Las pruebas de integración usan dobles de IA/vectorial/Redis; las de DOCX usan POI y plantilla reales. No hay demostración con los servicios externos en esta corrida. Ninguna prueba sintética acredita precisión RAG ni vigencia normativa.

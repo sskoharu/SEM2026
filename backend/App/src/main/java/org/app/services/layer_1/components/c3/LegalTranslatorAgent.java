@@ -152,7 +152,7 @@ public class LegalTranslatorAgent {
             </CONSIGNA>
             """.formatted(originalNarrative, context, attempt);
 
-        return chatClient.prompt()
+        return chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM)
                 .user(prompt)
                 .call()
                 .entity(LegalTranslationResult.class);

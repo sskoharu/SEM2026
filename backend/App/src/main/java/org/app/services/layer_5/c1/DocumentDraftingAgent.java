@@ -27,12 +27,10 @@ public class DocumentDraftingAgent {
         String rawNarrative = session.getConflictDetails().getDescription();
 
         // Convertimos los parámetros recolectados a un texto legible
-        String collectedParams = session.getCollectedParameters().entrySet().stream()
-                .map(entry -> entry.getKey() + ": " + entry.getValue())
-                .collect(Collectors.joining("\n"));
+        String collectedParams = org.app.services.ModelInputPolicy.safeParameters(session.getCollectedParameters());
 
         // Extraemos el plan de ejecución (que tiene la acción elegida y los cálculos)
-        String executionPlan = session.getExecutionPlan().toString();
+        String executionPlan = org.app.services.ModelInputPolicy.safeParameters(session.getExecutionPlan());
 
         String viability = session.getViabilityReport();
 
@@ -60,7 +58,7 @@ public class DocumentDraftingAgent {
             2. PRETENSIONES: Redacta un párrafo solicitando formalmente la acción que el usuario eligió (basándote en el `action_title` y `base_article` del Plan de Ejecución). Incluye los montos calculados si existen.
             
             REGLAS ESTRICTAS:
-            - NO uses placeholders como [nombre] o [fecha]. Redacta como si ya tuvieras todos los nombres.
+            - NO uses placeholders como [nombre] o [fecha]. No añadas nombres: el servidor incorpora la identificación en la plantilla local.
             - NO inventes hechos que no estén en el relato o en los parámetros.
             - Mantén un lenguaje formal, en primera persona (ej. "solicito", "manifiesto").
             </CONSIGNA>
@@ -80,7 +78,7 @@ public class DocumentDraftingAgent {
                 .replace("[EXECUTION_PLAN]", executionPlan)
                 .replace("[VIABILITY]", viability != null ? viability : "No disponible");
 
-        DraftingResult result = chatClient.prompt()
+        DraftingResult result = chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM)
                 .user(prompt)
                 .call()
                 .entity(DraftingResult.class);

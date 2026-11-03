@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +19,12 @@ import java.util.Map;
 public class CalculationExecutorService {
 
     private static final int MAX_ITER = 3;
+    private static final Pattern TARGET_NAME = Pattern.compile("[a-zA-Z][a-zA-Z0-9_]{0,63}");
+    private static final Set<String> RESERVED_TARGETS = Set.of(
+            "calculationError", "calculationStatus", "sessionId", "currentPhase",
+            "userId", "status", "base_article", "action_title", "selectedOptionId",
+            "selectedOptionTitle", "legalSources", "citedSourceIds"
+    );
 
     private final CalculationTools calculationTools;
 
@@ -40,20 +48,75 @@ public class CalculationExecutorService {
                 break;
             }
 
+            executedTasks++; // Incluye intentos fallidos dentro del límite.
+            if (!isValidTask(task) || !isWritableTarget(executionPlan, task.getTargetVariable())
+                    || !argumentsGrounded(executionPlan, task.getArguments())) {
+                log.warn("Tarea de cálculo rechazada por parámetros o destino inválidos.");
+                executionPlan.put("calculationError", "INVALID_CALCULATION_TASK");
+                continue;
+            }
+
             try {
                 Object result = executeTask(task);
-                executedTasks++;
 
                 if (result != null) {
                     // Inyectamos el resultado en el plan de ejecución
                     executionPlan.put(task.getTargetVariable(), result);
-                    log.info("Variable '{}' calculada con éxito: {}", task.getTargetVariable(), result);
+                    log.info("Cálculo completado para un destino autorizado.");
                 }
             } catch (Exception e) {
-                log.error("Error al ejecutar la tarea de cálculo: {}", task.getToolName(), e);
+                log.error("Falló una tarea de cálculo validada: {}", task.getToolName());
                 executionPlan.put(task.getTargetVariable(), "ERROR_CALCULO");
+                executionPlan.put("calculationError", "CALCULATION_FAILED");
             }
         }
+    }
+
+    /**
+     * Impide reemplazar datos jurídicos o resultados ya calculados.
+     * Solo permite crear resultados nuevos o completar marcadores pendientes.
+     */
+    private boolean isWritableTarget(Map<String, Object> executionPlan, String target) {
+        if (target == null || RESERVED_TARGETS.contains(target)) {
+            return false;
+        }
+
+        if (!executionPlan.containsKey(target)) {
+            return false;
+        }
+
+        Object currentValue = executionPlan.get(target);
+        return currentValue == null || "PENDIENTE_CALCULO".equals(currentValue);
+    }
+
+    private boolean isValidTask(CalculationTask task) {
+        if (task == null || task.getTargetVariable() == null
+                || !TARGET_NAME.matcher(task.getTargetVariable()).matches()
+                || RESERVED_TARGETS.contains(task.getTargetVariable())
+                || task.getArguments() == null || task.getToolName() == null) {
+            return false;
+        }
+        Map<String, Object> args = task.getArguments();
+        return switch (task.getToolName()) {
+            case "calculate_future_date" -> hasExactArgs(args, "startDate", "daysToAdd");
+            case "calculate_legal_interest" -> hasExactArgs(args, "capital", "daysLate");
+            case "calculate_percentage" -> hasExactArgs(args, "amount", "percentage");
+            default -> false;
+        };
+    }
+
+    private boolean argumentsGrounded(Map<String, Object> executionPlan, Map<String, Object> arguments) {
+        if (arguments == null) {
+            return false;
+        }
+        return arguments.entrySet().stream().allMatch(entry ->
+                executionPlan.containsKey(entry.getKey()) && entry.getValue() != null
+                        && String.valueOf(entry.getValue()).equals(String.valueOf(executionPlan.get(entry.getKey()))));
+    }
+
+    private boolean hasExactArgs(Map<String, Object> args, String... required) {
+        return args.keySet().equals(Set.of(required))
+                && args.values().stream().allMatch(value -> value != null && !value.toString().isBlank());
     }
 
     /**
@@ -67,7 +130,7 @@ public class CalculationExecutorService {
             case "calculate_future_date":
                 // Extraemos y convertimos el argumento de forma segura
                 int daysToAdd = Integer.parseInt(String.valueOf(args.get("daysToAdd")));
-                return calculationTools.calculate_future_date(daysToAdd);
+                return calculationTools.calculate_future_date(String.valueOf(args.get("startDate")), daysToAdd);
 
             case "calculate_legal_interest":
                 BigDecimal capital = new BigDecimal(String.valueOf(args.get("capital")));

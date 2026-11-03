@@ -22,6 +22,7 @@ public class PrePopulatingParametersStep implements Layer2Step {
 
     // Inyectamos la fábrica en lugar del agente genérico
     private final ExtractionAgentFactory agentFactory;
+    private final org.app.services.ParameterValidator parameterValidator;
 
     @Override
     public Layer2InternalState getState() {
@@ -55,14 +56,24 @@ public class PrePopulatingParametersStep implements Layer2Step {
             // 4. Procesar los EXTRAÍDOS
             if (result != null && result.extractedParameters() != null && !result.extractedParameters().isEmpty()) {
                 log.info("El relato ya contenía los siguientes parámetros: {}", result.extractedParameters().keySet());
-                session.getCollectedParameters().putAll(result.extractedParameters());
-                session.getPendingParametersToAsk().removeAll(result.extractedParameters().keySet());
+                for (var entry : result.extractedParameters().entrySet()) {
+                    if (!session.getRequiredParameters().contains(entry.getKey())) {
+                        continue;
+                    }
+                    try {
+                        String valid = parameterValidator.normalize(entry.getKey(), entry.getValue());
+                        session.getCollectedParameters().put(entry.getKey(), valid);
+                        session.getPendingParametersToAsk().remove(entry.getKey());
+                    } catch (RuntimeException invalid) {
+                        log.warn("Se solicitará un parámetro no validado: {}", entry.getKey());
+                    }
+                }
             }
 
             // 5. Procesar los IRRELEVANTES
             if (result != null && result.irrelevantParameters() != null && !result.irrelevantParameters().isEmpty()) {
                 log.warn("⚠️ El agente ignoró los siguientes parámetros: {}", result.irrelevantParameters());
-                session.getPendingParametersToAsk().removeAll(result.irrelevantParameters());
+                // La relevancia propuesta por el modelo no elimina requisitos normativos.
             } else {
                 log.info("El agente no marcó ningún parámetro como irrelevante.");
             }
@@ -72,7 +83,7 @@ public class PrePopulatingParametersStep implements Layer2Step {
                 log.info("⚖️ Se detectaron parámetros de proceder/acción (Capa 3): {}", result.proceduralParameters());
 
                 // Los removemos de la cola para no preguntárselos al usuario
-                session.getPendingParametersToAsk().removeAll(result.proceduralParameters());
+                // Se conservan los requisitos hasta validación determinista.
 
                 // Los guardamos en el SessionObject para que la Capa 3 los conozca
                 session.setProceduralParameters(result.proceduralParameters());
