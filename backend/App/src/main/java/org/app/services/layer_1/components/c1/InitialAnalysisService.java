@@ -31,7 +31,11 @@ public class InitialAnalysisService {
      * y tenga la suficiente información básica para iniciar la Capa 1.
      */
     public SessionObject processInitialRequest(String rawUserInput) {
-        log.info("Iniciando análisis previo (Gatekeeper) para un relato de {} caracteres.", rawUserInput.length());
+        if (rawUserInput == null || rawUserInput.isBlank()) {
+            throw new IllegalArgumentException("El relato del consumidor es obligatorio.");
+        }
+        rawUserInput = org.app.services.ModelInputPolicy.redact(rawUserInput);
+        log.info("Iniciando análisis previo (Gatekeeper) para un nuevo relato.");
 
         // 1. Armar el contexto ligero para el Agente
         Layer1Context context = new Layer1Context(rawUserInput, null, 0, null);
@@ -45,9 +49,13 @@ public class InitialAnalysisService {
             throw new RuntimeException("No se pudo procesar el lenguaje natural en este momento. Intente más tarde.");
         }
 
+        if (result == null) {
+            throw new IllegalStateException("El analizador no devolvió un resultado válido.");
+        }
+
         // 3. FILTRO 1: ¿Es un reclamo de consumo?
         if (!result.isConsumerComplaint()) {
-            log.warn("Petición rechazada por el Portero. Motivo: {}", result.rejectionMessage());
+            log.warn("Petición rechazada por el Portero por no corresponder al dominio de consumo.");
             throw new IllegalArgumentException(result.rejectionMessage() != null
                     ? result.rejectionMessage()
                     : "El texto ingresado no parece ser un reclamo de consumo válido.");

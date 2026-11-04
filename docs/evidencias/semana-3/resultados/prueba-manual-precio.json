@@ -1,0 +1,54 @@
+{
+  "recorded_at": "2026-11-02T22:41:57-05:00",
+  "type": "manual_rag_observation",
+  "session_id": "4e64e1a4-fc84-4a92-b2c9-92ab085d2d28",
+  "scenario": "Diferencia entre precio anunciado y precio cobrado en una licuadora",
+  "layer1_state": "DONE",
+  "layer2_state": "DONE",
+  "layer3_state": "WAITING_FOR_DECISION",
+  "claim_type": "INFORMACION_PRECIOS_FACTURACION",
+  "retrieved_source_ids": [
+    "lodc_ley_art_17",
+    "lodc_ley_art_8",
+    "lodc_ley_art_14"
+  ],
+  "cited_source_ids": [
+    "lodc_ley_art_17",
+    "lodc_ley_art_8"
+  ],
+  "feasibility": "MEDIO",
+  "citation_review": {
+    "status": "PENDIENTE_REVISION_HUMANA",
+    "reasoning": "Las dos citas observadas corresponden a fragmentos recuperados y contienen texto del corpus; la pertinencia jurídica final requiere revisión humana."
+  },
+  "observed_issues": [
+    {
+      "area": "classification",
+      "description": "Se asignó secondaryClaimType=SERVICIOS_PUBLICOS_DOMICILIARIOS para una compra de una licuadora."
+    },
+    {
+      "area": "parameters",
+      "description": "La capa 2 incluyó rotuladoAlimentos y hasLabelingEvidence, parámetros que no corresponden al caso."
+    },
+    {
+      "area": "state",
+      "description": "currentParameterBeingAsked conservó hasWitnesses aunque layer2State ya era DONE."
+    },
+    {
+      "area": "parameter_validation",
+      "description": "providerFailedToJustifyAd terminó almacenando texto libre en lugar de un valor binario."
+    }
+  ],
+  "metrics": {
+    "retrieval": "OBSERVADO",
+    "answer_correct": "PENDIENTE_REVISION_HUMANA",
+    "citations_reviewed": false,
+    "abstained": false,
+    "rejected": false
+  },
+  "limitations": [
+    "Esta observación manual no se asigna a un caso del JSONL de 20 consultas porque la pregunta ejecutada no coincide exactamente con su expected_source_ids.",
+    "No se declara precisión ni cumplimiento de umbrales con una sola observación.",
+    "El informe requiere revisión humana antes de marcar answer_correct o citations_reviewed."
+  ]
+}

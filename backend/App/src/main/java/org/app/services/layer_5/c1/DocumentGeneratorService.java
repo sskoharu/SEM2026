@@ -51,6 +51,7 @@ public class DocumentGeneratorService {
             // 2. Reemplazar en los párrafos normales
             for (XWPFParagraph p : document.getParagraphs()) {
                 replaceInParagraph(p, variables);
+                neutralizeLegalAssertion(p);
             }
 
             // 3. Reemplazar en las tablas (si la plantilla tuviera)
@@ -80,6 +81,16 @@ public class DocumentGeneratorService {
     /**
      * Reemplaza los placeholders en un párrafo, uniendo los "runs" para evitar cortes.
      */
+    private void neutralizeLegalAssertion(XWPFParagraph paragraph) {
+        String text = paragraph.getText();
+        if (text.contains("vulnera de forma directa")) {
+            while (!paragraph.getRuns().isEmpty()) {
+                paragraph.removeRun(0);
+            }
+            paragraph.createRun().setText("Referencias recuperadas para revisión. El documento expresa la solicitud del consumidor; no declara probado un incumplimiento.");
+        }
+    }
+
     private void replaceInParagraph(XWPFParagraph paragraph, Map<String, String> variables) {
         String paragraphText = paragraph.getText();
         if (paragraphText == null || paragraphText.isEmpty()) return;

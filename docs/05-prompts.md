@@ -1,3 +1,7 @@
+# Estado de los prompts y su comparación
+
+Las tablas originales son antecedentes documentales, no resultados de esta corrección. Los agentes actuales construyen prompts en Java y comparten ModelInputPolicy.SYSTEM, con pruebas de construcción; los recursos system_v1/v2/v3 se conservan como historial. No se les atribuyen métricas reales actuales.
+
 # Comparación de versiones del prompt
 
 Caso 02 · Generador Inteligente de Reclamos de Consumo

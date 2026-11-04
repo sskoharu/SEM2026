@@ -20,7 +20,7 @@ public class ExtractionAgentFactory {
     }
 
     public ILayer2ExtractionAgent getAgent(ClaimType claimType) {
-        ILayer2ExtractionAgent agent = agents.get(claimType.name());
+        ILayer2ExtractionAgent agent = agents.getOrDefault(claimType.name(), agents.get("GENERIC"));
         if (agent == null) {
             throw new RuntimeException("No existe un agente de extracción para el tipo: " + claimType.name());
         }

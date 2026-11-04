@@ -1,0 +1,16 @@
+
+> frontend@0.0.0 test
+> tsc -p tsconfig.tests.json && vitest run
+
+
+ RUN  v5.0.5 C:/Users/User/Documents/Codex/2026-11-02/files-mentioned-by-the-user-sem2026/work/project/frontend
+
+
+ Test Files  6 passed (6)
+      Tests  52 passed (52)
+   Start at  19:47:01
+   Duration  11.15s (environment 43%, tests 26%, import 22%, transform 7%, worker 1%)
+
+    Isolate  6 workers spawned · ~946ms startup each (spawn + environment, per file)
+             at least ~4.73s faster with isolate: false — reuses workers across files instead of one per file
+

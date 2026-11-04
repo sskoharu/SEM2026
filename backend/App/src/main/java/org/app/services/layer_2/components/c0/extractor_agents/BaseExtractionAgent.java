@@ -88,7 +88,7 @@ public abstract class BaseExtractionAgent implements ILayer2ExtractionAgent {
         );
 
         try {
-            String rawResponse = chatClient.prompt().user(prompt).call().content();
+            String rawResponse = chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM).user(prompt).call().content();
             String cleanJson = rawResponse.replaceAll("```json", "").replaceAll("```", "").trim();
             return objectMapper.readValue(cleanJson, PreExtractionResult.class);
         } catch (Exception e) {

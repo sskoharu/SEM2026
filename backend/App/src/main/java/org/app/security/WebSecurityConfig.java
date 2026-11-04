@@ -41,6 +41,7 @@ public class WebSecurityConfig {
                         HttpMethod.POST, "/api/v1/claims/**"
                         )
                 .permitAll()
+                .anyRequest().permitAll()
         );
 
         log.info("Configurando autenticación");
@@ -61,6 +62,7 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("X-Claim-Token"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

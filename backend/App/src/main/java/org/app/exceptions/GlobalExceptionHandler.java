@@ -31,6 +31,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import tools.jackson.core.JacksonException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -165,6 +166,13 @@ public class GlobalExceptionHandler {
         return badRequest().body(of(resolver.get("exception.read-error")));
     }
 
+    @ExceptionHandler(JacksonException.class)
+    public ResponseEntity<ErrorResponse> handleJacksonException(JacksonException ex) {
+        log.error("La respuesta estructurada del modelo no es un JSON válido.", ex);
+        return status(HttpStatus.BAD_GATEWAY)
+                .body(of("La respuesta del servicio de IA no pudo interpretarse.", HttpStatus.BAD_GATEWAY));
+    }
+
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
@@ -186,19 +194,19 @@ public class GlobalExceptionHandler {
         if (rootCause instanceof TransientAiException) {
             return ResponseEntity
                     .status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("El proveedor de IA sigue saturado tras 4 intentos. Por favor, espera un momento.");
+                    .body("El proveedor de IA sigue saturado tras 2 intentos. Por favor, espera un momento.");
         }
 
         if (rootCause instanceof ResourceAccessException) {
             return ResponseEntity
                     .status(HttpStatus.GATEWAY_TIMEOUT)
-                    .body("No se pudo establecer conexión con el servicio de IA después de múltiples intentos.");
+                    .body("No se pudo establecer conexión con el servicio de IA después de 2 intentos.");
         }
 
         // Fallback genérico para cualquier otra RuntimeException
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("La operación falló definitivamente: " + rootCause.getMessage());
+                .body("No fue posible completar la operación. Intente más tarde.");
     }
 
     @ExceptionHandler(NonTransientAiException.class)

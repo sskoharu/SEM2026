@@ -6,9 +6,10 @@ import org.app.schemas.interfaces.layer_3.Layer3Step;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer3InternalState;
 import org.app.services.context.layer_3.Layer3ExecutionContext;
-import org.app.services.layer_2.components.c3.ValidationClassifierAgent; // REUTILIZAMOS CAPA 2
+import org.app.services.layer_2.components.c3.ValidationClassifierAgent;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
@@ -16,7 +17,6 @@ import java.util.Map;
 @Log4j2
 public class BatchValidatingStep implements Layer3Step {
 
-    // REUTILIZACIÓN: Inyectamos el agente de validación de la Capa 2
     private final ValidationClassifierAgent validationAgent;
 
     @Override
@@ -30,47 +30,57 @@ public class BatchValidatingStep implements Layer3Step {
         Map<String, Object> batch = context.getBatchParameters();
 
         if (batch == null || batch.isEmpty()) {
-            log.warn("No se recibieron parámetros en el lote. Volviendo a esperar decisión.");
+            session.setClarificationMessage("No se recibieron parámetros para corregir.");
+            return Layer3InternalState.WAITING_FOR_DECISION;
+        }
+        if (session.getCollectedParameters() == null) {
+            session.setClarificationMessage("No se encontraron parámetros de la sesión.");
             return Layer3InternalState.WAITING_FOR_DECISION;
         }
 
-        log.info("Validando lote de {} parámetros corregidos...", batch.size());
-
-        // 1. Iteramos sobre cada parámetro que el usuario quiso corregir
+        // Primero se valida todo el lote. No se modifica la sesión durante esta fase.
+        Map<String, Object> validated = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : batch.entrySet()) {
-            String parameterName = entry.getKey();
-            String userInput = String.valueOf(entry.getValue());
-
-            log.info("Validando parámetro del lote: '{}' con valor '{}'", parameterName, userInput);
-
-            // 2. Delegamos la validación literal a la Capa 2
-            String validationResult = validationAgent.validateParameter(parameterName, userInput);
-
-            if (validationResult.startsWith("ERROR")) {
-                // Si un solo parámetro falla, detenemos el proceso y pedimos corrección
-                log.warn("Validación fallida en lote para '{}': {}", parameterName, validationResult);
-
-                String errorMsg = validationResult.replace("ERROR:", "").trim();
-                session.setClarificationMessage("Error en el parámetro '" + parameterName + "': " + errorMsg);
-
-                // Volvemos a esperar que el usuario decida/corrija
+            String name = entry.getKey();
+            String value = entry.getValue() == null ? "" : String.valueOf(entry.getValue()).trim();
+            if (name == null || name.isBlank() || !session.getCollectedParameters().containsKey(name)
+                    || value.isBlank()) {
+                session.setClarificationMessage("Parámetro no reconocido o vacío: " + name);
                 return Layer3InternalState.WAITING_FOR_DECISION;
             }
 
-            // 3. Si es válido, extraemos el valor normalizado (igual que en Capa 2)
-            String normalizedValue = userInput;
-            if (validationResult.startsWith("OK:")) {
-                normalizedValue = validationResult.replace("OK:", "").trim();
+            String result = validationAgent.validateParameter(name, value);
+            if (result == null || !result.startsWith("OK:")) {
+                String detail = result != null && result.startsWith("ERROR:")
+                        ? result.substring("ERROR:".length()).trim()
+                        : "No se pudo validar el dato.";
+                session.setClarificationMessage("Error en el parámetro '" + name + "': " + detail);
+                log.warn("Lote rechazado por validación del parámetro '{}'", name);
+                return Layer3InternalState.WAITING_FOR_DECISION;
             }
-
-            // 4. Actualizamos los parámetros en la sesión
-            session.getCollectedParameters().put(parameterName, normalizedValue);
+            String normalized = result.substring("OK:".length()).trim();
+            if (normalized.isEmpty()) {
+                session.setClarificationMessage("La validación del parámetro '" + name + "' devolvió un dato vacío.");
+                return Layer3InternalState.WAITING_FOR_DECISION;
+            }
+            validated.put(name, normalized);
         }
 
-        log.info("Todos los parámetros del lote fueron validados y actualizados.");
-        session.setClarificationMessage(null); // Limpiamos errores
-
-        // 5. Volvemos al razonamiento jurídico para reevaluar con los nuevos datos
+        // Se aplica el lote únicamente si todos los elementos fueron validados.
+        session.setActionRouteOptions(null);
+        session.setSelectedOptionId(null);
+        session.setProceduralFormData(null);
+        session.setExecutionPlan(new java.util.HashMap<>());
+        session.setLegalSources(new java.util.ArrayList<>());
+        session.setCitedSourceIds(new java.util.ArrayList<>());
+        session.setDocumentPreviewId(null);
+        session.setDocumentPreviewFacts(null);
+        session.setDocumentPreviewRequests(null);
+        session.setDocumentPreviewRequestSnapshot(null);
+        session.setCurrentPhase(org.app.schemas.session_object.enums.ClaimSessionState.VIABILITY_EVALUATION);
+        session.getCollectedParameters().putAll(validated);
+        session.setClarificationMessage(null);
+        log.info("Se aplicaron {} correcciones validadas", validated.size());
         return Layer3InternalState.EVALUATING_VIABILITY;
     }
 }

@@ -38,7 +38,7 @@ public class TraduciendoQueryStep implements Layer1Step {
         context.setTranslationResult(result);
 
         if (!result.isLegallyCoherent()) {
-            log.warn("   No es coherente con LODC: {}", result.legalReasoning());
+            log.warn("Relato fuera del dominio o insuficiente; se solicitará aclaración.");
             session.setClarificationMessage("El caso que describes parece no estar relacionado con la Defensa del Consumidor...");
             sessionRepository.save(session);
             return Layer1InternalState.SOLICITANDO_ACLARACION;

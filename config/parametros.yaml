@@ -1,0 +1,8 @@
+calculos:
+  interes:
+    tasa-anual: 0.12
+    verificada: false
+
+rag:
+  similarity-threshold: 0.75
+  top-k: 5

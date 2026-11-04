@@ -3,14 +3,31 @@
     "id": "lodc_ley_disp_final_segunda",
     "document": "SEGUNDA.- Sustitúyase el artículo 148 del Código de Comercio, por el siguiente: Art. 148.- Las ofertas públicas contenidas en circulares, catálogos, avisos publicitarios, proformas, obligan a quien las hace; salvo que en la misma oferta se señale un determinado plazo de validez de la misma o que las condiciones de la oferta original sean modificadas por una oferta posterior.",
     "metadata": {
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02",
+      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "148",
       "capitulo": "Disposiciones Finales",
       "tema_principal": "Ofertas Públicas Vinculantes",
-      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
-      "parametros_requeridos": ["isPublicOffer", "offerDetails"],
-      "articulos_procedimentales_asociados": ["30", "72", "70"]
+      "tipo_reclamo_asociado": [
+        "INCUMPLIMIENTO_CONTRATOS_MORA"
+      ],
+      "parametros_requeridos": [
+        "isPublicOffer",
+        "offerDetails"
+      ],
+      "articulos_procedimentales_asociados": [
+        "30",
+        "72",
+        "70"
+      ],
+      "reviewed": true,
+      "status": "VIGENTE",
+      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "vigencia": "Vigente al 2026-11-02"
     }
   }
 ]

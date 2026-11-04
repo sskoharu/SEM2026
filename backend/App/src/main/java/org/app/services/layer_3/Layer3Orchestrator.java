@@ -39,6 +39,13 @@ public class Layer3Orchestrator {
                                  String selectedOptionId, Map<String, Object> proceduralFormData) {
         log.info("Iniciando/Reanudando Orquestador Capa 3 para sesión: {}", session.getSessionId());
 
+        // Un estado de abstención/error es terminal: ninguna aceptación, selección
+        // ni envío posterior puede reactivar esta evaluación sin respaldo.
+        if (session.getLayer3State() == Layer3InternalState.ERROR) {
+            log.warn("Se rechazó continuar una evaluación detenida: {}", session.getSessionId());
+            return session;
+        }
+
         // 1. Lógica de entrada (Entry Point)
         if (session.getLayer3State() == null) {
             log.info("Primera entrada a la Capa 3. Iniciando en EVALUATING_VIABILITY.");

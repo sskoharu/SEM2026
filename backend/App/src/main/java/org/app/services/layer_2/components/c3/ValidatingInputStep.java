@@ -6,7 +6,6 @@ import org.app.schemas.interfaces.layer_2.Layer2Step;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer2InternalState;
 import org.app.services.context.layer_2.Layer2ExecutionContext;
-import org.app.services.layer_2.components.c3.ValidationClassifierAgent;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,51 +23,40 @@ public class ValidatingInputStep implements Layer2Step {
     @Override
     public Layer2InternalState execute(Layer2ExecutionContext context) {
         SessionObject session = context.getSession();
-        String userInput = context.getUserInput();
         String parameter = session.getCurrentParameterBeingAsked();
+        String userInput = context.getUserInput();
 
-        log.info("Validando respuesta '{}' para el parámetro '{}'", userInput, parameter);
-
-        // 1. Llamamos al Agente (Devuelve "OK: valor_normalizado" o "ERROR: mensaje")
-        String validationResult = validationAgent.validateParameter(parameter, userInput);
-
-        // ==========================================
-        // 2. MANEJO DE ERROR
-        // ==========================================
-        if (validationResult.startsWith("ERROR")) {
-            log.warn("Validación fallida: {}", validationResult);
-
-            // Extraemos el mensaje sin la palabra ERROR
-            String errorMsg = validationResult.replace("ERROR:", "").trim();
-            session.setClarificationMessage(errorMsg);
-
-            // Volvemos al estado de Generar Pregunta para que el LLM se disculpe
+        if (parameter == null || parameter.isBlank() || userInput == null || userInput.isBlank()) {
+            session.setClarificationMessage("Debe proporcionar un dato válido para continuar.");
             return Layer2InternalState.GENERATING_QUESTIONS;
         }
 
-        // ==========================================
-        // 3. MANEJO DE ÉXITO Y NORMALIZACIÓN
-        // ==========================================
-        // Por defecto, usamos el input original (por si el Agente devuelve solo "OK")
-        String normalizedValue = userInput;
-
-        // Si el Agente devolvió el formato "OK: valor", extraemos el valor normalizado
-        if (validationResult.startsWith("OK:")) {
-            normalizedValue = validationResult.replace("OK:", "").trim();
-            log.info("Dato normalizado: '{}' -> '{}'", userInput, normalizedValue);
+        String result = validationAgent.validateParameter(parameter, userInput);
+        if (result == null || !result.startsWith("OK:")) {
+            String message = result != null && result.startsWith("ERROR:")
+                    ? result.substring("ERROR:".length()).trim()
+                    : "No se pudo validar el dato. Intente nuevamente.";
+            session.setClarificationMessage(message.isBlank() ? "Dato no válido." : message);
+            log.warn("Validación rechazada para el parámetro '{}'", parameter);
+            return Layer2InternalState.GENERATING_QUESTIONS;
         }
 
-        // Guardamos el valor NORMALIZADO (no el texto original del usuario)
+        String normalizedValue = result.substring("OK:".length()).trim();
+        if (normalizedValue.isEmpty()) {
+            session.setClarificationMessage("La validación devolvió un dato vacío.");
+            return Layer2InternalState.GENERATING_QUESTIONS;
+        }
+
+        if (session.getCollectedParameters() == null || session.getPendingParametersToAsk() == null) {
+            session.setClarificationMessage("No se pudo recuperar el formulario. Intente nuevamente.");
+            return Layer2InternalState.GENERATING_QUESTIONS;
+        }
+
         session.getCollectedParameters().put(parameter, normalizedValue);
         session.getPendingParametersToAsk().remove(parameter);
-
-        // Limpiamos errores y preguntas previas
         session.setClarificationMessage(null);
         session.setCurrentQuestionForUser(null);
-
-        log.info("Validación exitosa para '{}'. Dato guardado: '{}'", parameter, normalizedValue);
-
-        // Volvemos al inicio del ciclo para ver qué más falta
+        log.info("Parámetro '{}' validado y guardado", parameter);
         return Layer2InternalState.DETERMINING_PARAMETERS;
     }
 }

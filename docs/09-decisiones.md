@@ -1,36 +1,14 @@
-﻿# 09 · Registro de decisiones
+# Decisiones de la corrección
 
-Este documento registra las decisiones técnicas, de diseño y de proceso tomadas durante el proyecto, incluyendo el uso de herramientas de IA generativa en el desarrollo. Se actualiza de forma continua.
-
----
-
-## Formato de entrada
-
-| Campo | Descripción |
-|---|---|
-| **ID** | DEC-NNN |
-| **Fecha** | YYYY-MM-DD |
-| **Decisión** | Qué se decidió |
-| **Contexto** | Por qué se tomó esa decisión |
-| **Apoyado en IA** | Herramienta utilizada y cómo |
-| **Verificación** | Cómo se revisó y ajustó lo generado |
-| **Responsable** | Integrante que tomó/validó la decisión |
-
----
-
-## Decisiones
-
-### DEC-001 · Uso de IA generativa para redactar la propuesta inicial
-
-| Campo | Detalle |
-|---|---|
-| **Fecha** | 2026-10-16 |
-| **Decisión** | Utilizar un asistente de IA generativa (Claude) para generar el borrador inicial del documento `01-propuesta.md`. |
-| **Contexto** | El plazo de entrega era ajustado y el equipo necesitaba un punto de partida estructurado que cubriera todos los apartados requeridos (problema, usuarios, alcance, riesgos y modelo con stack). Se optó por usar IA para acelerar la redacción inicial y dedicar el tiempo restante a revisar, corregir y enriquecer el contenido con criterio propio. |
-| **Apoyado en IA** | **Herramienta:** Claude. **Uso:** generación del borrador completo de `01-propuesta.md` a partir de la descripción del caso asignado y los lineamientos del seminario. |
-| **Verificación** | Todos los integrantes leyeron el borrador generado, corrigieron datos incorrectos, ajustaron el alcance a la realidad del grupo y verificaron que las fuentes de conocimiento mencionadas existen y son accesibles. El documento final refleja decisiones propias del equipo, no afirmaciones del modelo sin contrastar. |
-| **Responsable** | Equipo completo |
-
----
-
-<!-- Agregar nuevas decisiones siguiendo el mismo formato -->
+- Se conserva la arquitectura y las versiones de dependencias del directorio fuente. No se modifica ningún valor de credencial.
+- Se corrige el import faltante y se comprueba compilación limpia, sin reutilizar target anterior.
+- Las sesiones anónimas se protegen con un token de capacidad independiente del UUID, hash SHA-256 en servidor y almacenamiento en memoria del cliente. No equivalen a una cuenta autenticada; quien robe el token puede actuar como su poseedor. HTTPS y protección frente a XSS siguen siendo necesarios.
+- Los controles de concurrencia son locales a la instancia. Un despliegue multirréplica necesita una estrategia distribuida revisada antes de habilitarse.
+- Los datos personales documentales se recogen después del análisis y se insertan localmente en la plantilla. Relatos y parámetros enviados al modelo se minimizan; los patrones no garantizan reconocer cualquier nombre libre, por lo que se exige usar datos ficticios en el seminario.
+- Inventario: relato minimizado, parámetros, fuentes, decisiones y borrador temporal se conservan en Redis por 60 minutos. Nombre, identificación, correo, teléfono, proveedor, RUC/dirección aportados forman parte del snapshot/documento autorizado. No se utilizan como corpus ni como datos de evaluación reales. El token bruto no se guarda en Redis ni en logs.
+- Las fuentes sin vigencia acreditada no se habilitan automáticamente. La tasa 0.12 heredada permanece como dato de configuración, con verificada=false. No constituye una tasa legal aprobada. Los tests usan tasa sintética explícita.
+- Las constantes jurídicas propuestas por el modelo se bloquean. LegalRuleRegistry lee config/reglas_juridicas.json, entregado vacío. Una regla exige fuente recuperada, cita, versión, fecha y responsable con aprobación explícita; no se aprueba ningún plazo por memoria.
+- Las citas se restringen a extractos textuales comprobables; su aplicabilidad requiere revisión humana.
+- La aprobación vincula el contenido integral visible y los bytes exactos del DOCX al snapshot de sesión. La descarga no invoca otra redacción.
+- Se retira únicamente el servicio TypeScript duplicado fuera de src y el recurso vacío sin consumidores. Los DTO históricos no se conectan artificialmente ni se atribuyen como funciones operativas.
+- No se atribuyen aportaciones o revisiones a los integrantes sin historial. Esta corrección fue asistida por Codex y verificada mediante los comandos de entrega.

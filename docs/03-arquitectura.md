@@ -1,22 +1,33 @@
-**Diagrama (Mermaid o imagen) con frontend, backend, modelo, base vectorial, herramientas del agente y fuentes**:  
-[![image1.png](https://i.postimg.cc/5ynP6mwc/image1.png)](https://postimg.cc/7JJ1R0sX)
-**2\. Descripción del flujo de una consulta de principio a fin**
+# Arquitectura de las cinco capas
 
-El ciclo de vida de un caso dentro del sistema sigue este proceso secuencial, separando estrictamente la interpretación semántica (IA) de la lógica de negocio procesal (Java):
+Se conserva Java 21, Spring Boot, Spring AI/Gemini, Qdrant, Redis y React/TypeScript. No se incorporan otros frameworks ni se sustituyen servicios.
 
-1. **Recepción del caso:** El usuario ingresa el relato de su problema y sube la evidencia (adjuntos) desde el Frontend.
-2. **Anonimización:** El Backend (Spring Boot) recibe la petición y reemplaza los datos personales (PII) por marcadores para proteger la identidad antes de enviar datos a la IA.
-3. **Extracción estructurada:** El Agente envía el texto al Modelo (DeepSeek-R1) para extraer los hechos, fechas, montos y el nombre del proveedor en formato estructurado (JSON mapeado con BeanOutputConverter).
-4. **Verificación de evidencia:** El Agente utiliza la herramienta evidencia_faltante para comprobar si el relato y los adjuntos cumplen con los requisitos mínimos del tipo de reclamo. Si falta información, pregunta al usuario antes de avanzar.
-5. **Búsqueda semántica (RAG):** Con los hechos consolidados, el Agente invoca buscar_normativa para consultar en ChromaDB (Base Vectorial) los fragmentos exactos de la Ley Orgánica de Defensa del Consumidor (Fuentes) que aplican al caso.
-6. **Razonamiento legal:** El Modelo analiza los hechos frente a los fragmentos de la ley recuperados e identifica los derechos posiblemente vulnerados.
+React → filtro de autorización → controladores → orquestadores → pasos/DTO → repositorio de sesión Redis.
 
-**7\. Ejecución de Reglas Deterministas (Código vs. Alucinación):** Dado que los LLMs son propensos a fallar en cálculos exactos, el Agente delega las decisiones procesales y matemáticas exclusivamente al backend en Java. Se ejecutan herramientas estáticas:
+## Capa 1
 
-- calcular_plazos: Usa java.time.LocalDate para sumar días exactos desde el evento y define si el reclamo está vigente o prescrito.
-- resolver_instancia: Define la ruta jerárquica estricta (ej. Proveedor → Arcotel → Defensoría).
-- promedio_consumo: Realiza el cálculo matemático en BigDecimal de los últimos 6 meses para cobros excesivos. _El modelo no inventa fechas ni rutas de atención; el código las impone basándose en archivos de configuración YAML._
+InitialAnalysisService valida/minimiza la entrada; NarrativeAnalysisAgent analiza el dominio. Layer1Orchestrator coordina traducción, búsqueda híbrida y clasificación. CorpusPolicy excluye fuentes no aprobadas y texto con patrones adversariales. Sin fuentes, se solicita aclaración.
 
-**8\. Validación del usuario (Human-in-the-loop y recolección de datos):** El Backend consolida todo (hechos extraídos por la IA + artículos del RAG + plazos exactos del código Java) y lo presenta en el Frontend como un "Informe Estructurado". Aquí ocurre la supervisión obligatoria: el usuario revisa, corrige si es necesario y confirma que la información es cierta. _Importante:_ Este informe visual no es el documento final, sino que actúa como la "lista de ingredientes validados" (los datos perfectos y confirmados) que habilitarán la redacción legal.
+## Capa 2
 
-**9\. Confirmación y Generación (Plantillas estáticas, cero inventos):** Al presionar "Registrar y generar borrador", **el LLM no redacta el documento legal desde cero**. El Agente llama a la función Java generar_documento, la cual toma una plantilla legal prediseñada (un archivo .docx fijo y aprobado en el servidor) y simplemente inyecta los datos validados del Paso 8 en las variables correspondientes (ej. reemplaza \[HECHOS\] con el relato y \[PLAZO_CALCULADO\] con la fecha de Java). Esto devuelve un documento formal a prueba de alucinaciones, garantizando el indicador de calidad: "cero hechos inventados", listo para su descarga e impresión.
+ExtractionAgentFactory usa el extractor específico de vicios ocultos o GenericExtractionAgent. PrePopulatingParametersStep acepta únicamente claves requeridas validadas por ParameterValidator; no permite que el modelo retire requisitos. Las respuestas manuales y lotes usan validación determinista. Datos desconocidos permanecen pendientes.
+
+## Capa 3
+
+LegalReasoningAgent entrega fragmentos delimitados con IDs. CitationPolicy exige citas textuales exactas y rechaza prosa jurídica sin respaldo. Esto verifica correspondencia textual, no sustituye revisión humana de aplicabilidad. La falta de citas produce ERROR terminal. Las opciones deben identificar su fuente y quote exacto. Las correcciones solo se admiten antes de la aceptación e invalidan resultados derivados.
+
+## Capa 4
+
+El modelo propone un plan, sin ejecutar herramientas directamente. Java limita tres intentos, impide destinos nuevos o reservados, verifica argumentos confirmados y comprueba pendientes/errores antes de avanzar. Las fechas usan fecha inicial explícita. Interés no revisado y constantes jurídicas del modelo quedan bloqueados. LegalRuleRegistry permite únicamente reglas explícitas revisadas en config/reglas_juridicas.json; el registro entregado está vacío. Un marcador ERROR_CALCULO se restaura a pendiente para reintentar.
+
+## Capa 5
+
+El DTO valida datos documentales separados del modelo. La vista previa genera el DOCX una sola vez, extrae todo su texto y conserva sus bytes. Un snapshot vincula identidad aportada, relato, parámetros, fuentes, selección y plan. La descarga exige aprobación, previewId y snapshot iguales; no vuelve a redactar. Se marca COMPLETED y React cierra el flujo.
+
+## Autorización y concurrencia
+
+SessionAuthorizationFilter protege todas las rutas sensibles por token aleatorio de 256 bits separado del UUID. SessionAccess compara hashes en tiempo constante. El token no se persiste en el navegador ni aparece en cuerpos de respuesta. El mapper Redis conserva hash y bytes; JSON de API los excluye. Los locks locales serializan solicitudes de la misma sesión en una instancia. La coordinación entre réplicas no está implementada.
+
+## Límites acreditados
+
+Las pruebas de integración usan dobles de IA/vectorial/Redis; las de DOCX usan POI y plantilla reales. No hay demostración con los servicios externos en esta corrida. Ninguna prueba sintética acredita precisión RAG ni vigencia normativa.

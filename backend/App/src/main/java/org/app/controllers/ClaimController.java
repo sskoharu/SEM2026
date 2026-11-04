@@ -9,6 +9,7 @@ import org.app.schemas.requests.BatchUpdateRequest;
 import org.app.schemas.requests.ClarificationRequest;
 import org.app.schemas.requests.StartClaimRequest;
 import org.app.schemas.session_object.SessionObject;
+import org.app.schemas.session_object.enums.ClaimSessionState;
 import org.app.schemas.session_object.enums.Layer1InternalState;
 import org.app.schemas.session_object.enums.Layer2InternalState;
 import org.app.schemas.session_object.enums.Layer3InternalState;
@@ -16,10 +17,11 @@ import org.app.services.layer_1.Layer1Orchestrator;
 import org.app.services.layer_1.components.c1.InitialAnalysisService;
 import org.app.services.layer_2.components.Layer2Orchestrator;
 import org.app.services.layer_3.Layer3Orchestrator;
-import org.app.services.mappers.layer_3.Layer3_Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -33,7 +35,6 @@ public class ClaimController {
     private final Layer2Orchestrator layer2Orchestrator;
     private final Layer3Orchestrator layer3Orchestrator;
     private final SessionRepository sessionRepository;
-    private final Layer3_Mapper layer3Mapper;
 
     // ==========================================
     // ENDPOINTS DE LA CAPA 1 (Triaje y Clasificación)
@@ -43,10 +44,15 @@ public class ClaimController {
      * 1. Iniciar un reclamo (Portero + Orquestador Capa 1)
      */
     @PostMapping("/start")
-    public ResponseEntity<?> startClaim(@Valid @RequestBody StartClaimRequest request) {
+    public ResponseEntity<?> startClaim(@Valid @RequestBody StartClaimRequest request,
+            jakarta.servlet.http.HttpServletResponse response) {
         try {
             // A. Pasa por el Portero (Filtro semántico)
             SessionObject session = initialAnalysisService.processInitialRequest(request.getIncidentDescription());
+            String accessToken = org.app.security.SessionAccess.issue(session);
+            sessionRepository.save(session);
+            response.setHeader(org.app.security.SessionAccess.HEADER, accessToken);
+            response.setHeader("Cache-Control", "no-store");
 
             // B. Si el Portero pidió aclaración, devolvemos las preguntas y no gastamos tokens en RAG
             if (session.getLayer1State() == Layer1InternalState.SOLICITANDO_ACLARACION) {
@@ -79,14 +85,63 @@ public class ClaimController {
         SessionObject session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
 
-        // Actualizamos el relato original con la nueva información
-        String newDescription = session.getConflictDetails().getDescription() + " | Aclaración: " + request.getAdditionalInfo();
-        session.getConflictDetails().setDescription(newDescription);
+        if (session.getLayer1State() != Layer1InternalState.SOLICITANDO_ACLARACION) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "error", "La sesión no está esperando una aclaración del relato."));
+        }
+        if (session.getConflictDetails() == null
+                || session.getConflictDetails().getDescription() == null) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "error", "La sesión no contiene un relato válido para aclarar."));
+        }
+        String additionalInfo = request.getAdditionalInfo();
+        if (additionalInfo == null || additionalInfo.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "La aclaración no puede estar vacía."));
+        }
 
-        // Reiniciamos el flujo de la Capa 1
+        String newDescription = session.getConflictDetails().getDescription()
+                + " | Aclaración: " + org.app.services.ModelInputPolicy.redact(additionalInfo.trim());
+
+        // Los resultados de las capas posteriores pertenecen al relato anterior.
+        // Invalidarlos antes de ejecutar de nuevo el triaje impide reutilizar
+        // parámetros, citas, decisiones o planes jurídicos obsoletos.
+        session.setClaimType(null);
+        session.setSecondaryClaimType(null);
+        session.setCurrentSearchQuery(null);
+        session.setClarificationMessage(null);
+        session.setApplicableArticles(new ArrayList<>());
+        session.setRequiredParameters(new ArrayList<>());
+        session.setLayer2State(null);
+        session.setPendingParametersToAsk(new ArrayList<>());
+        session.setCurrentParameterBeingAsked(null);
+        session.setCurrentQuestionForUser(null);
+        session.setCollectedParameters(new HashMap<>());
+        session.setSpecificClaimParameters(null);
+        session.setProceduralParameters(null);
+        session.setLayer3State(null);
+        session.setViabilityReport(null);
+        session.setActionRouteText(null);
+        session.setActionRouteOptions(null);
+        session.setSelectedOptionId(null);
+        session.setProceduralArticles(new ArrayList<>());
+        session.setProceduralFormData(null);
+        session.setExecutionPlan(new HashMap<>());
+        session.setLegalSources(new ArrayList<>());
+        session.setCitedSourceIds(new ArrayList<>());
+        session.setDocumentPreviewId(null);
+        session.setDocumentPreviewFacts(null);
+        session.setDocumentPreviewRequests(null);
+        session.setDocumentPreviewRequestSnapshot(null);
+        session.setCurrentPhase(ClaimSessionState.TRIAGE_PROCESSING);
+        session.setFeasibility(null);
+        session.setMissingQuestions(null);
         session.setLayer1State(Layer1InternalState.TRADUCIENDO_QUERY);
         session.setRagRetryCount(0);
+        session.getConflictDetails().setDescription(newDescription);
 
+        // Persistir la invalidación antes de volver a invocar el orquestador.
+        sessionRepository.save(session);
         SessionObject updatedSession = layer1Orchestrator.process(session);
         return ResponseEntity.ok(updatedSession);
     }
@@ -189,6 +244,9 @@ public class ClaimController {
         SessionObject session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
 
+        if (session.getLayer3State() != Layer3InternalState.WAITING_FOR_DECISION) {
+            return ResponseEntity.status(409).body(Map.of("error", "Solo puede corregir una evaluación pendiente de aceptación."));
+        }
         if (request.getUpdatedParameters() == null || request.getUpdatedParameters().isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "No se enviaron parámetros para actualizar."));
         }
@@ -221,16 +279,9 @@ public class ClaimController {
         // Enviamos el selectedOptionId al Orquestador
         SessionObject updatedSession = layer3Orchestrator.process(session, false, null, optionId, null);
 
-        // Si el sistema determinó que no necesita más datos y terminó de una vez
-        if (updatedSession.getLayer3State() == Layer3InternalState.DONE) {
-            return ResponseEntity.ok(Map.of(
-                    "message", "Opción seleccionada y procesada correctamente. No se requieren datos adicionales.",
-                    "status", "DONE"
-            ));
-        }
-
-        // Si requiere datos, devolvemos el DTO para que el frontend pinte el formulario
-        return ResponseEntity.ok(layer3Mapper.mapToDto(updatedSession));
+        // Siempre devolver la sesión completa: React necesita el estado,
+        // las opciones, los campos, las fuentes y el plan de ejecución.
+        return ResponseEntity.ok(updatedSession);
     }
 
     /**
@@ -251,25 +302,8 @@ public class ClaimController {
 
         SessionObject updated = layer3Orchestrator.process(session, false, null, null, formData);
 
-        // VALIDACIÓN CRÍTICA:
-        // Si después de procesar sigue en WAITING_FOR_PROCEDURAL_INPUT, significa que
-        // algún dato falló la validación (ej. puso letras en el número de cuenta).
-        if (updated.getLayer3State() == Layer3InternalState.WAITING_FOR_PROCEDURAL_INPUT) {
-            log.warn("El formulario contiene errores. Devolviendo DTO para mostrar correcciones.");
-            // Devolvemos el DTO con las preguntas actualizadas (que ahora incluyen el "⚠️ Error...")
-            return ResponseEntity.ok(layer3Mapper.mapToDto(updated));
-        }
-
-        // Si llegó a DONE, todo salió perfecto y terminamos la Capa 3.
-        if (updated.getLayer3State() == Layer3InternalState.DONE) {
-            return ResponseEntity.ok(Map.of(
-                    "message", "Formulario validado y procesado exitosamente. Capa 3 finalizada.",
-                    "status", "DONE",
-                    "executionPlan", updated.getExecutionPlan() // Opcional: devolver el plan para que el front lo vea
-            ));
-        }
-
-        // Fallback en caso de error interno del Orquestador
-        return ResponseEntity.internalServerError().body(Map.of("error", "Error procesando el formulario."));
+        // El orquestador determina si debe solicitar correcciones o finalizar.
+        // Un único contrato de respuesta evita perder datos en el frontend.
+        return ResponseEntity.ok(updated);
     }
 }

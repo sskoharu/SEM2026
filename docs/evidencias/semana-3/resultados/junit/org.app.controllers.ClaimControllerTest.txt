@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.app.controllers.ClaimControllerTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.23 s -- in org.app.controllers.ClaimControllerTest

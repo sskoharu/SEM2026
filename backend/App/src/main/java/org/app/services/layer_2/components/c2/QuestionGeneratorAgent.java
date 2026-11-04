@@ -47,7 +47,7 @@ public class QuestionGeneratorAgent {
             </CONSIGNA>
             """.formatted(narrative, claimType.name(), previousQuestion != null ? previousQuestion : "Ninguna", parameterName, errorContext);
 
-        return chatClient.prompt()
+        return chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM)
                 .user(prompt)
                 .call()
                 .content()

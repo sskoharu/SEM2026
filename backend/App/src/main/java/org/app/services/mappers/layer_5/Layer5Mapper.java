@@ -14,7 +14,12 @@ public class Layer5Mapper {
 
     public DocumentContext mapToDocumentContext(SessionObject session, Layer5RequestDto request) {
         // 1. Formatear Artículos
-        String articulos = String.join(", ", session.getApplicableArticles());
+        String articulos = session.getLegalSources().stream()
+                .filter(source -> session.getCitedSourceIds().contains(source.getId()))
+                .map(source -> "[" + source.getId() + "] " + source.getLaw() + " Art. "
+                        + source.getArticle() + " — Vigencia: " + source.getValidity()
+                        + " — " + source.getUrl() + "\n" + source.getText())
+                .collect(java.util.stream.Collectors.joining("\n\n"));
 
         // 2. Extraer Cuantía del ExecutionPlan (si existe)
         String monto = "A determinar";
@@ -42,7 +47,10 @@ public class Layer5Mapper {
                 .providerAddress(request.getProviderAddress())
                 .applicableArticles(articulos)
                 .cuantia(monto)
-                .listaEvidencias(null)
+                .listaEvidencias(session.getCollectedParameters().entrySet().stream()
+                        .filter(entry -> entry.getKey().startsWith("has") && "true".equals(String.valueOf(entry.getValue())))
+                        .map(entry -> entry.getKey() + ": declarado por el usuario; no verificado documentalmente")
+                        .toList())
                 // hechosRedactados y pretensionesRedactadas se llenarán en la Subtarea 2
                 .build();
     }

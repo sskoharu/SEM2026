@@ -1,52 +1,75 @@
 package org.app.controllers;
 
+import org.app.repositories.SessionRepository;
+import org.app.schemas.session_object.SessionObject;
+import org.app.schemas.session_object.enums.Layer1InternalState;
+import org.app.services.layer_1.Layer1Orchestrator;
+import org.app.services.layer_1.components.c1.InitialAnalysisService;
+import org.app.services.layer_2.components.Layer2Orchestrator;
+import org.app.services.layer_3.Layer3Orchestrator;
+import org.app.services.mappers.layer_3.Layer3_Mapper;
+import org.app.utils.MessageResolverI18n;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.app.services.RoutingService;
 
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(ClaimController.class)
-public class ClaimControllerTest {
+class ClaimControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private RoutingService claimService;
+    @MockitoBean
+    private InitialAnalysisService initialAnalysisService;
+
+    @MockitoBean
+    private Layer1Orchestrator layer1Orchestrator;
+
+    @MockitoBean
+    private Layer2Orchestrator layer2Orchestrator;
+
+    @MockitoBean
+    private Layer3Orchestrator layer3Orchestrator;
+
+    @MockitoBean
+    private SessionRepository sessionRepository;
+
+    @MockitoBean
+    private Layer3_Mapper layer3Mapper;
+
+    @MockitoBean
+    private MessageResolverI18n messageResolverI18n;
 
     @Test
-    public void testAnalyzeClaimV3() throws Exception {
-        // Mocking the service response
-        Mockito.when(claimService.analyzeClaim(Mockito.any(), Mockito.eq("v3")))
-                .thenReturn("{\"preliminaryCategory\":\"Garantía de bienes\"}");
-
-        // Performing the POST request
-        mockMvc.perform(post("/api/v1/claims/analyze?version=v3")
+    void rejectsBlankIncidentDescription() throws Exception {
+        mockMvc.perform(post("/api/v1/claims/start")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"claim\":\"sample claim\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"preliminaryCategory\":\"Garantía de bienes\"}"));
+                        .content("{\"incidentDescription\":\"\"}"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(initialAnalysisService, layer1Orchestrator);
     }
 
     @Test
-    public void testAnalyzeClaimV1() throws Exception {
-        // Mocking the service response
-        Mockito.when(claimService.analyzeClaim(Mockito.any(), Mockito.eq("v1")))
-                .thenReturn("Análisis preliminar");
+    void acceptsValidIncidentDescriptionAndReturnsClarificationSession() throws Exception {
+        SessionObject session = new SessionObject();
+        session.setLayer1State(Layer1InternalState.SOLICITANDO_ACLARACION);
+        when(initialAnalysisService.processInitialRequest("El proveedor cobró un valor distinto al anunciado."))
+                .thenReturn(session);
 
-        // Performing the POST request
-        mockMvc.perform(post("/api/v1/claims/analyze?version=v1")
+        mockMvc.perform(post("/api/v1/claims/start")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"claim\":\"sample claim\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Análisis preliminar"));
+                        .content("{\"incidentDescription\":\"El proveedor cobró un valor distinto al anunciado.\"}"))
+                .andExpect(status().isOk());
+
+        verifyNoInteractions(layer1Orchestrator);
     }
 }

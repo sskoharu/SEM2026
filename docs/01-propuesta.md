@@ -1,3 +1,7 @@
+# Estado de la propuesta histórica
+
+La tabla de tecnologías original conserva el diseño inicial y no describe el estado actual. La implementación vigente usa Java 21, Spring Boot, Spring AI/Gemini, Qdrant, Redis y React. El alcance propuesto no acredita funciones completadas: rigen README y docs/03-arquitectura.md.
+
 # 01 · Propuesta del Proyecto
 
 > **Proyecto:** Generador Inteligente de Reclamos de Consumo  

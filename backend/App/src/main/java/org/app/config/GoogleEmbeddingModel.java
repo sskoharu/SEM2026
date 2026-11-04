@@ -25,7 +25,7 @@ public class GoogleEmbeddingModel implements EmbeddingModel {
     @Value("${spring.ai.openai.api-key}")
     private String apiKey;
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(java.time.Duration.ofSeconds(5)).build();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${spring.ai.openai.embedding.options.model}")
@@ -44,7 +44,7 @@ public class GoogleEmbeddingModel implements EmbeddingModel {
             try {
                 // 1. Construir el JSON exacto que espera Google AI Studio
                 ObjectNode payload = objectMapper.createObjectNode();
-                payload.put("model", "models/text-embedding-004");
+                payload.put("model", "models/" + modelName);
 
                 ObjectNode content = objectMapper.createObjectNode();
                 ArrayNode parts = objectMapper.createArrayNode();
@@ -56,23 +56,31 @@ public class GoogleEmbeddingModel implements EmbeddingModel {
 
                 // 2. Hacer la petición HTTP a Google
                 HttpRequest httpRequest = HttpRequest.newBuilder()
-                        .uri(URI.create("https://generativelanguage.googleapis.com/v1/models/"+modelName+":embedContent?key=" + apiKey))
+                        .uri(URI.create("https://generativelanguage.googleapis.com/v1/models/"+modelName+":embedContent"))
                         .header("Content-Type", "application/json")
+                        .header("x-goog-api-key", apiKey)
+                        .timeout(java.time.Duration.ofSeconds(20))
                         .POST(HttpRequest.BodyPublishers.ofString(payload.toString()))
                         .build();
 
                 HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() != 200) {
-                    throw new RuntimeException("Error de Google API: " + response.body());
+                    throw new RuntimeException("El proveedor de embeddings devolvió HTTP " + response.statusCode());
                 }
 
                 // 3. Parsear la respuesta para extraer el arreglo de números (el vector)
                 JsonNode root = objectMapper.readTree(response.body());
                 JsonNode valuesNode = root.path("embedding").path("values");
 
+                if (!valuesNode.isArray() || valuesNode.isEmpty()) {
+                    throw new IllegalStateException("Vector de embeddings vacío o inválido.");
+                }
                 float[] vector = new float[valuesNode.size()];
                 for (int j = 0; j < valuesNode.size(); j++) {
+                    if (!valuesNode.get(j).isNumber() || !Double.isFinite(valuesNode.get(j).asDouble())) {
+                        throw new IllegalStateException("Vector no numérico.");
+                    }
                     vector[j] = (float) valuesNode.get(j).asDouble();
                 }
 

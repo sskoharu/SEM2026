@@ -1,0 +1,184 @@
+{
+  "sources": [
+    {
+      "file": "backend/App/src/main/resources/data/lodc/01_principios_generales.json",
+      "sha256": "d5efba24f76f0525dbc700ceeec07ee603cbcf4151a08e976193cb61a9f39652",
+      "count": 3,
+      "ids": [
+        "lodc_ley_art_1",
+        "lodc_ley_art_2",
+        "lodc_ley_art_3"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/03_regulacion_publicidad.json",
+      "sha256": "63c827c5016e9cba2484396c9ae059b7e2165ac6d6667d4d9b9d819e2c0f28f0",
+      "count": 3,
+      "ids": [
+        "lodc_ley_art_6",
+        "lodc_ley_art_7",
+        "lodc_ley_art_8"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/04_informacion_basica_comercial.json",
+      "sha256": "06ffe70e7507fa576c75e80650081bb14a3c96b780a5e0bacdaf2bdf2e0b4348",
+      "count": 6,
+      "ids": [
+        "lodc_ley_art_9",
+        "lodc_ley_art_12",
+        "lodc_ley_art_13",
+        "lodc_ley_art_14",
+        "lodc_ley_art_15",
+        "lodc_ley_art_16"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/05_responsabilidades_proveedor.json",
+      "sha256": "3669de010558ed9488537e6c5c1c4a8beadf086e9fffae40e265ec0cb7547cb9",
+      "count": 12,
+      "ids": [
+        "lodc_ley_art_17",
+        "lodc_ley_art_18",
+        "lodc_ley_art_19",
+        "lodc_ley_art_20",
+        "lodc_ley_art_21",
+        "lodc_ley_art_22",
+        "lodc_ley_art_23",
+        "lodc_ley_art_24",
+        "lodc_ley_art_25",
+        "lodc_ley_art_26",
+        "lodc_ley_art_27",
+        "lodc_ley_art_30"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/06_servicios_publicos.json",
+      "sha256": "759c3f81a3b27dfdc3051cbbccb528213e76f80b092b0a1d8f8eb2967eef9128",
+      "count": 9,
+      "ids": [
+        "lodc_ley_art_32",
+        "lodc_ley_art_33",
+        "lodc_ley_art_34",
+        "lodc_ley_art_35",
+        "lodc_ley_art_36",
+        "lodc_ley_art_37",
+        "lodc_ley_art_38",
+        "lodc_ley_art_39",
+        "lodc_ley_art_40"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/07_proteccion_contractual.json",
+      "sha256": "31f26d178201c138f3430feb2c96bbd5a9f02da0fc400450a1f81a048878f542",
+      "count": 6,
+      "ids": [
+        "lodc_ley_art_44",
+        "lodc_ley_art_46",
+        "lodc_ley_art_47",
+        "lodc_ley_art_48",
+        "lodc_ley_art_49",
+        "lodc_ley_art_50"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/09_practicas_prohibidas.json",
+      "sha256": "08c6a47f14ff8b946ddf8b73026fba655e153b4a04de19075fa5772d0b90e69c",
+      "count": 8,
+      "ids": [
+        "lodc_ley_art_55_num_1",
+        "lodc_ley_art_55_num_2",
+        "lodc_ley_art_55_num_3",
+        "lodc_ley_art_55_num_4",
+        "lodc_ley_art_55_num_5",
+        "lodc_ley_art_55_num_6",
+        "lodc_ley_art_55_num_7",
+        "lodc_ley_art_55_num_8"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/13_infracciones_sanciones.json",
+      "sha256": "de8412aa0879830ac9eeafe5a11f31f251d7d4d07d9e6287a2874e5b40d92427",
+      "count": 10,
+      "ids": [
+        "lodc_ley_art_70",
+        "lodc_ley_art_71",
+        "lodc_ley_art_72",
+        "lodc_ley_art_73",
+        "lodc_ley_art_75",
+        "lodc_ley_art_76",
+        "lodc_ley_art_77",
+        "lodc_ley_art_78",
+        "lodc_ley_art_79",
+        "lodc_ley_art_80"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/15_disposiciones_generales.json",
+      "sha256": "68771f819332d626e7a9e881436701858cd47c33ea43cbc1e0b62a0685d5711b",
+      "count": 2,
+      "ids": [
+        "lodc_ley_art_91",
+        "lodc_ley_art_93"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    },
+    {
+      "file": "backend/App/src/main/resources/data/lodc/16_disposiciones_finales.json",
+      "sha256": "02ca6b40a74e83b17d60cf6dadc6998ae27ccb58c140245b0b694f391b70b03d",
+      "count": 1,
+      "ids": [
+        "lodc_ley_disp_final_segunda"
+      ],
+      "review_status": "PENDIENTE_REVISION",
+      "note": "La huella verifica bytes locales, no autenticidad ni vigencia normativa.",
+      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
+      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
+      "source_accessed_at": "2026-11-02"
+    }
+  ]
+}

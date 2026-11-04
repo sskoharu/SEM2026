@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.app.repositories.SessionRepository;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer3InternalState;
+import org.app.schemas.session_object.enums.ClaimSessionState;
 import org.app.services.layer_4.dto.Layer4ResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +39,23 @@ public class Layer4Controller {
             ));
         }
 
+        // Una vez iniciada la generación documental, no se permiten recálculos.
+        ClaimSessionState phase = session.getCurrentPhase();
+        if (phase != ClaimSessionState.ACTION_SELECTION
+                && phase != ClaimSessionState.ALGORITHMIC_PROCESSING) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "error", "No se pueden repetir cálculos en esta fase. "
+                            + "El documento o su vista previa deben permanecer inalterados."
+            ));
+        }
+
         // Ejecutamos el Orquestador de la Capa 4
-        SessionObject updatedSession = layer4Orchestrator.process(session);
+        SessionObject updatedSession;
+        try {
+            updatedSession = layer4Orchestrator.process(session);
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(409).body(Map.of("error", ex.getMessage()));
+        }
 
         // Construimos la respuesta ligera
         Layer4ResponseDto response = Layer4ResponseDto.builder()

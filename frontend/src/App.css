@@ -382,6 +382,21 @@ small {
   color: #1a4d87;
 }
 
+.stage-status {
+  display: grid;
+  gap: 3px;
+  margin: 12px 0 2px;
+  padding: 11px 12px;
+  border-left: 4px solid #1766cc;
+  background: #f5f9ff;
+  color: #355474;
+  font-size: 12px;
+}
+
+.stage-status strong {
+  color: #1758a8;
+}
+
 .inconsistencies {
   background: #fff4e5;
   color: #8a4b08;
