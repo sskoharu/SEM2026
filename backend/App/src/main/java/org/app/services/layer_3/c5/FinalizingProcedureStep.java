@@ -2,6 +2,7 @@ package org.app.services.layer_3.c5;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.app.exceptions.ClientException;
 import org.app.schemas.interfaces.layer_3.Layer3Step;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer3InternalState;
@@ -19,8 +20,6 @@ import java.util.Map;
 @Log4j2
 public class FinalizingProcedureStep implements Layer3Step {
 
-    private final org.app.services.LegalRuleRegistry legalRules;
-
     @Override
     public Layer3InternalState getState() {
         return Layer3InternalState.FINALIZING_PROCEDURE;
@@ -35,20 +34,14 @@ public class FinalizingProcedureStep implements Layer3Step {
         ProceduralOption selectedOption = session.getActionRouteOptions().getOptions().stream()
                 .filter(o -> o.getOptionId().equals(session.getSelectedOptionId()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Opción seleccionada no encontrada"));
+                .orElseThrow(() -> ClientException.error("La opción seleccionada no existe: " + session.getSelectedOptionId()));
 
         // 2. Crear el Plan de Ejecución
         Map<String, Object> plan = new HashMap<>();
-        plan.putAll(session.getCollectedParameters());
 
         // Agregamos el artículo base (ej. "71") y el título
         plan.put("base_article", selectedOption.getBasedOnArticle());
         plan.put("action_title", selectedOption.getTitle());
-        var cited = new java.util.LinkedHashSet<>(session.getCitedSourceIds());
-        if (selectedOption.getSourceId() != null) {
-            cited.add(selectedOption.getSourceId());
-        }
-        session.setCitedSourceIds(new java.util.ArrayList<>(cited));
 
         // 3. Inyectar los parámetros que llenó el usuario
         if (session.getProceduralFormData() != null) {
@@ -60,14 +53,11 @@ public class FinalizingProcedureStep implements Layer3Step {
         if (deterministicTasks != null && !deterministicTasks.isEmpty()) {
             for (ActionParameter task : deterministicTasks) {
 
-                // Una constante jurídica necesita revisión externa al modelo.
+                // Si es un STATIC_INPUT, guardamos su valor real (ej. "30")
                 if ("STATIC_INPUT".equals(task.getParameterRole())) {
-                    var value = legalRules.resolve(session, selectedOption.getBasedOnArticle(), task.getParameterName());
-                    if (value.isEmpty()) {
-                        session.setClarificationMessage("La regla jurídica del cálculo requiere revisión documentada. Plazo no determinado.");
-                        return Layer3InternalState.ERROR;
-                    }
-                    plan.put(task.getParameterName(), value.get());
+                    String staticValue = task.getCurrentValue() != null ? task.getCurrentValue() : "0";
+                    plan.put(task.getParameterName(), staticValue);
+                    log.debug("Parámetro estático '{}' inyectado con valor: {}", task.getParameterName(), staticValue);
                 }
                 // Si es un DYNAMIC_OUTPUT (o no tiene rol definido), lo marcamos como pendiente
                 else {
@@ -79,7 +69,7 @@ public class FinalizingProcedureStep implements Layer3Step {
 
         // 5. Guardar el plan en la sesión
         session.setExecutionPlan(plan);
-        log.info("Plan de ejecución preparado para Capa 4.");
+        log.info("Plan de ejecución generado para Capa 4: {}", plan);
 
         // 6. Terminamos la Capa 3
         return Layer3InternalState.DONE;

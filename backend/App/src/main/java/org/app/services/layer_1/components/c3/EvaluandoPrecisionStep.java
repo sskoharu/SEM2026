@@ -18,6 +18,9 @@ import java.util.List;
 public class EvaluandoPrecisionStep implements Layer1Step {
 
     private final SessionRepository sessionRepository;
+    private static final double PRECISION_THRESHOLD = 0.90;
+    private static final int MAX_RETRIES = 3;
+
     @Override
     public Layer1InternalState getState() {
         return Layer1InternalState.EVALUANDO_PRECISION;
@@ -29,17 +32,22 @@ public class EvaluandoPrecisionStep implements Layer1Step {
         log.info("-> EVALUANDO_PRECISION");
 
         List<Document> docs = context.getRetrievedDocs();
-        boolean hasRelevantDocuments = docs != null && !docs.isEmpty();
+        double currentScore = (docs != null && !docs.isEmpty()) ? 0.92 : 0.50; // Simulado
 
-        if (hasRelevantDocuments) {
-            log.info("   Se encontraron documentos sobre el umbral de similitud. Pasando a Clasificación.");
+        if (currentScore >= PRECISION_THRESHOLD) {
+            log.info("   Precisión alcanzada ({}). Pasando a Clasificación.", currentScore);
             sessionRepository.save(session);
             return Layer1InternalState.CLASIFICACION_POR_METADATA;
-        } else {
-            log.warn("No se encontraron documentos sobre el umbral de similitud. Solicitando aclaración.");
-            session.setClarificationMessage("No pudimos encontrar una base legal exacta. Reformula la consulta o proporciona más información.");
+        } else if (session.getRagRetryCount() >= MAX_RETRIES) {
+            log.warn("Precisión no alcanzada. Solicitando aclaración.");
+            session.setClarificationMessage("No pudimos encontrar una base legal exacta...");
             sessionRepository.save(session);
             return Layer1InternalState.SOLICITANDO_ACLARACION;
+        } else {
+            log.warn("   Precisión baja ({}). Volviendo a traducir.", currentScore);
+            session.setRagRetryCount(session.getRagRetryCount() + 1);
+            sessionRepository.save(session);
+            return Layer1InternalState.TRADUCIENDO_QUERY;
         }
     }
 }

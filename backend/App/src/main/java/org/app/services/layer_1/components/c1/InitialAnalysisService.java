@@ -7,6 +7,8 @@ import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.ClaimSessionState;
 import org.app.schemas.session_object.enums.Layer1InternalState;
 import org.app.repositories.SessionRepository;
+import org.springframework.http.HttpStatus;
+import org.app.exceptions.ClientException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,14 @@ import java.util.UUID;
 @Service
 @Log4j2
 public class InitialAnalysisService {
+
+    static final String OUT_OF_CORPUS_MESSAGE = "Mi corpus no cubre eso. Por ahora solo atiendo reclamos de la LODC sobre "
+            + "bienes defectuosos o vicios ocultos, servicio técnico y custodia, e información, precios y facturación. "
+            + "Tu caso se rige por otra materia o norma, o por un tipo de reclamo que todavía no manejo.";
+
+    static final String OUT_OF_DOMAIN_MESSAGE = "Tu relato no tiene relación con los aspectos legales. "
+            + "Describe un problema de consumo (por ejemplo, un producto defectuoso, un servicio técnico o un cobro incorrecto) "
+            + "para poder ayudarte.";
 
     private final NarrativeAnalysisAgent narrativeAgent;
     private final SessionRepository sessionRepository;
@@ -31,11 +41,7 @@ public class InitialAnalysisService {
      * y tenga la suficiente información básica para iniciar la Capa 1.
      */
     public SessionObject processInitialRequest(String rawUserInput) {
-        if (rawUserInput == null || rawUserInput.isBlank()) {
-            throw new IllegalArgumentException("El relato del consumidor es obligatorio.");
-        }
-        rawUserInput = org.app.services.ModelInputPolicy.redact(rawUserInput);
-        log.info("Iniciando análisis previo (Gatekeeper) para un nuevo relato.");
+        log.info("Iniciando análisis previo (Gatekeeper) para un relato de {} caracteres.", rawUserInput.length());
 
         // 1. Armar el contexto ligero para el Agente
         Layer1Context context = new Layer1Context(rawUserInput, null, 0, null);
@@ -46,19 +52,23 @@ public class InitialAnalysisService {
             result = narrativeAgent.analyze(context);
         } catch (Exception e) {
             log.error("Error crítico al invocar al NarrativeAnalysisAgent", e);
-            throw new RuntimeException("No se pudo procesar el lenguaje natural en este momento. Intente más tarde.");
+            throw ClientException.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .error("No se pudo procesar el lenguaje natural en este momento. Intente más tarde.");
         }
 
-        if (result == null) {
-            throw new IllegalStateException("El analizador no devolvió un resultado válido.");
+        // 3. FILTRO 1: alcance del relato (fuera del dominio / fuera del corpus / en alcance)
+        String scope = result.scope() == null ? "" : result.scope().trim().toUpperCase();
+        if ("FUERA_DE_DOMINIO".equals(scope)) {
+            log.warn("Relato fuera de dominio. Motivo: {}", result.rejectionMessage());
+            throw ClientException.error(OUT_OF_DOMAIN_MESSAGE);
         }
-
-        // 3. FILTRO 1: ¿Es un reclamo de consumo?
+        if ("FUERA_DE_CORPUS".equals(scope)) {
+            log.warn("Relato fuera del corpus. Motivo: {}", result.rejectionMessage());
+            throw ClientException.error(OUT_OF_CORPUS_MESSAGE);
+        }
         if (!result.isConsumerComplaint()) {
-            log.warn("Petición rechazada por el Portero por no corresponder al dominio de consumo.");
-            throw new IllegalArgumentException(result.rejectionMessage() != null
-                    ? result.rejectionMessage()
-                    : "El texto ingresado no parece ser un reclamo de consumo válido.");
+            log.warn("Petición rechazada por el Portero. Motivo: {}", result.rejectionMessage());
+            throw ClientException.error(OUT_OF_DOMAIN_MESSAGE);
         }
 
         // 4. Crear la Bóveda (SessionObject) SIN consumir tokens de RAG todavía
@@ -78,7 +88,10 @@ public class InitialAnalysisService {
 
             // Dejamos la sesión en estado de pausa. NO pasa al Orquestador.
             session.setLayer1State(Layer1InternalState.SOLICITANDO_ACLARACION);
-            session.setClarificationMessage("Para poder entender tu caso y buscar la ley exacta, necesitamos que aclares lo siguiente:");
+            session.setClarificationMessage("Para poder entender tu caso y buscar la ley exacta, necesitamos que aclares lo siguiente. "
+                    + "Además, debido a la escasa información de tu relato, este no cumpliría el requisito fundamental 3 de la Defensoría del Pueblo "
+                    + "(relato de los hechos: descripción cronológica, clara y sucinta de cómo ocurrió la vulneración). "
+                    + "Complétalo para poder presentar tu reclamo:");
             session.setMissingQuestions(result.clarifyingQuestions());
 
             sessionRepository.save(session);

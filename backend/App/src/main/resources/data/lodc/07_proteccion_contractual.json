@@ -3,18 +3,12 @@
     "id": "lodc_ley_art_44",
     "document": "Art. 44.- Terminación Anticipada.- En los contratos de adhesión referentes a la prestación de servicios, tales como telefonía celular, medicina prepagada, televisión satelital o por cable u otros similares, el consumidor podrá dar por terminado unilateralmente el contrato en cualquier tiempo, previa notificación por escrito con al menos quince días de anticipación a la finalización del período en curso. En estos casos, en el contrato de adhesión no se podrá incluir cláusulas ni disposición alguna que impongan al consumidor multas, sanciones o recargos de ninguna naturaleza, atribuida a la terminación anticipada de dicho contrato y de incluirlas no tendrá ningún efecto jurídico. Sin perjuicio de lo dispuesto en el presente artículo, el consumidor mantendrá la obligación de cancelar los saldos pendientes únicamente por servicios efectivamente prestados hasta la fecha de terminación unilateral del contrato, así como los valores adeudados por la adquisición de los bienes necesarios para la prestación del servicio, de ser el caso.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "44",
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Terminación Anticipada de Contratos de Adhesión",
-      "tipo_reclamo_asociado": [
-        "CONTRATOS"
-      ],
+      "tipo_reclamo_asociado": ["CONTRATOS"],
       "parametros_requeridos": [
         "wantsToTerminateEarly",
         "notifiedInWriting",
@@ -24,31 +18,19 @@
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_46",
     "document": "Art. 46.- Promociones y Ofertas.- Toda promoción u oferta especial deberá señalar, además del tiempo de duración de la misma, el precio anterior del bien o servicio y el nuevo precio o, en su defecto, el beneficio que obtendría el consumidor, en caso de aceptarla. Cuando se trate de promociones en que el incentivo consista en la participación en concursos o sorteos, el anunciante deberá informar al público sobre el monto o número de premios de aquellos, el plazo y el lugar donde se podrán reclamar. El anunciante estará obligado a difundir adecuadamente el resultado de los concursos o sorteos.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "46",
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Promociones y Ofertas Especiales",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA"
-      ],
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
       "parametros_requeridos": [
         "isOfferOrPromotion",
         "offerDetails",
@@ -57,32 +39,19 @@
         "hasAdvertisingEvidence",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "72",
-        "30"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["72", "30"]
     }
   },
   {
     "id": "lodc_ley_art_47",
     "document": "Art. 47.- Sistemas de Crédito.- Cuando el consumidor adquiera determinados bienes o servicios mediante sistemas de crédito, el proveedor estará obligado a informarle en forma previa, clara y precisa: 1. El precio al contado del bien o servicio materia de la transacción; 2. El monto total correspondiente a intereses, la tasa a la que serán calculados; así como la tasa de interés moratoria y todos los demás recargos adicionales; 3. El número, monto y periodicidad de los pagos a efectuar; y, 4. La suma total a pagar por el referido bien o servicio. Se prohíbe el establecimiento y cobro de intereses sobre intereses. El cálculo de los intereses en las compras a crédito debe hacerse exclusivamente sobre el saldo de capital impago. Es decir, cada vez que se cancele una cuota, el interés debe ser recalculado para evitar que se cobre sobre el total del capital. Lo dispuesto en este artículo y en especial en este inciso, incluye a las instituciones del Sistema Financiero. El proveedor está en la obligación de conferir recibos por cada pago parcial. El pago de la cuota correspondiente a un período de tiempo determinado hace presumir el de los anteriores.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "47",
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Sistemas de Crédito y Prohibición de Anatocismo",
-      "tipo_reclamo_asociado": [
-        "FINANCIEROS_CREDITOS_COBRANZAS"
-      ],
+      "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
       "parametros_requeridos": [
         "informedCashPrice",
         "informedTotalInterest",
@@ -95,32 +64,19 @@
         "hasPaymentProof",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "75"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
     "id": "lodc_ley_art_48",
     "document": "Art. 48.- Pago Anticipado.- En toda venta o prestación de servicios a crédito, el consumidor siempre tendrá derecho a pagar anticipadamente la totalidad de lo adeudado, o a realizar pre-pagos parciales en cantidades mayores a una cuota. En estos casos, los intereses se pagarán únicamente sobre el saldo pendiente. Lo prescrito en el presente artículo incluye al sistema financiero.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "48",
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Derecho a Pago Anticipado",
-      "tipo_reclamo_asociado": [
-        "FINANCIEROS_CREDITOS_COBRANZAS"
-      ],
+      "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
       "parametros_requeridos": [
         "requestedEarlyPayment",
         "providerRefusedEarlyPayment",
@@ -130,32 +86,19 @@
         "hasPaymentProof",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "75"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
     "id": "lodc_ley_art_49",
     "document": "Art. 49.- Cobranza de Créditos.- En la cobranza de créditos, el consumidor no deberá ser expuesto al ridículo o a la difamación, ni a cualquier tipo de coacción ilícita ni amenaza de cualquier naturaleza, dirigida a su persona, por el proveedor o quien actúe en su nombre. La obligación impuesta al proveedor, será exigible, sin perjuicio de las acciones penales a las que hubiere lugar.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "49",
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Prohibición de Cobranza Abusiva",
-      "tipo_reclamo_asociado": [
-        "FINANCIEROS_CREDITOS_COBRANZAS"
-      ],
+      "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
       "parametros_requeridos": [
         "abusiveCollectionMethods",
         "exposedToRidicule",
@@ -167,31 +110,19 @@
         "hasWrittenCommunication",
         "hasWitnesses"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_50",
     "document": "Art. 50.- Pagos con Tarjeta de Crédito.- El precio para el pago con tarjeta de crédito, será el mismo precio que al contado. Toda oferta, promoción, rebaja o descuento exigible respecto a la modalidad de pago al contado, será también exigible por el consumidor que efectúa pagos mediante el uso de tarjetas de crédito, salvo que se ponga en su conocimiento oportuna y adecuadamente, en la publicidad o información respectiva y de manera expresa, lo contrario.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "50",
       "capitulo": "Capítulo VII: Protección Contractual",
       "tema_principal": "Igualdad de Precio con Tarjeta de Crédito",
-      "tipo_reclamo_asociado": [
-        "FINANCIEROS_CREDITOS_COBRANZAS"
-      ],
+      "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
       "parametros_requeridos": [
         "paidWithCreditCard",
         "cashPrice",
@@ -204,14 +135,7 @@
         "hasPaymentProof",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "72"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "72"]
     }
   }
 ]

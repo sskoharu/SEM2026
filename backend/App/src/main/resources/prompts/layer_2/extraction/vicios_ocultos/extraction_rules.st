@@ -1,0 +1,8 @@
+- purchaseDate: Fecha de compra.
+- pricePaid: Monto pagado.
+- defectDescription: Falla del producto.
+- hasInvoice: Si tiene factura.
+- hasWarranty: Si tiene garantía.
+- thirdPartyIntervention: Si un tercero lo manipuló.
+- hasPhotosOrVideos: Si tiene fotos del defecto.
+- hasWarrantyDocument: Si tiene el documento físico de garantía.

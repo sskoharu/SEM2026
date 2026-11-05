@@ -6,6 +6,7 @@ import java.util.List;
 public record NarrativeAnalysisResult(
         // 1. Control de Filtro (Gatekeeper)
         @JsonProperty("es_reclamo_consumo") boolean isConsumerComplaint,
+        @JsonProperty("alcance_relato") String scope, // EN_ALCANCE | FUERA_DE_CORPUS | FUERA_DE_DOMINIO
         @JsonProperty("mensaje_rechazo") String rejectionMessage,
 
         // 2. Evaluación de Suficiencia

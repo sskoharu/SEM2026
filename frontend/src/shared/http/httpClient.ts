@@ -92,7 +92,7 @@ async function ejecutarIntento<T>(url: string, opciones: OpcionesHttp<T>, timeou
 export async function solicitarJson<T>(url: string, opciones: OpcionesHttp<T>): Promise<T> {
   const medicion = iniciarMedicion(opciones.operacion)
   const politica = { ...politicaPredeterminada, ...opciones.reintentos }
-  const timeout = opciones.timeoutMs ?? 15000
+  const timeout = opciones.timeoutMs ?? 60000
   const metodo = opciones.metodo ?? 'GET'
   const segura = ['GET', 'HEAD', 'OPTIONS'].includes(metodo) ||
     opciones.idempotencia?.garantizadaPorServidor === true

@@ -2,6 +2,12 @@ package org.app.schemas.session_object.enums;
 
 public enum Layer3InternalState {
 
+    // 0. Compuerta: verifica los requisitos mínimos de la Defensoría antes de gastar tokens en el razonamiento.
+    VALIDATING_DPE_REQUIREMENTS,
+
+    // 0b. TERMINAL: el usuario declaró no tener prueba de consumo; debe iniciar una conversación nueva.
+    BLOCKED_DPE_REQUIREMENTS,
+
     // 1. El Agente Razonador evalúa la lógica jurídica y genera el informe.
     EVALUATING_VIABILITY,
 

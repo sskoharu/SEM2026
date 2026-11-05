@@ -1,0 +1,196 @@
+[
+  {
+    "id": "dpe_naturaleza_rol",
+    "document": "La información de la Defensoría del Pueblo (DPE) no modifica el articulado de la LODC ni crea derecho sustantivo: es una guía práctica y procedimental para que el consumidor ejerza sus derechos. La DPE puede conocer y pronunciarse motivadamente sobre reclamos de consumidores, nacionales o extranjeros, y promover mecanismos alternativos de solución de conflictos como la mediación, siempre que el conflicto no se refiera a una infracción penal. Acudir a la DPE no impide que el consumidor acuda, en cualquier tiempo, a la instancia judicial o administrativa que corresponda.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "NATURALEZA_ROL",
+      "capa_destino": ["L3", "L5"],
+      "articulos_lodc_relacionados": ["81", "82"]
+    }
+  },
+  {
+    "id": "dpe_tramite_descripcion",
+    "document": "Trámite: Atención de peticiones por posibles vulneraciones a los derechos humanos, de la naturaleza y del consumidor. Objetivo práctico: brindar asesoría defensorial, convocar a mediación con el proveedor y tutelar derechos vulnerados. Costo: gratuito.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "DESCRIPCION_TRAMITE",
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_requisito_identificacion",
+    "document": "Requisito 1 - Documento de identificación: cédula de ciudadanía, cédula de identidad o pasaporte del consumidor que presenta la petición.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "REQUISITO",
+      "codigo_requisito": "IDENTIFICACION",
+      "obligatorio": true,
+      "capa_destino": ["L3"],
+      "campo_sesion_equivalente": "datos_personales.identificacion",
+      "sugerencia_si_falta": "Prepare su cédula de ciudadanía, cédula de identidad o pasaporte; deberá presentarlo ante la DPE.",
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_requisito_prueba_consumo",
+    "document": "Requisito 2 - Prueba de la relación de consumo: factura, contrato, nota de venta, comprobante de pago o comprobante de transferencia bancaria que demuestre la transacción con el proveedor.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "REQUISITO",
+      "codigo_requisito": "PRUEBA_CONSUMO",
+      "obligatorio": true,
+      "capa_destino": ["L3"],
+      "campo_sesion_equivalente": "evidencias",
+      "sugerencia_si_falta": "Reúna una factura, contrato, nota de venta, comprobante de pago o de transferencia que demuestre su compra o contratación.",
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_requisito_relato",
+    "document": "Requisito 3 - Relato cronológico de los hechos: descripción sucinta del problema, por ejemplo defecto del bien, negativa de garantía, cobro indebido o interrupción de servicio.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "REQUISITO",
+      "codigo_requisito": "RELATO_HECHOS",
+      "obligatorio": true,
+      "capa_destino": ["L3"],
+      "campo_sesion_equivalente": "relato",
+      "sugerencia_si_falta": "Describa en orden cronológico qué ocurrió, cuándo y con qué proveedor.",
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_requisito_reclamo_previo",
+    "document": "Requisito 4 (opcional, recomendado) - Respaldo de reclamo previo: copia o registro del reclamo presentado directamente al proveedor, por ejemplo la hoja del Libro de Reclamos del establecimiento.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "REQUISITO",
+      "codigo_requisito": "RECLAMO_PREVIO",
+      "obligatorio": false,
+      "capa_destino": ["L3"],
+      "campo_sesion_equivalente": "evidencias",
+      "sugerencia_si_falta": "Si presentó un reclamo al proveedor, conserve una copia o el registro; si no, se recomienda hacerlo primero.",
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_canal_virtual",
+    "document": "Canal virtual: el trámite puede ingresarse a través del Portal Único de Trámites (GOB.EC) o de la plataforma web institucional de la Defensoría del Pueblo (www.defensoria.gob.ec), con carga de documentos digitalizados.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "CANAL",
+      "codigo_canal": "VIRTUAL",
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_canal_presencial",
+    "document": "Canal presencial: delegaciones provinciales, coordinaciones zonales y centros de mediación de la Defensoría del Pueblo en el territorio nacional.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "CANAL",
+      "codigo_canal": "PRESENCIAL",
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_paso_0_reclamo_previo",
+    "document": "Paso previo sugerido: presentar el reclamo directamente al proveedor (por ejemplo en su Libro de Reclamos). Si el proveedor no responde o rechaza el reclamo, el consumidor puede ingresar su petición ante la Defensoría del Pueblo.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "PASO",
+      "orden_paso": 0,
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_paso_1_ingreso",
+    "document": "Paso 1 - Ingreso y admisibilidad: el consumidor presenta los requisitos por el canal virtual o presencial y la DPE verifica que el asunto sea de su competencia en materia de consumo.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "PASO",
+      "orden_paso": 1,
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81", "82"]
+    }
+  },
+  {
+    "id": "dpe_paso_2_convocatoria",
+    "document": "Paso 2 - Convocatoria: la DPE pone la petición en conocimiento del proveedor y convoca a una instancia de mediación o conciliación.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "PASO",
+      "orden_paso": 2,
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81", "82"]
+    }
+  },
+  {
+    "id": "dpe_paso_3_mediacion",
+    "document": "Paso 3 - Mediación o conciliación: espacio de diálogo asistido entre consumidor y proveedor para procurar un acuerdo, por ejemplo reparación, reposición o devolución del dinero.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "PASO",
+      "orden_paso": 3,
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_paso_4_cierre_con_acuerdo",
+    "document": "Paso 4 (con acuerdo) - Si las partes llegan a un acuerdo, este se deja constancia por escrito y debe ser cumplido por el proveedor.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "PASO",
+      "orden_paso": 4,
+      "resultado": "CON_ACUERDO",
+      "capa_destino": ["L5"],
+      "articulos_lodc_relacionados": ["81"]
+    }
+  },
+  {
+    "id": "dpe_paso_4_cierre_sin_acuerdo",
+    "document": "Paso 4 (sin acuerdo) - Si las partes no llegan a un acuerdo, la DPE elabora un informe y puede solicitar a las autoridades competentes el inicio del proceso correspondiente, incluso ante el Juez de Contravenciones. Si el consumidor anexa este informe a su denuncia, el juez lo aprecia de acuerdo a su sana crítica y su contenido se considera conforme a la LODC. El juzgamiento de infracciones corresponde al Juez de Contravenciones.",
+    "metadata": {
+      "documento_tipo": "ORIENTACION_DPE",
+      "fuente": "Defensoría del Pueblo del Ecuador / GOB.EC",
+      "url": "https://www.gob.ec/dpe/tramites/atencion-peticiones-posibles-vulneraciones-derechos-humanos-naturaleza/",
+      "seccion": "PASO",
+      "orden_paso": 4,
+      "resultado": "SIN_ACUERDO",
+      "capa_destino": ["L3", "L5"],
+      "articulos_lodc_relacionados": ["83", "84"]
+    }
+  }
+]

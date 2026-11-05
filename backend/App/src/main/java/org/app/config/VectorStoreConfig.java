@@ -36,11 +36,21 @@ public class VectorStoreConfig {
     }
 
     @Bean
-    @Primary // <-- AÑADE ESTO para que Spring sepa que este es el VectorStore principal
-    public VectorStore vectorStore(QdrantClient qdrantClient,
-                                   GoogleEmbeddingModel googleEmbeddingModel) { // <-- Tu clase manual
-        return QdrantVectorStore.builder(qdrantClient, googleEmbeddingModel)
+    @Primary
+    public VectorStore vectorStore(QdrantClient qdrantClient, EmbeddingModel embeddingModel) {
+        return QdrantVectorStore.builder(qdrantClient, embeddingModel)
                 .collectionName(collectionName)
+                .initializeSchema(true)
+                .build();
+    }
+
+    // Colección separada para no contaminar la recuperación de artículos de la LODC
+    @Bean(name = "dpeVectorStore")
+    public VectorStore dpeVectorStore(QdrantClient qdrantClient,
+                                      EmbeddingModel embeddingModel,
+                                      @Value("${app.dpe.collection-name:dpe_orientacion}") String dpeCollectionName) {
+        return QdrantVectorStore.builder(qdrantClient, embeddingModel)
+                .collectionName(dpeCollectionName)
                 .initializeSchema(true)
                 .build();
     }

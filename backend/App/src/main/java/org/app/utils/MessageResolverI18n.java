@@ -18,4 +18,8 @@ public class MessageResolverI18n {
     public String get(String code, Object... args) throws NoSuchMessageException {
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
     }
+
+    public String getOrDefault(String code, String defaultMessage, Object... args) {
+        return messageSource.getMessage(code, args, defaultMessage, LocaleContextHolder.getLocale());
+    }
 }

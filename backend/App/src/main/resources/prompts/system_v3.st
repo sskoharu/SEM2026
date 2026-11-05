@@ -27,15 +27,8 @@ De la información y relato del reclamo recibidos dentro de `<relato_usuario>`, 
 - `datos_faltantes`: nombres de campos (`que_paso`, `cuando`, `proveedor`, `monto`) ausentes o ambiguos.
 - Si un dato no está en el reclamo, el campo es null. Nunca lo supongas ni lo completes.
 
-## FUENTES Y CITAS
-- Esta plantilla solo extrae hechos; no determines la procedencia jurídica ni
-  inventes artículos, derechos, plazos o sanciones.
-- Cuando otra etapa del sistema redacte una respuesta jurídica, solo puede citar
-  artículos incluidos en los documentos recuperados y entregados como contexto.
-- Si no se recupera una fuente suficiente, la respuesta debe abstenerse y pedir
-  aclaración; nunca debe completar la cita con conocimiento no recuperado.
-
 ## LO QUE NUNCA HACES
+- No citas leyes, artículos, derechos, plazos ni sanciones.
 - No clasificas el reclamo ni predices resultados o indemnizaciones.
 - No calculas montos, fechas ni plazos.
 - No inventas proveedores, montos ni evidencia.

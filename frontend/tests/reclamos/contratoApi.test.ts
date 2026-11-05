@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { analizarConApi, esRespuestaSesion, seleccionarAccionConApi } from '../../src/modules/reclamos/services/reclamosApi'
+import { analizarConApi, ejecutarCalculosConApi, enviarFormularioConApi, esRespuestaSesion, seleccionarAccionConApi } from '../../src/modules/reclamos/services/reclamosApi'
 import { forgetSessions } from '../../src/modules/reclamos/services/sessionAccess'
 import { reclamoValido } from './datos'
 
@@ -35,5 +35,43 @@ describe('Contrato y autorización React–Spring', () => {
     expect(result.camposFormulario[0].parameterName).toBe('field')
     expect(result.opcionSeleccionada).toBe('Opción de prueba')
     expect(fetchMock.mock.calls[1][0]).toContain('/select-action/' + id)
+  })
+
+  it('acepta la respuesta resumida DONE de los endpoints de Capa 3', async () => {
+    const id = '22222222-2222-2222-2222-222222222222'
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({
+        status: 'DONE',
+        message: 'Formulario validado y procesado exitosamente.',
+        executionPlan: { action_title: 'Reposición' },
+      }), { headers: { 'Content-Type': 'application/json' } }),
+    ))
+
+    const resultado = await enviarFormularioConApi(id, { providerAddress: 'Avenida Quito' })
+
+    expect(resultado.estadoCapa3).toBe('DONE')
+    expect(resultado.planEjecucion).toEqual({ action_title: 'Reposición' })
+  })
+
+  it('acepta un plan de Capa 4 sin tareas de cálculo', async () => {
+    const id = '33333333-3333-3333-3333-333333333333'
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      sessionId: id,
+      status: 'CALCULATIONS_COMPLETED',
+      message: 'Cálculos deterministas ejecutados exitosamente.',
+      executionPlan: {
+        action_title: 'Corrección de la publicidad engañosa',
+        base_article: '7, 12 y 17',
+      },
+      nextPhase: 'DOCUMENT_GENERATION',
+    }), { headers: { 'Content-Type': 'application/json' } }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    const resultado = await ejecutarCalculosConApi(id)
+
+    expect(resultado.executionPlan).toEqual({
+      action_title: 'Corrección de la publicidad engañosa',
+      base_article: '7, 12 y 17',
+    })
   })
 })

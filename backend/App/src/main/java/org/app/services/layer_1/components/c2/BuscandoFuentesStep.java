@@ -17,8 +17,6 @@ import java.util.List;
 @Log4j2
 public class BuscandoFuentesStep implements Layer1Step {
 
-    @org.springframework.beans.factory.annotation.Value("${rag.top-k}")
-    private int topK;
     private final VectorSearchTool vectorSearchTool;
 
     @Override
@@ -30,10 +28,10 @@ public class BuscandoFuentesStep implements Layer1Step {
     public Layer1InternalState execute(Layer1ExecutionContext context) {
         SessionObject session = context.getSession();
 
-        log.info("-> BUSCANDO_FUENTES");
+        log.info("-> BUSCANDO_FUENTES | Query: '{}'", session.getCurrentSearchQuery());
 
         // 1. Ejecutamos la búsqueda vectorial en Qdrant
-        List<Document> retrievedDocs = vectorSearchTool.search(session.getCurrentSearchQuery(), topK);
+        List<Document> retrievedDocs = vectorSearchTool.search(session.getCurrentSearchQuery(), 5);
 
         // 2. Guardamos los documentos en el contexto para que el siguiente paso los evalúe
         context.setRetrievedDocs(retrievedDocs);

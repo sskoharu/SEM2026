@@ -6,7 +6,6 @@ import org.app.services.layer_3.dto.ActionParameter;
 
 import java.util.List;
 import java.util.Map;
-import org.app.schemas.session_object.LegalSource;
 
 @Data
 @Builder
@@ -14,8 +13,6 @@ public class Layer3ActionResponseDto {
     private String sessionId;
     private String layer3State;
     private String viabilityReport;
-    private List<LegalSource> legalSources;
-    private List<String> citedSourceIds;
     private String clarificationMessage; // Para errores
 
     // Datos de la opción seleccionada

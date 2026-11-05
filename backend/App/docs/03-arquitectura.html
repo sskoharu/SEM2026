@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>03 · Arquitectura</title></head>
+<body style="font-family:sans-serif"><h2>03 · Arquitectura</h2>
+<pre class="mermaid">
+flowchart LR
+    U([Usuario]) --> FE["Frontend<br/>React + TypeScript"]
+    FE -- "HTTPS · API REST /api/v1/claims" --> BE
+
+    subgraph BACK["Backend · Spring Boot 4 + Spring AI (Java 21)"]
+        direction TB
+        BE["Controladores REST<br/>+ limitador de tasa por IP"]
+        ORQ{{"Orquestador de capas<br/>(patrón State)"}}
+        BE --> ORQ
+
+        subgraph CAPAS["Capas del flujo"]
+            direction TB
+            L1["Capa 1 · Clasificación<br/>traducción de la consulta, búsqueda RAG,<br/>tipo de reclamo por metadatos"]
+            L2["Capa 2 · Parámetros<br/>extracción por tipo de reclamo,<br/>preguntas y validación"]
+            L3["Capa 3 · Viabilidad y procedimiento<br/>compuerta DPE, razonamiento legal,<br/>informe validado, ruta de acción"]
+            L4["Capa 4 · Cálculos<br/>resolutor por catálogo (código)<br/>+ planificador LLM de respaldo"]
+            L5["Capa 5 · Documento<br/>redacción de secciones (LLM)<br/>+ plantilla Word (Apache POI)"]
+            L1 --> L2 --> L3 --> L4 --> L5
+        end
+        ORQ --> L1
+
+        subgraph TOOLS["Herramientas del agente (código determinista)"]
+            direction TB
+            T0["buscar en Qdrant (VectorSearchTool)"]
+            T1["validación de entradas (ValidationTools)"]
+            T2["herramientas de cálculo por tipo de reclamo<br/>fechas, montos, Art. 22 / 71 / 91 / 93"]
+            T3["catálogo de cálculo<br/>data/calculations/*/catalog.json"]
+        end
+        L1 -.-> T0
+        L2 -.-> T1
+        L3 -.-> T0
+        L4 -.-> T2
+        L4 -.-> T3
+    end
+
+    LLM[["Modelo de lenguaje<br/>OpenAI gpt-5.6-sol<br/>(salida estructurada)"]]
+    EMB[["Modelo de embeddings<br/>text-embedding-3-large"]]
+    L1 & L2 & L3 & L4 & L5 <--> LLM
+    T0 --> EMB
+
+    subgraph DATA["Almacenamiento"]
+        direction TB
+        QD[("Qdrant<br/>lodc_leyes_vector<br/>dpe_orientacion")]
+        RD[("Redis<br/>sesiones y límite de tasa")]
+        PG[("PostgreSQL<br/>claim_case · JSONB")]
+    end
+    T0 --> QD
+    ORQ <--> RD
+    ORQ <--> PG
+
+    subgraph SRC["Fuentes"]
+        direction TB
+        F1["F01 · LODC<br/>11 JSON · 64 fragmentos"]
+        F2["F02 · Orientación DPE<br/>14 fragmentos"]
+    end
+    F1 & F2 --> ING["Ingesta al arrancar<br/>(LodcDataIngestionRunner,<br/>DpeDataIngestionRunner)"]
+    ING --> EMB
+    ING --> QD
+
+    L5 -- "Documento .docx" --> FE
+</pre>
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'; mermaid.initialize({startOnLoad:true});</script>
+</body></html>

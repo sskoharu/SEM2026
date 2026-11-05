@@ -1,7 +1,12 @@
 package org.app.services.layer_2.components;
 
 import lombok.extern.log4j.Log4j2;
+import org.app.exceptions.ClientException;
 import org.app.repositories.SessionRepository;
+import org.springframework.ai.retry.NonTransientAiException;
+import org.springframework.ai.retry.TransientAiException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.ResourceAccessException;
 import org.app.schemas.interfaces.layer_2.Layer2Step;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.ClaimSessionState;
@@ -56,18 +61,27 @@ public class Layer2Orchestrator {
             if (currentStep == null) {
                 log.error("CRÍTICO: No hay un handler para el estado: {}", session.getLayer2State());
                 session.setLayer2State(Layer2InternalState.ERROR);
-                break;
+                sessionRepository.save(session);
+                throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .error("Estado interno no soportado en la Capa 2.");
             }
 
             try {
                 Layer2InternalState nextState = currentStep.execute(context);
                 session.setLayer2State(nextState);
                 sessionRepository.save(session);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("Error crítico ejecutando el paso: {}", session.getLayer2State(), e);
                 session.setLayer2State(Layer2InternalState.ERROR);
                 session.setClarificationMessage("Ocurrió un error procesando tu respuesta. Por favor, intenta de nuevo.");
-                break;
+                sessionRepository.save(session);
+                if (e instanceof ClientException
+                        || e instanceof TransientAiException || e instanceof NonTransientAiException
+                        || e instanceof ResourceAccessException) {
+                    throw e; // El GlobalExceptionHandler ya sabe responder a estos errores
+                }
+                throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .error("Ocurrió un error procesando tu respuesta. Por favor, intenta de nuevo.");
             }
         }
 

@@ -1,0 +1,110 @@
+# 03 · Arquitectura
+
+## 1. Diagrama
+
+```mermaid
+flowchart LR
+    U([Usuario]) --> FE["Frontend<br/>React + TypeScript"]
+    FE -- "HTTPS · API REST /api/v1/claims" --> BE
+
+    subgraph BACK["Backend · Spring Boot 4 + Spring AI (Java 21)"]
+        direction TB
+        BE["Controladores REST<br/>+ limitador de tasa por IP"]
+        ORQ{{"Orquestador de capas<br/>(patrón State)"}}
+        BE --> ORQ
+
+        subgraph CAPAS["Capas del flujo"]
+            direction TB
+            L1["Capa 1 · Clasificación<br/>traducción de la consulta, búsqueda RAG,<br/>tipo de reclamo por metadatos"]
+            L2["Capa 2 · Parámetros<br/>extracción por tipo de reclamo,<br/>preguntas y validación"]
+            L3["Capa 3 · Viabilidad y procedimiento<br/>compuerta DPE, razonamiento legal,<br/>informe validado, ruta de acción"]
+            L4["Capa 4 · Cálculos<br/>resolutor por catálogo (código)<br/>+ planificador LLM de respaldo"]
+            L5["Capa 5 · Documento<br/>redacción de secciones (LLM)<br/>+ plantilla Word (Apache POI)"]
+            L1 --> L2 --> L3 --> L4 --> L5
+        end
+        ORQ --> L1
+
+        subgraph TOOLS["Herramientas del agente (código determinista)"]
+            direction TB
+            T0["buscar en Qdrant (VectorSearchTool)"]
+            T1["validación de entradas (ValidationTools)"]
+            T2["herramientas de cálculo por tipo de reclamo<br/>fechas, montos, Art. 22 / 71 / 91 / 93"]
+            T3["catálogo de cálculo<br/>data/calculations/*/catalog.json"]
+        end
+        L1 -.-> T0
+        L2 -.-> T1
+        L3 -.-> T0
+        L4 -.-> T2
+        L4 -.-> T3
+    end
+
+    LLM[["Modelo de lenguaje<br/>OpenAI gpt-5.6-sol<br/>(salida estructurada)"]]
+    EMB[["Modelo de embeddings<br/>text-embedding-3-large"]]
+    L1 & L2 & L3 & L4 & L5 <--> LLM
+    T0 --> EMB
+
+    subgraph DATA["Almacenamiento"]
+        direction TB
+        QD[("Qdrant<br/>lodc_leyes_vector<br/>dpe_orientacion")]
+        RD[("Redis<br/>sesiones y límite de tasa")]
+        PG[("PostgreSQL<br/>claim_case · JSONB")]
+    end
+    T0 --> QD
+    ORQ <--> RD
+    ORQ <--> PG
+
+    subgraph SRC["Fuentes"]
+        direction TB
+        F1["F01 · LODC<br/>11 JSON · 64 fragmentos"]
+        F2["F02 · Orientación DPE<br/>14 fragmentos"]
+    end
+    F1 & F2 --> ING["Ingesta al arrancar<br/>(LodcDataIngestionRunner,<br/>DpeDataIngestionRunner)"]
+    ING --> EMB
+    ING --> QD
+
+    L5 -- "Documento .docx" --> FE
+```
+
+## 2. Descripción del flujo de una consulta de principio a fin
+
+El ciclo de vida de un caso sigue cinco capas secuenciales. La interpretación semántica la hace el modelo de lenguaje; las decisiones procesales y los cálculos los hace el código Java. El estado del caso se guarda en la sesión (Redis) y puede persistirse en PostgreSQL para retomarlo.
+
+1. **Recepción del caso.** El usuario escribe el relato desde el Frontend (`POST /api/v1/claims/start`). Cada petición pasa por el limitador de tasa por IP, que usa Redis, y se crea una sesión.
+
+2. **Capa 1 · Clasificación del reclamo.**
+   - El agente analiza el relato (`NarrativeAnalysisAgent`) y lo traduce a una consulta jurídica (`LegalTranslatorAgent`).
+   - La herramienta de búsqueda consulta en Qdrant los fragmentos de la LODC, con umbral de similitud de 0,30.
+   - Un paso determinista infiere el tipo de reclamo (uno de ocho) a partir de los metadatos `tipo_reclamo_asociado` de los fragmentos recuperados.
+   - Si la precisión es insuficiente, pide aclaraciones al usuario (`/layer1/clarify`).
+
+3. **Capa 2 · Recolección de parámetros.**
+   - Un agente extractor propio del tipo de reclamo pre-llena los parámetros a partir del relato y de la evidencia declarada (fechas, montos, proveedor).
+   - El sistema determina qué datos faltan según `parametros_requeridos`, genera preguntas (`QuestionGeneratorAgent`) y valida cada respuesta (`ValidationClassifierAgent` y `ValidationTools`).
+   - Repite hasta completar los datos (`/layer2/answer`).
+
+4. **Capa 3 · Viabilidad y procedimiento.**
+   - **Compuerta DPE:** el código comprueba los requisitos de admisión de la Defensoría del Pueblo con la colección `dpe_orientacion`.
+   - **Razonamiento legal:** `LegalReasoningAgent` analiza los hechos frente a los artículos de la LODC y evalúa la viabilidad.
+   - **Informe y validación del usuario (human-in-the-loop):** el backend presenta un informe estructurado. El usuario lo revisa, lo corrige con `/batch-update` y lo acepta con `/accept`. Este informe aún no es el documento final.
+   - **Ruta de acción:** `ActionRouteAgent` propone opciones procesales con base en los artículos procedimentales. El usuario elige una (`/select-action`) y completa su formulario (`/submit-procedural-form`).
+   - **Plan de ejecución:** el paso final arma el `executionPlan` con el artículo base, los datos del formulario y las variables por calcular, marcadas como `PENDIENTE_CALCULO`.
+
+5. **Capa 4 · Cálculos deterministas (código en lugar de alucinación).** El modelo no calcula montos ni fechas.
+   - El **resolutor por catálogo** busca cada variable pendiente en `data/calculations/<tipo>/catalog.json`, que la vincula con su artículo, y obtiene los argumentos de los datos recolectados.
+   - Según la entrada del catálogo, copia un dato existente, aplica una constante legal o invoca una herramienta Java de cálculo con `BigDecimal` y `java.time` (por ejemplo, plazo del Art. 22, multa mínima del Art. 71, interés legal del Art. 93).
+   - Solo las variables sin regla en el catálogo pasan al planificador LLM de respaldo (`CalculationPlannerAgent`), que se limita a ellas.
+   - Los valores que debe fijar una autoridad (por ejemplo, la indemnización por daños y perjuicios) quedan como `A_DEFINIR_POR_AUTORIDAD`. Los datos que faltan quedan como `DATO_FALTANTE` y los fallos como `ERROR_CALCULO`.
+   - El catálogo cubre hoy los tipos 1, 2 y 4.
+
+6. **Capa 5 · Generación del documento.**
+   - `PlanRenderer` convierte los marcadores en texto legible, por ejemplo "pendiente de determinar por la autoridad competente".
+   - `DocumentDraftingAgent` redacta solo las secciones narrativas (hechos y pretensiones) con los datos validados y la cuantía calculada.
+   - `DocumentGeneratorService` inyecta esos textos y los datos del consumidor, el proveedor, los artículos y la lista de evidencias en la plantilla fija `Plantilla_Reclamo_LODC.docx` (Apache POI, variables `{{...}}`). Añade al final la sección DPE.
+   - El usuario descarga el `.docx` desde el Frontend.
+
+## 3. Límites de la implementación actual
+
+- No hay anonimización de datos personales antes de enviar texto al modelo.
+- El modelo redacta los hechos y las pretensiones; la plantilla, los datos de las partes, los artículos y la cuantía los impone el código.
+- No se verifican el contenido ni la autenticidad de los adjuntos: la evidencia se gestiona como lista declarada.
+- El catálogo de cálculo no cubre los tipos 3, 5, 6, 7 y 8.

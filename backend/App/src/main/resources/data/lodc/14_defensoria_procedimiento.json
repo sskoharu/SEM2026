@@ -1,0 +1,58 @@
+[
+  {
+    "id": "lodc_ley_art_81",
+    "document": "Art. 81.- Facultad de la Defensoría del Pueblo.- Es facultad de la Defensoría del Pueblo, conocer y pronunciarse motivadamente sobre los reclamos y las quejas, que presente cualquier consumidor, nacional o extranjero, que resida o esté de paso en el país y que considere que ha sido directa o indirectamente afectado por la violación o inobservancia de los derechos fundamentales del consumidor, establecidos en la Constitución Política de la República, los tratados o convenios internacionales de los cuales forme parte nuestro país, la presente Ley, así como las demás leyes conexas. En el procedimiento señalado en el inciso anterior, la Defensoría del Pueblo podrá promover la utilización de mecanismos alternativos para la solución de conflictos, como la mediación, siempre que dicho conflicto no se refiera a una infracción penal. Sin perjuicio de lo dispuesto en el presente artículo, el consumidor podrá acudir, en cualquier tiempo, a la instancia judicial o administrativa que corresponda.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "81",
+      "capitulo": "Capítulo XIV",
+      "tema_principal": "Facultad de la Defensoría del Pueblo y Mediación",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": [],
+      "articulos_procedimentales_asociados": ["82", "83", "84"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_82",
+    "document": "Art. 82.- Procedimiento ante la Defensoría del Pueblo.- En lo relacionado con tal procedimiento, serán aplicables a las disposiciones del Título III de la Ley Orgánica de la Defensoría del Pueblo, así como las disposiciones reglamentarias que para este efecto dicte el Defensor del Pueblo.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "82",
+      "capitulo": "Capítulo XIV",
+      "tema_principal": "Procedimiento ante la Defensoría del Pueblo",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": [],
+      "articulos_procedimentales_asociados": ["81", "83"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_83",
+    "document": "Art. 83.- Informe.- Una vez agotado el procedimiento anterior y, en caso de que las partes no hayan llegado a un acuerdo, la Defensoría del Pueblo elaborará un informe en base del cual solicitará a las autoridades competentes la iniciación del respectivo proceso investigativo del que se podrá desprender la imposición de las sanciones establecidas en la presente Ley, así como la exigencia de que se de cumplimiento a la obligación pendiente. El informe emitido por la Defensoría del Pueblo será apreciado por el juez de acuerdo a su sana crítica. El Defensor del Pueblo podrá acudir ante el Juez de Contravenciones de su respectiva jurisdicción a fin de solicitar el inicio del respectivo proceso.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "83",
+      "capitulo": "Capítulo XIV",
+      "tema_principal": "Informe de la Defensoría del Pueblo",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": [],
+      "articulos_procedimentales_asociados": ["81", "82", "84"]
+    }
+  },
+  {
+    "id": "lodc_ley_art_84",
+    "document": "Art. 84.- Juzgamiento de Infracciones.- Son competentes para conocer y resolver sobre las infracciones a las normas contenidas en la presente Ley, en primera instancia, el Juez de Contravenciones de la respectiva jurisdicción, y, en caso de apelación, el Juez de lo Penal de la respectiva jurisdicción. El juzgamiento de las infracciones previstas en esta Ley se iniciará mediante denuncia, acusación particular o excitativa fiscal. Propuesta la denuncia y una vez citado el acusado, el Juez señalará día y hora para la audiencia oral de juzgamiento, la misma que deberá llevarse a cabo dentro del plazo de diez días contados a partir de la fecha de la notificación. Dicha audiencia iniciará con la contestación del acusado. A esta audiencia concurrirán las partes con todas las pruebas de las que se crean asistidos, previniéndoles que se procederá en rebeldía. Se dispondrá que las partes presenten sus pruebas, luego de lo cual se dictará sentencia en la misma audiencia, de ser posible, caso contrario, se lo hará dentro del plazo perentorio de tres días. Si el consumidor anexa a su denuncia el informe emitido por la Defensoría del Pueblo, se considerará su contenido de conformidad a lo dispuesto en la presente Ley.",
+    "metadata": {
+      "documento_tipo": "LEY",
+      "ley": "LODC",
+      "numero_articulo": "84",
+      "capitulo": "Capítulo XIV",
+      "tema_principal": "Juzgamiento de Infracciones",
+      "tipo_reclamo_asociado": [],
+      "parametros_requeridos": [],
+      "articulos_procedimentales_asociados": ["81", "83"]
+    }
+  }
+]

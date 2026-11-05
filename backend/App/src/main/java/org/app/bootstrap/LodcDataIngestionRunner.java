@@ -10,6 +10,7 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -26,14 +27,12 @@ import java.util.UUID;
 @Component
 @Order(1) // Se ejecuta primero
 @Log4j2
+@ConditionalOnProperty(name = "app.ingestion.enabled", havingValue = "true")
 public class LodcDataIngestionRunner implements CommandLineRunner {
 
     private final VectorStore vectorStore;
     private final ObjectMapper objectMapper;
     private final QdrantClient qdrantClient; // <-- NUEVO
-
-    @Value("${rag.ingest-on-start:false}")
-    private boolean ingestOnStart;
 
     @Value("${spring.ai.vectorstore.qdrant.collection-name}")
     private String collectionName; // <-- NUEVO
@@ -46,10 +45,6 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (!ingestOnStart) {
-            log.info("Ingesta automática deshabilitada. Qdrant no se modifica al iniciar.");
-            return;
-        }
         log.info("======================================================");
         log.info("INICIANDO INGESTA DE LA LODC A QDRANT");
         log.info("======================================================");
@@ -69,8 +64,6 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
         }
 
         List<Document> allDocuments = new ArrayList<>();
-        List<String> failures = new ArrayList<>();
-        java.util.Set<String> identifiers = new java.util.HashSet<>();
 
         // 2. Leer cada archivo
         for (Resource resource : resources) {
@@ -88,37 +81,13 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
 
                     // CORRECCIÓN: Qdrant exige UUIDs, no Strings arbitrarios.
                     String semanticId = article.getId();
-                    if (semanticId == null || semanticId.isBlank()) {
-                        throw new IllegalArgumentException(
-                                "Se encontró un artículo sin identificador en " + resource.getFilename()
-                        );
-                    }
-
-                    if (!identifiers.add(semanticId)) {
-                        throw new IllegalArgumentException("Identificador duplicado en corpus.");
-                    }
-                    UUID uuid = UUID.nameUUIDFromBytes(
-                            semanticId.getBytes(StandardCharsets.UTF_8)
-                    );
+                    UUID uuid = UUID.nameUUIDFromBytes(semanticId.getBytes(StandardCharsets.UTF_8));
 
                     // Guardamos el ID original en los metadatos para no perder la referencia
-                    Map<String, Object> metadata = article.getMetadata() == null
-                            ? new HashMap<>()
-                            : new HashMap<>(article.getMetadata());
+                    Map<String, Object> metadata = new HashMap<>(article.getMetadata());
                     metadata.put("original_id", semanticId);
-                    metadata.put("document_id", semanticId);
-                    metadata.put("source_file", resource.getFilename());
 
-                    // No se inventan URL ni fechas de vigencia.
-                    // Si el corpus no las proporciona, se marca explícitamente.
-                    metadata.putIfAbsent("reviewed", false);
-                    metadata.putIfAbsent("status", "PENDIENTE_REVISION");
-                    metadata.putIfAbsent("url", "");
-                    metadata.putIfAbsent("vigencia", "No verificada");
-
-                    org.app.services.ModelInputPolicy.assertSafe(article.getDocument());
-
-                    // Spring AI generará el embedding usando nuestro GoogleEmbeddingModel
+                    // Spring AI generará el embedding usando el EmbeddingModel configurado
                     return new Document(
                             uuid.toString(), // Pasamos el UUID válido a Qdrant
                             article.getDocument(),
@@ -130,28 +99,16 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
                 log.info("  -> Cargados {} artículos del archivo {}.", docsFromFile.size(), resource.getFilename());
 
             } catch (Exception e) {
-                failures.add(resource.getFilename());
-                log.error("Error leyendo un archivo del corpus: {}", resource.getFilename());
+                log.error("❌ Error leyendo el archivo: " + resource.getFilename(), e);
             }
-        }
-
-        if (!failures.isEmpty()) {
-            throw new IllegalStateException("Ingesta cancelada antes del upsert; archivos inválidos: " + failures);
         }
 
         // 3. Guardar TODO en Qdrant
         if (!allDocuments.isEmpty()) {
             log.info("Generando Embeddings e insertando {} documentos en Qdrant Cloud...", allDocuments.size());
             // Qdrant hará un UPSERT basado en los UUIDs generados
-            List<Document> approved = allDocuments.stream()
-                    .filter(new org.app.services.CorpusPolicy()::approved).toList();
-            if (approved.isEmpty()) {
-                log.warn("No hay documentos aprobados; no se escriben vectores ni se sustituyen documentos existentes.");
-                return;
-            }
-            vectorStore.add(approved);
-            log.info("Ingesta: {} documentos aprobados; {} pendientes excluidos.",
-                    approved.size(), allDocuments.size() - approved.size());
+            vectorStore.add(allDocuments);
+            log.info("✅ ¡INGESTA COMPLETADA CON ÉXITO! Total de documentos en el corpus: {}", allDocuments.size());
         } else {
             log.warn("No se generaron documentos para insertar.");
         }

@@ -2,7 +2,12 @@ package org.app.services.layer_3;
 
 
 import lombok.extern.log4j.Log4j2;
+import org.app.exceptions.ClientException;
 import org.app.repositories.SessionRepository;
+import org.springframework.ai.retry.NonTransientAiException;
+import org.springframework.ai.retry.TransientAiException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.ResourceAccessException;
 import org.app.schemas.interfaces.layer_3.Layer3Step;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.ClaimSessionState;
@@ -39,17 +44,10 @@ public class Layer3Orchestrator {
                                  String selectedOptionId, Map<String, Object> proceduralFormData) {
         log.info("Iniciando/Reanudando Orquestador Capa 3 para sesión: {}", session.getSessionId());
 
-        // Un estado de abstención/error es terminal: ninguna aceptación, selección
-        // ni envío posterior puede reactivar esta evaluación sin respaldo.
-        if (session.getLayer3State() == Layer3InternalState.ERROR) {
-            log.warn("Se rechazó continuar una evaluación detenida: {}", session.getSessionId());
-            return session;
-        }
-
         // 1. Lógica de entrada (Entry Point)
         if (session.getLayer3State() == null) {
-            log.info("Primera entrada a la Capa 3. Iniciando en EVALUATING_VIABILITY.");
-            session.setLayer3State(Layer3InternalState.EVALUATING_VIABILITY);
+            log.info("Primera entrada a la Capa 3. Iniciando en VALIDATING_DPE_REQUIREMENTS.");
+            session.setLayer3State(Layer3InternalState.VALIDATING_DPE_REQUIREMENTS);
             session.setCurrentPhase(ClaimSessionState.VIABILITY_EVALUATION);
 
         } else if (batchParameters != null && !batchParameters.isEmpty()) {
@@ -86,6 +84,7 @@ public class Layer3Orchestrator {
                 && session.getLayer3State() != Layer3InternalState.WAITING_FOR_DECISION
                 && session.getLayer3State() != Layer3InternalState.WAITING_FOR_ACTION_SELECTION
                 && session.getLayer3State() != Layer3InternalState.WAITING_FOR_PROCEDURAL_INPUT
+                && session.getLayer3State() != Layer3InternalState.BLOCKED_DPE_REQUIREMENTS
                 && session.getLayer3State() != Layer3InternalState.ERROR) {
 
             Layer3Step currentStep = steps.get(session.getLayer3State());
@@ -93,18 +92,27 @@ public class Layer3Orchestrator {
             if (currentStep == null) {
                 log.error("CRÍTICO: No hay un handler para el estado: {}", session.getLayer3State());
                 session.setLayer3State(Layer3InternalState.ERROR);
-                break;
+                sessionRepository.save(session);
+                throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .error("Estado interno no soportado en la Capa 3.");
             }
 
             try {
                 Layer3InternalState nextState = currentStep.execute(context);
                 session.setLayer3State(nextState);
                 sessionRepository.save(session);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("Error crítico ejecutando el paso: {}", session.getLayer3State(), e);
                 session.setLayer3State(Layer3InternalState.ERROR);
                 session.setClarificationMessage("Ocurrió un error procesando tu solicitud en el razonamiento jurídico.");
-                break;
+                sessionRepository.save(session);
+                if (e instanceof ClientException
+                        || e instanceof TransientAiException || e instanceof NonTransientAiException
+                        || e instanceof ResourceAccessException) {
+                    throw e; // El GlobalExceptionHandler ya sabe responder a estos errores
+                }
+                throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .error("Ocurrió un error procesando tu solicitud en el razonamiento jurídico.");
             }
         }
 
