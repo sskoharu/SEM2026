@@ -59,6 +59,11 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <!-- 1. Web REST Server -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -20,10 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CorpusCatalog {
     private final List<Document> documents;
-    private static final Pattern ARTICLE = Pattern.compile("(?i)art(?:iculo|ículo)?[.]?\\s*([0-9]{1,4})");
+    private static final Pattern ARTICLE = Pattern.compile(
+            "(?i)\\bart(?:iculo|ículo)?[.]?\\s*([0-9]{1,4}(?:\\.[0-9]{1,3})?)\\b");
 
     @Autowired
-    public CorpusCatalog(ObjectMapper mapper) throws java.io.IOException {
+    public CorpusCatalog(ObjectMapper mapper, CorpusPolicy policy) throws java.io.IOException {
         var all = new ArrayList<Document>();
         for (var resource : new PathMatchingResourcePatternResolver().getResources("classpath:data/lodc/*.json")) {
             try (var stream = resource.getInputStream()) {
@@ -31,7 +32,7 @@ public class CorpusCatalog {
                 for (var entry : entries) {
                     Map<String, Object> metadata = new HashMap<>(entry.getMetadata());
                     metadata.put("original_id", entry.getId());
-                    all.add(new Document(entry.getId(), entry.getDocument(), metadata));
+                    all.add(policy.reviewed(new Document(entry.getId(), entry.getDocument(), metadata)));
                 }
             }
         }
@@ -43,14 +44,30 @@ public class CorpusCatalog {
     }
 
     public List<Document> lexical(String query, CorpusPolicy policy, int limit) {
+        if (query == null || query.isBlank() || limit < 1) {
+            return List.of();
+        }
         String normalized = normalize(query);
         var article = ARTICLE.matcher(query);
         String exact = article.find() ? article.group(1) : null;
+        if (exact != null) {
+            return articles(java.util.Set.of(exact), policy).stream().limit(limit).toList();
+        }
         String[] terms = normalized.split("[^a-z0-9]+");
         return documents.stream().filter(policy::approved)
                 .filter(doc -> score(doc, terms, exact) >= 2)
                 .sorted(Comparator.comparingInt((Document doc) -> score(doc, terms, exact)).reversed())
                 .limit(limit).toList();
+    }
+
+    public List<Document> articles(java.util.Set<String> numbers, CorpusPolicy policy) {
+        return documents.stream().filter(policy::approved)
+                .filter(document -> numbers.contains(String.valueOf(document.getMetadata().get("numero_articulo"))))
+                .toList();
+    }
+
+    public int size() {
+        return documents.size();
     }
 
     private int score(Document document, String[] terms, String article) {

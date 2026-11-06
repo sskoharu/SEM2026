@@ -51,6 +51,9 @@ jobs:
       - name: Run frontend tests
         run: npm test
 
+      - name: Run frontend server proxy tests
+        run: node --test tests/server/proxy.test.mjs
+
       - name: Build frontend
         run: npm run build
 

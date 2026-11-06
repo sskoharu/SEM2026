@@ -37,7 +37,8 @@ public class EvaluandoPrecisionStep implements Layer1Step {
             return Layer1InternalState.CLASIFICACION_POR_METADATA;
         } else {
             log.warn("No se encontraron documentos sobre el umbral de similitud. Solicitando aclaración.");
-            session.setClarificationMessage("No pudimos encontrar una base legal exacta. Reformula la consulta o proporciona más información.");
+            session.setClarificationMessage("No hay fuentes jurídicas aprobadas suficientes para fundamentar "
+                    + "el reclamo. Se requiere revisión documental antes de continuar.");
             sessionRepository.save(session);
             return Layer1InternalState.SOLICITANDO_ACLARACION;
         }

@@ -25,7 +25,7 @@ class CorpusMetadataValidationTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void everyCorpusEntryHasUniqueIdentityAndApprovedProvenance() throws IOException {
+    void loadsSixtyUniqueEntriesWithoutTreatingBasicFlagsAsHumanApproval() throws IOException {
         Set<String> ids = new HashSet<>();
         int entries = 0;
 
@@ -49,9 +49,10 @@ class CorpusMetadataValidationTest {
                             () -> "Versión de fuente ausente para " + id);
                     assertFalse(metadata.path("source_accessed_at").asText().isBlank(),
                             () -> "Fecha de consulta ausente para " + id);
-                    assertEquals("APROBADO",
-                            metadata.path("review_status").asText(),
-                            () -> "El corpus aprobado debe conservar su estado de revisión: " + id);
+                    var review = objectMapper.convertValue(metadata,
+                            new TypeReference<java.util.Map<String, Object>>() { });
+                    assertFalse(new CorpusPolicy().approved(document, review),
+                            () -> "Una marca básica no acredita revisión humana de " + id);
                 }
             }
         }

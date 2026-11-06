@@ -165,6 +165,8 @@ function mapearRespuesta(respuesta: BackendSession): Analisis {
 
 const baseUrl = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080').replace(/\/+$/, '')
 
+const TIMEOUT_ANALISIS_IA_MS = 120_000
+
 async function solicitarSesion(
   ruta: string,
   cuerpo: unknown,
@@ -175,6 +177,7 @@ async function solicitarSesion(
     {
       operacion: 'analisis-inicial',
       metodo: 'POST',
+      timeoutMs: TIMEOUT_ANALISIS_IA_MS,
       cabeceras: { 'Content-Type': 'application/json', Accept: 'application/json', ...headersForPath(ruta) },
       cuerpo: JSON.stringify(cuerpo),
       senal,
