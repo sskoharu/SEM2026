@@ -105,11 +105,11 @@ recuperados vuelven a pasar por la política de aprobación.
 docker build -t sem2026-rag:correccion-rag .
 ```
 
-El Dockerfile usa como base la imagen de producción exacta inspeccionada y reemplaza
-únicamente /app/app.jar. Hereda usuario app, directorio /app y ENTRYPOINT con PORT,
-confirmados en la configuración OCI. Esto conserva el runtime; la capa de aplicación
-anterior permanece en las capas base y aumenta el tamaño de la imagen resultante.
-El contexto excluye fuentes, archivos de entorno y secretos. El 6 de noviembre de 2026 se construyó y probó localmente la imagen sem2026-rag:cierre-verificado; no se publicó.
+El Dockerfile usa Eclipse Temurin Java 21 JRE público fijado por digest,
+usuario app sin root, directorio /app y ENTRYPOINT compatible con PORT.
+No necesita acceso al registro privado para validar PR y no conserva capas
+anteriores de la aplicación. El contexto excluye fuentes, entornos y secretos.
+La imagen se construye y valida localmente; publicar requiere autorización.
 3. Publicar una imagen requiere autorización; no se ha realizado push. Cuando se autorice:
 
 ```powershell

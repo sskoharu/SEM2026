@@ -1,3 +1,9 @@
+> Registro de la etapa anterior. Actualización: la credencial histórica fue retirada
+> con autorización y una conexión nueva devolvió WRONGPASS. Ver
+> seguridad-publicacion.md para evidencia, excepción exacta y sesiones residuales;
+> ci-cd-operacion.md describe el workflow actual. Los bloqueos descritos abajo
+> corresponden al estado anterior a esa revocación.
+
 # Cierre local de integración con GitHub — 6 de noviembre de 2026
 
 ## Base y alcance

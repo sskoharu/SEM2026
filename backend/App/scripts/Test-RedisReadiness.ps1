@@ -51,6 +51,12 @@ try {
         -out "$directory/redis.crt" -days 1 -subj /CN=redis-test `
         -addext subjectAltName=DNS:redis-test *> "$directory/openssl.log"
     if ($LASTEXITCODE -ne 0) { throw 'Cannot generate test certificate.' }
+    if (-not $IsWindows) {
+        # Ephemeral test key must be readable by the Redis container UID on Linux.
+        [IO.File]::SetUnixFileMode("$directory/redis.key", (
+            [IO.UnixFileMode]::UserRead -bor [IO.UnixFileMode]::UserWrite -bor
+            [IO.UnixFileMode]::GroupRead -bor [IO.UnixFileMode]::OtherRead))
+    }
     $hash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($password))).ToLowerInvariant()
     [IO.File]::WriteAllText("$directory/users.acl", "user default off`nuser test-acl on #$hash ~* &* +@all`n")
     [IO.File]::WriteAllText("$directory/redis.conf", @"
