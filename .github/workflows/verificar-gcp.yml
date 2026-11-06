@@ -1,0 +1,37 @@
+
+name: Verificar conexion Google Cloud
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Autenticar con Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - name: Configurar Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Verificar proyecto
+        run: |
+          gcloud config set project "${{ vars.GCP_PROJECT_ID }}"
+          gcloud projects describe "${{ vars.GCP_PROJECT_ID }}" \
+            --format="value(projectId)"
+
+      - name: Verificar Artifact Registry
+        run: |
+          gcloud artifacts repositories describe \
+            "${{ vars.GCP_ARTIFACT_REPOSITORY }}" \
+            --location="${{ vars.GCP_REGION }}" \
+            --project="${{ vars.GCP_PROJECT_ID }}" \
+            --format="value(name)"
