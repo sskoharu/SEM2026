@@ -1,0 +1,450 @@
+[
+ {
+  "id": "lodc_ley_art_1",
+  "archivo": "01_principios_generales.json",
+  "articulo": "1",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_2",
+  "archivo": "01_principios_generales.json",
+  "articulo": "2",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_3",
+  "archivo": "01_principios_generales.json",
+  "articulo": "3",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_6",
+  "archivo": "03_regulacion_publicidad.json",
+  "articulo": "6",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_7",
+  "archivo": "03_regulacion_publicidad.json",
+  "articulo": "7",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_8",
+  "archivo": "03_regulacion_publicidad.json",
+  "articulo": "8",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_9",
+  "archivo": "04_informacion_basica_comercial.json",
+  "articulo": "9",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_12",
+  "archivo": "04_informacion_basica_comercial.json",
+  "articulo": "12",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_13",
+  "archivo": "04_informacion_basica_comercial.json",
+  "articulo": "13",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_14",
+  "archivo": "04_informacion_basica_comercial.json",
+  "articulo": "14",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_15",
+  "archivo": "04_informacion_basica_comercial.json",
+  "articulo": "15",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_16",
+  "archivo": "04_informacion_basica_comercial.json",
+  "articulo": "16",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_17",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "17",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_18",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "18",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_19",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "19",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_20",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "20",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_21",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "21",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_22",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "22",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_23",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "23",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_24",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "24",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_25",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "25",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_26",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "26",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_27",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "27",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_30",
+  "archivo": "05_responsabilidades_proveedor.json",
+  "articulo": "30",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_32",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "32",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_33",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "33",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_34",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "34",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_35",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "35",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_36",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "36",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_37",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "37",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_38",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "38",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_39",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "39",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_40",
+  "archivo": "06_servicios_publicos.json",
+  "articulo": "40",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_44",
+  "archivo": "07_proteccion_contractual.json",
+  "articulo": "44",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_46",
+  "archivo": "07_proteccion_contractual.json",
+  "articulo": "46",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_47",
+  "archivo": "07_proteccion_contractual.json",
+  "articulo": "47",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_48",
+  "archivo": "07_proteccion_contractual.json",
+  "articulo": "48",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_49",
+  "archivo": "07_proteccion_contractual.json",
+  "articulo": "49",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_50",
+  "archivo": "07_proteccion_contractual.json",
+  "articulo": "50",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_1",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_2",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_3",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_4",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_5",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_6",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_7",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_55_num_8",
+  "archivo": "09_practicas_prohibidas.json",
+  "articulo": "55",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_70",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "70",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_71",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "71",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_72",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "72",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_73",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "73",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_75",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "75",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_76",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "76",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_77",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "77",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_78",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "78",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_79",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "79",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_80",
+  "archivo": "13_infracciones_sanciones.json",
+  "articulo": "80",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_81",
+  "archivo": "14_defensoria_procedimiento.json",
+  "articulo": "81",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_82",
+  "archivo": "14_defensoria_procedimiento.json",
+  "articulo": "82",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_83",
+  "archivo": "14_defensoria_procedimiento.json",
+  "articulo": "83",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_84",
+  "archivo": "14_defensoria_procedimiento.json",
+  "articulo": "84",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_91",
+  "archivo": "15_disposiciones_generales.json",
+  "articulo": "91",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_art_93",
+  "archivo": "15_disposiciones_generales.json",
+  "articulo": "93",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ },
+ {
+  "id": "lodc_ley_disp_final_segunda",
+  "archivo": "16_disposiciones_finales.json",
+  "articulo": "148",
+  "estado": "VERIFICADO",
+  "cobertura": 1.0
+ }
+]

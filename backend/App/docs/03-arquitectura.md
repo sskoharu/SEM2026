@@ -55,7 +55,7 @@ flowchart LR
 
     subgraph SRC["Fuentes"]
         direction TB
-        F1["F01 · LODC<br/>11 JSON · 64 fragmentos"]
+        F1["F01 · LODC<br/>10 JSON · 64 fragmentos"]
         F2["F02 · Orientación DPE<br/>14 fragmentos"]
     end
     F1 & F2 --> ING["Ingesta al arrancar<br/>(LodcDataIngestionRunner,<br/>DpeDataIngestionRunner)"]

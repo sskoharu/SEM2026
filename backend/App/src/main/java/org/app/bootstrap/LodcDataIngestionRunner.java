@@ -37,7 +37,11 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
     @Value("${spring.ai.vectorstore.qdrant.collection-name}")
     private String collectionName; // <-- NUEVO
 
-    public LodcDataIngestionRunner(VectorStore vectorStore, ObjectMapper objectMapper, QdrantClient qdrantClient) {
+    private final CorpusManifest corpusManifest;
+
+    public LodcDataIngestionRunner(VectorStore vectorStore, ObjectMapper objectMapper, QdrantClient qdrantClient,
+                                   CorpusManifest corpusManifest) {
+        this.corpusManifest = corpusManifest;
         this.vectorStore = vectorStore;
         this.objectMapper = objectMapper;
         this.qdrantClient = qdrantClient;
@@ -80,6 +84,7 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
                 List<Document> docsFromFile = articles.stream().map(article -> {
 
                     // CORRECCIÓN: Qdrant exige UUIDs, no Strings arbitrarios.
+                    corpusManifest.verify(article);
                     String semanticId = article.getId();
                     UUID uuid = UUID.nameUUIDFromBytes(semanticId.getBytes(StandardCharsets.UTF_8));
 
@@ -98,6 +103,8 @@ public class LodcDataIngestionRunner implements CommandLineRunner {
                 allDocuments.addAll(docsFromFile);
                 log.info("  -> Cargados {} artículos del archivo {}.", docsFromFile.size(), resource.getFilename());
 
+            } catch (IllegalStateException e) {
+                throw e; // la compuerta de integridad aborta la ingesta
             } catch (Exception e) {
                 log.error("❌ Error leyendo el archivo: " + resource.getFilename(), e);
             }

@@ -20,4 +20,6 @@
 
 ## Hallazgo previo a la corrida
 
+El CSV de resultados incluye `layer1State`, `claimType`, `mejor_score` y `abstencion` por caso (desde la versión con abstención por umbral). `resultados_2026-11-04.csv` es anterior y solo trae `id`, HTTP, estado y cuerpo.
+
 `SessionObject.proceduralArticles` nunca se llena. La Capa 3 siempre usa `applicableArticles` como respaldo. Los metadatos `articulos_procedimentales_asociados` no se leen. Los casos D01–D06 miden este comportamiento real.

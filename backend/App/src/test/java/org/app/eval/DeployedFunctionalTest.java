@@ -52,7 +52,7 @@ class DeployedFunctionalTest {
     @TestFactory
     Stream<DynamicTest> casosFuncionales() throws IOException {
         List<Map<String, String>> cases = readCsv(PLAN);
-        results.add(new String[]{"id", "http_esperado", "http_obtenido", "estado", "resultado_obtenido"});
+        results.add(new String[]{"id", "http_esperado", "http_obtenido", "estado", "layer1State", "claimType", "mejor_score", "abstencion", "resultado_obtenido"});
 
         List<DynamicTest> tests = new ArrayList<>();
         for (int i = 0; i < cases.size(); i++) {
@@ -72,8 +72,16 @@ class DeployedFunctionalTest {
         String body = response.getBody() == null ? "" : response.getBody();
 
         List<String> errors = validate(c, http, body);
+        Matcher sm = Pattern.compile("\"score\"\\s*:\\s*([0-9.]+)").matcher(body);
+        double best = 0;
+        while (sm.find()) best = Math.max(best, Double.parseDouble(sm.group(1)));
+        String abstention = extract(body, "\"abstention\"\\s*:\\s*(\\{.*?\\})");
         results.add(new String[]{c.get("id"), c.get("http_esperado"), String.valueOf(http),
-                errors.isEmpty() ? "OK" : "FALLO", body.replaceAll("\\s+", " ")});
+                errors.isEmpty() ? "OK" : "FALLO",
+                String.valueOf(extract(body, "\"layer1State\"\\s*:\\s*\"(\\w+)\"")),
+                String.valueOf(extract(body, "\"claimType\"\\s*:\\s*\"(\\w+)\"")),
+                best > 0 ? String.valueOf(best) : "", abstention == null ? "" : abstention,
+                body.replaceAll("\\s+", " ")});
 
         if (!errors.isEmpty()) {
             fail(c.get("id") + ": " + String.join(" | ", errors) + "\nRespuesta: " + body);

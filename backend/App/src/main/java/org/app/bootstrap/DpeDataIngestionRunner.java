@@ -38,13 +38,16 @@ public class DpeDataIngestionRunner implements CommandLineRunner {
     private final VectorStore dpeVectorStore;
     private final ObjectMapper objectMapper;
     private final QdrantClient qdrantClient;
+    private final CorpusManifest corpusManifest;
 
     @Value("${app.dpe.collection-name:dpe_orientacion}")
     private String collectionName;
 
     public DpeDataIngestionRunner(@Qualifier("dpeVectorStore") VectorStore dpeVectorStore,
                                   ObjectMapper objectMapper,
-                                  QdrantClient qdrantClient) {
+                                  QdrantClient qdrantClient,
+                                  CorpusManifest corpusManifest) {
+        this.corpusManifest = corpusManifest;
         this.dpeVectorStore = dpeVectorStore;
         this.objectMapper = objectMapper;
         this.qdrantClient = qdrantClient;
@@ -65,12 +68,15 @@ public class DpeDataIngestionRunner implements CommandLineRunner {
             try (InputStream in = resource.getInputStream()) {
                 List<ArticleJsonDto> fragments = objectMapper.readValue(in, new TypeReference<List<ArticleJsonDto>>() {});
                 for (ArticleJsonDto fragment : fragments) {
+                    corpusManifest.verify(fragment);
                     UUID uuid = UUID.nameUUIDFromBytes(fragment.getId().getBytes(StandardCharsets.UTF_8));
                     Map<String, Object> metadata = new HashMap<>(fragment.getMetadata());
                     metadata.put("original_id", fragment.getId());
                     documents.add(new Document(uuid.toString(), fragment.getDocument(), metadata));
                 }
                 log.info("  -> {} fragmentos leídos de {}.", fragments.size(), resource.getFilename());
+            } catch (IllegalStateException e) {
+                throw e;
             } catch (Exception e) {
                 log.error("Error leyendo el archivo DPE: " + resource.getFilename(), e);
             }

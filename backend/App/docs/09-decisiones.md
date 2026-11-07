@@ -28,7 +28,7 @@ Cada decisión sigue el formato **contexto → decisión → justificación → 
 ### D3. RAG con Qdrant sobre un corpus cerrado
 
 - **Contexto.** Las respuestas deben basarse en la LODC y no en el conocimiento general del modelo.
-- **Decisión.** Corpus de la LODC (11 JSON, 64 fragmentos) y de la orientación pública de la Defensoría del Pueblo (14 fragmentos), en dos colecciones de Qdrant. Los metadatos de cada fragmento (`numero_articulo`, `tipo_reclamo_asociado`) permiten clasificar el reclamo y traer por filtro los artículos procedimentales.
+- **Decisión.** Corpus de la LODC (10 JSON, 64 fragmentos) y de la orientación pública de la Defensoría del Pueblo (14 fragmentos), en dos colecciones de Qdrant. Los metadatos de cada fragmento (`numero_articulo`, `tipo_reclamo_asociado`) permiten clasificar el reclamo y traer por filtro los artículos procedimentales.
 - **Justificación.**
   - **Trazabilidad:** el conjunto de artículos citados sale de los metadatos del corpus, no de la memoria del modelo.
   - **Persistencia:** Qdrant es un servicio externo; la app sobrevive a un reinicio. La ingesta es repetible (`app.ingestion.enabled`, UUID determinista, upsert sin duplicados).

@@ -1,0 +1,554 @@
+{
+ "corpus_version": "426e9b95941c5b5c",
+ "total": 78,
+ "aprobados": 64,
+ "pendientes": 14,
+ "fragments": {
+  "lodc_ley_art_1": {
+   "file": "lodc/01_principios_generales.json",
+   "sha256": "2d40a40334e974aadb71d5933585124d4762027fe39fb01de5571d02884576ef",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_2": {
+   "file": "lodc/01_principios_generales.json",
+   "sha256": "de7000e3bc225f4606c9939e960613f3c3b69a0ffafdc503b3d34a29cf9ee7ec",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_3": {
+   "file": "lodc/01_principios_generales.json",
+   "sha256": "d1cfb076115531a40a72263d53fa6c68a6e889452cd7031d8535966d02e13026",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_6": {
+   "file": "lodc/03_regulacion_publicidad.json",
+   "sha256": "bb683060377f1dbf4b763c0a93f1059761c4151b913ea6b99c5dacf88fb92bf6",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_7": {
+   "file": "lodc/03_regulacion_publicidad.json",
+   "sha256": "e34e208c3bc91a42e620f79294fba29d68935bf4eaa3807a55fe06bae77c9dce",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_8": {
+   "file": "lodc/03_regulacion_publicidad.json",
+   "sha256": "5465fe4e3c3992661ff6597909c94ec2c9390516bbc1b7f04ef982a9faff9e85",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_9": {
+   "file": "lodc/04_informacion_basica_comercial.json",
+   "sha256": "136e797a72e75d53f081e2927c0791e9d70118c1bf6e359f105826ee763aabc6",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_12": {
+   "file": "lodc/04_informacion_basica_comercial.json",
+   "sha256": "7e4ea521ec6807bd7d58f2bc10daf87fec16cb90b20a8486b8680da32226c1bf",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_13": {
+   "file": "lodc/04_informacion_basica_comercial.json",
+   "sha256": "dc454458d66019d95e43c42c619d4e926f3da4db26a0d8800f0e1bd6f3aba597",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_14": {
+   "file": "lodc/04_informacion_basica_comercial.json",
+   "sha256": "2adc7ee4f5a41989bf6cbb27db6716e70f03ed7b0f5b751663e9cb771edef6f1",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_15": {
+   "file": "lodc/04_informacion_basica_comercial.json",
+   "sha256": "dbe75d5a665b170b0600d20252dc5a3fb649ebba53c28e14665e83e4b9deb792",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_16": {
+   "file": "lodc/04_informacion_basica_comercial.json",
+   "sha256": "f98c6c9e555fa3c37b0e50df8d138e269b84df269c0dc63dd47537c8dd92349b",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_17": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "386a4b475b374e9d47cf66f18766d5228d71fe148b5bd12d6398f8f2c8a32457",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_18": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "3413c6ab158a2b88cd6a65edecaabb12a3430d70df5ec066b67cee1eddc3f73a",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_19": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "d726bf488c1b7ffbbfb18ba567970978be6d932c9077deef9cd14ed2c70b3163",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_20": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "f23876a509fdea0dd9faec2748fd80a5bad239c2687178c1fc951af0a4259efb",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_21": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "d3a82d12ddb0035c078bc84ade31c0d9be9db33cddc670447459451bb5a4ed78",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_22": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "deb53f2ef8b1b61adfe45dbaee57af3b2319c0365849bbe755eea1ebe3db5b1d",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_23": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "c48da22f89dd5f8c1f645a4e3de67166a906710be96d11bdee71e474874bf171",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_24": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "d1e08a9356855e75b88302deb1c13da07e52f9ee907fba698e024d96a8a1da52",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_25": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "71952a9f5fe1ce3bb6ff22e017bda04976f8fb0592dff2096defc8adcd7727bc",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_26": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "21b9879cfef3e58683481f8966b3c59217650ed9746402b6cdcaf9227264982d",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_27": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "7d4dadbf2805f76118b74b456ff4eba598687eaf80076ab109f70175d69e9ec3",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_30": {
+   "file": "lodc/05_responsabilidades_proveedor.json",
+   "sha256": "efd9c6894dfd287f0729d949c4f0d6ed6c154abde4b5e3f12787220d331efd58",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_32": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "397dbef2e29dc42bcdde11ed2d1a7989d69ed0dd82a0fd0bc6fbf1ad1d51d0de",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_33": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "f0d4b1fc52c958adc22ab66d26d7d750276e4ba74d1099744d2e8072c2dad46b",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_34": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "2a1bbe982b60a156eb4f747ad37bad60eb2aef28ed30c65cb6efe301275eb902",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_35": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "85ac46cbe551904a818c58a1ba41030093d0b308cd7a2dbe353ce3e16e65e8ab",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_36": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "00bd93114b508fc677a7d5ba31aa8259c170473d128fcdd6bfba807aa622af22",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_37": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "6b8dc2676a27eca10a9060e353ecc4865c9dc7208080688640fdc90409c702ee",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_38": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "160f53cf9266631057a51ef31d2aec1b1c74a5c7c974f336155cba2b583d8d0f",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_39": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "5252e039ff68e134193b5abb1242e6ec28b88981675deec45b5d5406ba55a16c",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_40": {
+   "file": "lodc/06_servicios_publicos.json",
+   "sha256": "c700cdeaf1539e8e2656f593304a2e56a400f251aa550b64dec603915c6a0e5b",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_44": {
+   "file": "lodc/07_proteccion_contractual.json",
+   "sha256": "1dec9ad0dcc3d2e76c1a5ca284b1615ccbae97eb37f2a8a35f3dfec7ec4f6e8d",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_46": {
+   "file": "lodc/07_proteccion_contractual.json",
+   "sha256": "28850d43e0c61b04701deb9e45faf132f70d67390d8b84862b26f506b855b6f7",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_47": {
+   "file": "lodc/07_proteccion_contractual.json",
+   "sha256": "c782d97f28cb8b456cc8e04f7303f535cb0a73d1f5052e25fa1ac73b148a2c84",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_48": {
+   "file": "lodc/07_proteccion_contractual.json",
+   "sha256": "f3e527cf956a962180be01c3cad3d5b0460971dc99766a9b97da444f6d961385",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_49": {
+   "file": "lodc/07_proteccion_contractual.json",
+   "sha256": "422e64374c73823d641d2757e74d9b1934f18c594a86060190315dcf2405cd1c",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_50": {
+   "file": "lodc/07_proteccion_contractual.json",
+   "sha256": "b72b01231f433d83f019a9ae713f9f1082f34b457164f5af019bba20fba5507b",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_1": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "1fbce318e2914c20a02e12bfb43f504376092b80e7aede4d93f284535c1f4327",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_2": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "e38d8caa5797401f5cd771c7ce252f57e6d3a4378344e8a8636ccc576fa2a51e",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_3": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "1261808a0de60ef6278367cf46fff91fa2ee5eeb2f8f372f938d2fc73222af8a",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_4": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "3290b3bf4a936255f6a2144015b966f0b52bea78d2695755724ede41690d18d2",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_5": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "06ea57fe93bf05509a4898c19f74e632198db05c6afa6a5c99b1b046cd0c5279",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_6": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "8cf805300324884700f6103ec6b91ba2f6cb6adac9927f525143165e7bbc1ad3",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_7": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "28c81df9a192ddefa5302f4e6ff79268eee23f3d3e8a5ebfaaec484fcd9d1027",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_55_num_8": {
+   "file": "lodc/09_practicas_prohibidas.json",
+   "sha256": "eabe32473ab6bb41aceed2ba94a85f2d61f01fd7631e7a520e9690513850e078",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_70": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "f6a8e7c5a72f2d23de0013faaa8cb83857e89c8832cae5be6be4426ead4dabfc",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_71": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "b93dbc48fbd7930c65a539ddbbbed4d70270d778df2e2792c29ab204ff310fa9",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_72": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "07a399162352e3b31bc1da59c482874bca1b45d44efc6cb34d0e7c578368f13e",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_73": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "b504147defa8f82ee44421c663e195ccf5464fa35e8121bf1e0cc464e4c1568d",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_75": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "827fcdd99994ac24b3b967270b1384470961171809181d19d6af3991fbcd64f8",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_76": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "fdd8b04d595f3a845826b10b55aa99498863da6212921242a365c5f1295aa5db",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_77": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "f77f1590334556bc089d3d8be8d6a8eeb1a35f2efbb62c8ffa42d96fad4d99ed",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_78": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "e9766b797fdce9753817938ece4ad85aa978e70d1d5a2432949ab3deaad0d878",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_79": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "74cffd2f9a64798abfe3d6a870ad2d4c56eeeb8e1ff8d7e57a92e6fc8e87bc0a",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_80": {
+   "file": "lodc/13_infracciones_sanciones.json",
+   "sha256": "046c679966126795fec6de046d4e0a9b4c02460ba34aee653ee0d9f7c14a2872",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_81": {
+   "file": "lodc/14_defensoria_procedimiento.json",
+   "sha256": "64d71eadc92d31e9c337019d6672578e3fa215968f4f02cfd5ccbec74cee0313",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_82": {
+   "file": "lodc/14_defensoria_procedimiento.json",
+   "sha256": "35ab6bbb530d5d6b0971ea70092d11d0239aea8fb1d213624d021a631324cae7",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_83": {
+   "file": "lodc/14_defensoria_procedimiento.json",
+   "sha256": "77532edae8722fd046343a844fe92db4b012ab6cb7461ad097ada86374f3e686",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_84": {
+   "file": "lodc/14_defensoria_procedimiento.json",
+   "sha256": "8cfe1d3ee6ffb810a3afca7de65c01e108f66e74bda0fe0abf284b0e0e67236c",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_91": {
+   "file": "lodc/15_disposiciones_generales.json",
+   "sha256": "305040c1fd42f40d7fbdd512f09b572cf416b66e1f6d72867e78cc18e9814c63",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_art_93": {
+   "file": "lodc/15_disposiciones_generales.json",
+   "sha256": "8124ed3b446872f4be1f35200cea3e7a07df555b6cf2c757629e0f02ec8ea051",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "lodc_ley_disp_final_segunda": {
+   "file": "lodc/16_disposiciones_finales.json",
+   "sha256": "6602ea24fb669c207ecde12924f85cf0ca59ccb9b2466d186b599bef2537fec6",
+   "estado_revision": "APROBADO",
+   "revisado_por": "Verificacion automatica tools/verify_corpus_pdf.py vs F01-lodc.pdf",
+   "fecha_revision": "2026-11-07"
+  },
+  "dpe_naturaleza_rol": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "87313631f5905b4b80c2000d41ce853640201e98237abaa42c8f9d25af304e95",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_tramite_descripcion": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "4f3c146f07781512a3e2e48caa88efb2b32d2b7a89ee2fb26ed1b77e7bf0aa99",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_requisito_identificacion": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "9f0c66215f3f22ee4e60d23395f8bb0abd93608ba8e94b039aa3b5700586c261",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_requisito_prueba_consumo": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "77b5eb8195dfac643869ab5eb7651a58efd6a610cf4dbfc4c1b7990443c5e96a",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_requisito_relato": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "f6574d37a34fe9320f150bd5338b227eea92f2d44a8f718d6197e710279a04d9",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_requisito_reclamo_previo": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "883126bf374a2a1344caf4a5f44343b4b04cdaf885ed58072c6efffe28753c98",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_canal_virtual": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "1d019a0b816b9a4dd0e471cba5098da72d8e93e4b89b8ee9dd9c4188c61b29a3",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_canal_presencial": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "f7b9ec510746ad8ca2742ae265dfedacf151b57c4434e8ee02c35fc02b31b250",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_paso_0_reclamo_previo": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "d8806685cd0605a3fdadd8858185da6bc207a5d245a4de3f11c203e1f3e34161",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_paso_1_ingreso": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "e15c3f097907b1a2647834e7c162e62d35ef501c65434bbe42481968acfc4c82",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_paso_2_convocatoria": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "d8779df3aef1f41f33a52526d293248ab70a4446cb02527aeb172e48f6c7453b",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_paso_3_mediacion": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "3a407fade9c3b2588202bf4466b8ca7899d84c6faf1d65ed9bf58fd77f6792bb",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_paso_4_cierre_con_acuerdo": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "20f12d769dd2073b56df82a74d4fdab616a7b0e6aa1978fc94da1cc0ca5b4191",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  },
+  "dpe_paso_4_cierre_sin_acuerdo": {
+   "file": "dpe/dpe_orientacion.json",
+   "sha256": "6c6de16c10942453e5b88e2215235df7ffb4defa386e220b06ffea705366f5cc",
+   "estado_revision": "PENDIENTE_REVISION",
+   "revisado_por": null,
+   "fecha_revision": null
+  }
+ }
+}

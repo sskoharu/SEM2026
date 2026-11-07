@@ -3,6 +3,7 @@ package org.app.services.layer_1.components.c2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.app.schemas.interfaces.layer_1.Layer1Step;
+import org.app.schemas.session_object.EvidenceItem;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer1InternalState;
 import org.app.services.context.layer_1.Layer1ExecutionContext;
@@ -18,6 +19,7 @@ import java.util.List;
 public class BuscandoFuentesStep implements Layer1Step {
 
     private final VectorSearchTool vectorSearchTool;
+    private final org.app.bootstrap.CorpusManifest corpusManifest;
 
     @Override
     public Layer1InternalState getState() {
@@ -35,6 +37,16 @@ public class BuscandoFuentesStep implements Layer1Step {
 
         // 2. Guardamos los documentos en el contexto para que el siguiente paso los evalúe
         context.setRetrievedDocs(retrievedDocs);
+        session.setRagEvidence(retrievedDocs.stream().map(d -> {
+            String id = String.valueOf(d.getMetadata().getOrDefault("original_id", d.getId()));
+            String text = d.getText() == null ? "" : d.getText();
+            return new EvidenceItem(id,
+                    String.valueOf(d.getMetadata().getOrDefault("numero_articulo", "")),
+                    d.getScore(),
+                    text.length() > 240 ? text.substring(0, 240) + "…" : text,
+                    corpusManifest.reviewStatus(id),
+                    corpusManifest.getCorpusVersion());
+        }).toList());
 
         log.info("   Se recuperaron {} documentos de Qdrant.", retrievedDocs.size());
 

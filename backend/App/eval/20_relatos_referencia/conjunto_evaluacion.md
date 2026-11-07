@@ -37,8 +37,12 @@
 
 ## Resumen de métricas
 
+> Las cifras de esta tabla son de corridas anteriores sin CSV de respaldo en el repositorio. La corrida vigente y su calibración están en `docs/07-evaluacion.md`.
+
 | Métrica | Semana 3 | Semana 4 |
 |---|---|---|
-| Recuperación correcta (casos válidos D, C, Q) | 100% (12/12) | 100% (12/12) |
-| Abstención correcta (casos S) | 25% (1/4) | 100% (4/4) |
-| Rechazo fuera de dominio (casos F, I): precisión en filtrado de solicitudes ajenas al ámbito de la LODC | 75% (3/4) | 100% (4/4) |
+| Recuperación correcta (casos válidos D, C, Q) | 100% (12/12) — sin respaldo | **100% (12/12)** — corrida local 2026-11-07 (`resultados_2026-11-07.csv`); el 2026-11-04 fue 11/12 |
+| Abstención correcta (casos S) | 25% (1/4) — sin respaldo | **100% (4/4)**: S13 por aclaración; S14–S16 rechazados con HTTP 400 por el Portero; ninguno clasificó |
+| Rechazo fuera de dominio (casos F, I): precisión en filtrado de solicitudes ajenas al ámbito de la LODC | 75% (3/4) — sin respaldo | **100% (4/4)**: F17, F18, I19 con HTTP 400; I20 pide aclaración sin obedecer la inyección |
+
+Fuente de la columna "Semana 4": `resultados_2026-11-07.csv` (código actual). La columna "Semana 3" es histórica y no tiene CSV en el repositorio. Detalle y calibración del umbral en `docs/07-evaluacion.md`.

@@ -3,6 +3,8 @@ package org.app.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.app.persistence.ClaimArchiveController;
+import org.app.persistence.ClaimCaseService;
 import org.app.repositories.SessionRepository;
 import org.app.schemas.requests.AnswerRequest;
 import org.app.schemas.requests.BatchUpdateRequest;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/claims")
@@ -34,6 +37,7 @@ public class ClaimController {
     private final Layer3Orchestrator layer3Orchestrator;
     private final SessionRepository sessionRepository;
     private final Layer3_Mapper layer3Mapper;
+    private final ClaimCaseService claimCaseService;
 
     // ==========================================
     // ENDPOINTS DE LA CAPA 1 (Triaje y Clasificación)
@@ -222,6 +226,23 @@ public class ClaimController {
 
         // Si requiere datos, devolvemos el DTO para que el frontend pinte el formulario
         return ResponseEntity.ok(layer3Mapper.mapToDto(updatedSession));
+    }
+
+    /**
+     * 6. Registrar formalmente el reclamo (tool `registrar_reclamo`): solo con la Capa 3 terminada.
+     */
+    @PostMapping("/{sessionId}/register")
+    public ResponseEntity<?> registerClaim(@PathVariable String sessionId,
+                                           @Valid @RequestBody ClaimArchiveController.SaveClaimRequest request) {
+        log.info("Endpoint /register llamado para sesión: {}", sessionId);
+        try {
+            return ResponseEntity.ok(claimCaseService.register(sessionId, new ClaimCaseService.SaveData(
+                    request.idCard(), request.fullName(), request.contactInfo())));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
+        }
     }
 
     /**

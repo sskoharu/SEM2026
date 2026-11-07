@@ -41,6 +41,12 @@ public class SessionObject {
     private String clarificationMessage;
     // Artículos que fundamentaron la clasificación de la Capa 1
     private List<String> applicableArticles;
+    // Evidencia recuperada del RAG (fragmento, artículo, score) que respalda la clasificación
+    private List<org.app.schemas.session_object.EvidenceItem> ragEvidence;
+    // Presente cuando la Capa 1 se abstiene por falta de evidencia suficiente
+    private org.app.schemas.session_object.AbstentionInfo abstention;
+    // Traza de las herramientas que el agente de la Capa 4 eligió y ejecutó
+    private List<org.app.schemas.session_object.AgentStep> agentTrace;
 
 
     // ==========================================

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.app.persistence.ClaimCaseRepository.ClaimCaseRow;
 import org.app.repositories.SessionRepository;
+import org.app.schemas.session_object.EvidenceItem;
 import org.app.schemas.session_object.SessionObject;
+import org.app.schemas.session_object.enums.Layer3InternalState;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,6 +51,24 @@ public class ClaimCaseService {
         session.setConsumer(consumer);
 
         repository.upsert(toRow(session));
+    }
+
+    public record Registration(String id, String status, LocalDateTime registeredAt, String claimType,
+                               java.util.List<String> applicableArticles, String corpusVersion) {
+    }
+
+    /** Registro formal: solo cuando la Capa 3 terminó (hay plan de ejecución); reutiliza la persistencia de save. */
+    public Registration register(String sessionId, SaveData data) {
+        SessionObject session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new NoSuchElementException("Sesión no encontrada o expirada"));
+        if (session.getLayer3State() != Layer3InternalState.DONE) {
+            throw new IllegalStateException("El reclamo aún no está listo para registrarse: la Capa 3 no ha finalizado.");
+        }
+        save(sessionId, data);
+        String corpusVersion = session.getRagEvidence() == null ? null : session.getRagEvidence().stream()
+                .map(EvidenceItem::corpusVersion).filter(Objects::nonNull).findFirst().orElse(null);
+        return new Registration(sessionId, "REGISTERED", LocalDateTime.now(), name(session.getClaimType()),
+                session.getApplicableArticles(), corpusVersion);
     }
 
     public String detail(String id, String idCard) {

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class ClasificacionPorMetadataStep implements Layer1Step {
 
     private final MetadataClassificationService classificationService;
+    private final org.app.services.layer_1.AbstentionPolicy abstentionPolicy;
     private final SessionRepository sessionRepository;
 
     @Override
@@ -43,9 +44,12 @@ public class ClasificacionPorMetadataStep implements Layer1Step {
             sessionRepository.save(session);
             return Layer1InternalState.DONE;
         } else {
-            log.error("   No se pudo clasificar el reclamo.");
+            log.warn("   No se pudo clasificar el reclamo: abstención.");
+            abstentionPolicy.abstain(session,
+                    "No pude determinar con seguridad el tipo de reclamo. Describe con más detalle qué producto o servicio es y qué ocurrió.",
+                    abstentionPolicy.bestScore(context.getRetrievedDocs()));
             sessionRepository.save(session);
-            return Layer1InternalState.ERROR;
+            return Layer1InternalState.SOLICITANDO_ACLARACION;
         }
     }
 }

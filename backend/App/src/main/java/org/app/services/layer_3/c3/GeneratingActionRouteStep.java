@@ -38,10 +38,11 @@ public class GeneratingActionRouteStep implements Layer3Step {
         // 1. Obtener los artículos procedimentales
         List<String> proceduralArticleNumbers = session.getProceduralArticles();
 
-        // Fallback: Si no hay procedimentales explícitos, usamos los aplicables
+        // Si no hay procedimentales explícitos, usamos los aplicables más el procedimiento
+        // de la LODC (Cap. XIV, Defensoría del Pueblo) para que la ruta cite cómo se aplica la ley
         if (proceduralArticleNumbers == null || proceduralArticleNumbers.isEmpty()) {
-            log.warn("No se encontraron artículos procedimentales. Usando los aplicables como respaldo.");
-            proceduralArticleNumbers = session.getApplicableArticles();
+            proceduralArticleNumbers = withLodcProcedure(session.getApplicableArticles());
+            log.info("Sin artículos procedimentales explícitos. Usando aplicables + Cap. XIV: {}", proceduralArticleNumbers);
         }
 
         // 2. Buscar el texto completo en Qdrant
@@ -68,6 +69,15 @@ public class GeneratingActionRouteStep implements Layer3Step {
 
         // 5. Pausar el flujo para que el usuario elija
         return Layer3InternalState.WAITING_FOR_ACTION_SELECTION;
+    }
+
+    static final List<String> LODC_PROCEDURE_ARTICLES = List.of("81", "82", "83", "84");
+
+    static List<String> withLodcProcedure(List<String> applicable) {
+        java.util.LinkedHashSet<String> all = new java.util.LinkedHashSet<>();
+        if (applicable != null) all.addAll(applicable);
+        all.addAll(LODC_PROCEDURE_ARTICLES);
+        return List.copyOf(all);
     }
 
     /**

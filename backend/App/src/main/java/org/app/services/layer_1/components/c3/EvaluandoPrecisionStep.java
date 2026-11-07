@@ -18,7 +18,7 @@ import java.util.List;
 public class EvaluandoPrecisionStep implements Layer1Step {
 
     private final SessionRepository sessionRepository;
-    private static final double PRECISION_THRESHOLD = 0.90;
+    private final org.app.services.layer_1.AbstentionPolicy abstentionPolicy;
     private static final int MAX_RETRIES = 3;
 
     @Override
@@ -32,19 +32,23 @@ public class EvaluandoPrecisionStep implements Layer1Step {
         log.info("-> EVALUANDO_PRECISION");
 
         List<Document> docs = context.getRetrievedDocs();
-        double currentScore = (docs != null && !docs.isEmpty()) ? 0.92 : 0.50; // Simulado
+        double currentScore = abstentionPolicy.bestScore(docs);
+        double threshold = abstentionPolicy.getThreshold();
 
-        if (currentScore >= PRECISION_THRESHOLD) {
-            log.info("   Precisión alcanzada ({}). Pasando a Clasificación.", currentScore);
+        if (currentScore >= threshold) {
+            log.info("   Evidencia suficiente (mejor score {} >= umbral {}). Pasando a Clasificación.", currentScore, threshold);
+            session.setAbstention(null);
             sessionRepository.save(session);
             return Layer1InternalState.CLASIFICACION_POR_METADATA;
         } else if (session.getRagRetryCount() >= MAX_RETRIES) {
-            log.warn("Precisión no alcanzada. Solicitando aclaración.");
-            session.setClarificationMessage("No pudimos encontrar una base legal exacta...");
+            log.warn("Evidencia insuficiente (mejor score {} < umbral {}). Abstención.", currentScore, threshold);
+            abstentionPolicy.abstain(session,
+                    "No encontré en la LODC una base legal suficiente para este relato. Agrega más detalles del producto o servicio y qué salió mal.",
+                    currentScore);
             sessionRepository.save(session);
             return Layer1InternalState.SOLICITANDO_ACLARACION;
         } else {
-            log.warn("   Precisión baja ({}). Volviendo a traducir.", currentScore);
+            log.warn("   Score bajo ({} < {}). Volviendo a traducir.", currentScore, threshold);
             session.setRagRetryCount(session.getRagRetryCount() + 1);
             sessionRepository.save(session);
             return Layer1InternalState.TRADUCIENDO_QUERY;
