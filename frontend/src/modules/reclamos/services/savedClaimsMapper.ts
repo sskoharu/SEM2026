@@ -1,4 +1,12 @@
-import type { Analisis, OpcionAccion, ParametroFormulario, Pregunta } from '../types/reclamo.types'
+import type {
+  AbstentionInfo,
+  AgentStep,
+  Analisis,
+  OpcionAccion,
+  ParametroFormulario,
+  Pregunta,
+  RagEvidenceItem,
+} from '../types/reclamo.types'
 
 export type SesionGuardada = {
   sessionId: string
@@ -25,6 +33,11 @@ export type SesionGuardada = {
   selectedOptionTitle?: string | null
   formInputsRequired?: ParametroFormulario[] | null
   executionPlan?: Record<string, unknown> | null
+  claimType?: string | null
+  secondaryClaimType?: string | null
+  ragEvidence?: RagEvidenceItem[] | null
+  abstention?: AbstentionInfo | null
+  agentTrace?: AgentStep[] | null
 }
 
 export function extraerSesion(valor: unknown): SesionGuardada | null {
@@ -111,6 +124,11 @@ export function mapearSesionGuardada(raw: unknown): { sessionId: string; analisi
       fuentes: sesion.applicableArticles ?? [],
       fuentesJuridicas: [],
       fuentesCitadas: [],
+      ragEvidence: Array.isArray(sesion.ragEvidence) ? sesion.ragEvidence : [],
+      abstention: sesion.abstention ?? null,
+      agentTrace: Array.isArray(sesion.agentTrace) ? sesion.agentTrace : null,
+      tipoReclamo: sesion.claimType ?? null,
+      tipoReclamoSecundario: sesion.secondaryClaimType ?? null,
       opcionesAccion: sesion.actionRouteOptions?.options ?? [],
       opcionSeleccionada: opcion?.title ?? sesion.selectedOptionTitle ?? null,
       camposFormulario: opcion?.userInputsRequired ?? sesion.formInputsRequired ?? [],

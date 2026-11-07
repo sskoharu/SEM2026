@@ -1151,3 +1151,373 @@ small {
   }
 }
 
+/* ==========================================================================
+   Trazabilidad y Evidencia RAG (Capa 1)
+   ========================================================================== */
+
+.rag-evidence-card {
+  border-left: 4px solid #1766cc;
+  background: #ffffff;
+  margin: 18px 0;
+}
+
+.rag-card-header {
+  margin-bottom: 14px;
+}
+
+.rag-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rag-section-icon {
+  font-size: 22px;
+}
+
+.rag-title-wrapper h3 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  color: #102d55;
+  font-weight: 700;
+}
+
+.rag-title-wrapper p {
+  margin: 0;
+  font-size: 12px;
+  color: #52647d;
+}
+
+/* Resumen de Clasificación */
+.rag-classification-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  background: #f1f6fd;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  border: 1px solid #d8e5f5;
+}
+
+.rag-claim-pill {
+  background: #1766cc;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rag-claim-pill.secondary {
+  background: #475569;
+}
+
+.rag-claim-pill .pill-label {
+  opacity: 0.85;
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.rag-articles-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.rag-articles-list .pill-label {
+  color: #52647d;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.article-badge {
+  background: #e2edfc;
+  color: #12437e;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+/* Bloques de Metadatos (Abstención y Traza) */
+.rag-metadata-block {
+  margin-bottom: 14px;
+}
+
+.rag-metadata-block h4,
+.rag-evidence-list-container h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #12345d;
+}
+
+.abstention-alert {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #d97706;
+  padding: 12px 14px;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 12.5px;
+}
+
+.abstention-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.abstention-icon {
+  font-size: 16px;
+}
+
+.abstention-motivo {
+  margin: 4px 0 8px;
+  line-height: 1.4;
+}
+
+.abstention-metrics {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.abstention-ok-badge {
+  background: #f0fbf4;
+  border: 1px solid #b7ebd0;
+  border-radius: 6px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #155724;
+}
+
+.agent-trace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agent-trace-step {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+.agent-trace-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.step-number-tag {
+  background: #1766cc;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.step-status-tag {
+  background: #e2e8f0;
+  color: #334155;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.agent-trace-data {
+  margin-top: 4px;
+}
+
+.agent-trace-data .data-label {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.agent-trace-data pre {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin: 4px 0;
+  font-size: 11px;
+  overflow-x: auto;
+}
+
+.agent-trace-empty {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #475569;
+}
+
+/* Lista de Evidencia RAG */
+.rag-evidence-list-container {
+  margin-top: 14px;
+}
+
+.rag-evidence-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rag-evidence-item {
+  background: #ffffff;
+  border: 1px solid #d4e0ee;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.rag-evidence-item[open] {
+  border-color: #1766cc;
+  box-shadow: 0 2px 8px rgba(23, 102, 204, 0.08);
+}
+
+.rag-evidence-summary {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #f9fbfe;
+}
+
+.rag-evidence-summary:hover {
+  background: #f0f5fc;
+}
+
+.rag-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rag-art-pill {
+  background: #102d55;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.rag-fragment-id {
+  font-family: monospace;
+  font-size: 11.5px;
+  color: #52647d;
+}
+
+.rag-summary-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rag-score-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.rag-score-pill.score-high {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.rag-score-pill.score-mid {
+  background: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffecb3;
+}
+
+.rag-score-pill.score-low {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+.rag-rev-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 12px;
+}
+
+.rag-rev-pill.rev-approved {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #bbdefb;
+}
+
+.rag-rev-pill.rev-pending {
+  background: #fbe9e7;
+  color: #d84315;
+  border: 1px solid #ffccbc;
+}
+
+.rag-version-pill {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10.5px;
+  font-family: monospace;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.rag-evidence-content {
+  padding: 12px 16px;
+  background: #ffffff;
+  border-top: 1px solid #eef3f9;
+}
+
+.rag-snippet-text {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 3px solid #1766cc;
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #2c3e50;
+  white-space: pre-wrap;
+}
+
+.rag-empty-message {
+  font-size: 12px;
+  color: #64748b;
+  font-style: italic;
+  margin: 6px 0;
+}
+
+

@@ -28,6 +28,29 @@ export type FuenteJuridica = {
   validity: string
 }
 
+export type RagEvidenceItem = {
+  fragmentId: string
+  numeroArticulo: string
+  score: number
+  snippet: string
+  estadoRevision?: string | null
+  corpusVersion?: string | null
+}
+
+export type AbstentionInfo = {
+  motivo?: string | null
+  mejorScore?: number | null
+  umbral?: number | null
+}
+
+export type AgentStep = {
+  paso?: number | null
+  herramienta?: string | null
+  argumentos?: Record<string, unknown> | null
+  resultado?: string | null
+  estado?: string | null
+}
+
 export type Analisis = {
   hechos: string[]
   preguntas: Pregunta[]
@@ -41,6 +64,11 @@ export type Analisis = {
   fuentes: string[]
   fuentesJuridicas: FuenteJuridica[]
   fuentesCitadas: string[]
+  ragEvidence: RagEvidenceItem[]
+  abstention: AbstentionInfo | null
+  agentTrace: AgentStep[] | null
+  tipoReclamo?: string | null
+  tipoReclamoSecundario?: string | null
   opcionesAccion: OpcionAccion[]
   opcionSeleccionada: string | null
   camposFormulario: ParametroFormulario[]

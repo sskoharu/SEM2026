@@ -1,6 +1,16 @@
 import { headersForPath, rememberSession, sessionHeaders } from './sessionAccess'
 import { solicitarJson } from '../../../shared/http/httpClient'
-import type { Analisis, FuenteJuridica, OpcionAccion, ParametroFormulario, Pregunta, Reclamo } from '../types/reclamo.types'
+import type {
+  AbstentionInfo,
+  AgentStep,
+  Analisis,
+  FuenteJuridica,
+  OpcionAccion,
+  ParametroFormulario,
+  Pregunta,
+  RagEvidenceItem,
+  Reclamo,
+} from '../types/reclamo.types'
 
 type BackendSession = {
   sessionId: string
@@ -33,6 +43,11 @@ type BackendSession = {
   executionPlan?: Record<string, unknown> | null
   status?: string | null
   message?: string | null
+  claimType?: string | null
+  secondaryClaimType?: string | null
+  ragEvidence?: RagEvidenceItem[] | null
+  abstention?: AbstentionInfo | null
+  agentTrace?: AgentStep[] | null
 }
 
 type Layer3CompletionResponse = {
@@ -165,6 +180,11 @@ function mapearRespuesta(respuesta: BackendSession): Analisis {
     fuentes: respuesta.applicableArticles ?? [],
     fuentesJuridicas: Array.isArray(respuesta.legalSources) ? respuesta.legalSources : [],
     fuentesCitadas: Array.isArray(respuesta.citedSourceIds) ? respuesta.citedSourceIds : [],
+    ragEvidence: Array.isArray(respuesta.ragEvidence) ? respuesta.ragEvidence : [],
+    abstention: respuesta.abstention ?? null,
+    agentTrace: Array.isArray(respuesta.agentTrace) ? respuesta.agentTrace : null,
+    tipoReclamo: respuesta.claimType ?? null,
+    tipoReclamoSecundario: respuesta.secondaryClaimType ?? null,
     opcionesAccion: respuesta.actionRouteOptions?.options ?? [],
     opcionSeleccionada: opcionSeleccionada?.title ?? respuesta.selectedOptionTitle ?? null,
     camposFormulario: opcionSeleccionada?.userInputsRequired ?? respuesta.formInputsRequired ?? [],
@@ -209,6 +229,21 @@ export async function analizarConApi(reclamo: Reclamo, senal?: AbortSignal): Pro
   const sesion = inicio.layer1State === 'DONE'
     ? await solicitarSesion(`/api/v1/claims/${encodeURIComponent(inicio.sessionId)}/layer2/start`, {}, senal)
     : inicio
+  if (inicio.ragEvidence && (!sesion.ragEvidence || sesion.ragEvidence.length === 0)) {
+    sesion.ragEvidence = inicio.ragEvidence
+  }
+  if (inicio.abstention && !sesion.abstention) {
+    sesion.abstention = inicio.abstention
+  }
+  if (inicio.agentTrace && !sesion.agentTrace) {
+    sesion.agentTrace = inicio.agentTrace
+  }
+  if (inicio.claimType && !sesion.claimType) {
+    sesion.claimType = inicio.claimType
+  }
+  if (inicio.secondaryClaimType && !sesion.secondaryClaimType) {
+    sesion.secondaryClaimType = inicio.secondaryClaimType
+  }
   return { sessionId: sesion.sessionId, analisis: mapearRespuesta(sesion) }
 }
 
@@ -231,6 +266,15 @@ export async function aclararConApi(sessionId: string, respuesta: string, senal?
   const siguiente = sesion.layer1State === 'DONE'
     ? await solicitarSesion(`/api/v1/claims/${encodeURIComponent(sessionId)}/layer2/start`, {}, senal)
     : sesion
+  if (sesion.ragEvidence && (!siguiente.ragEvidence || siguiente.ragEvidence.length === 0)) {
+    siguiente.ragEvidence = sesion.ragEvidence
+  }
+  if (sesion.abstention && !siguiente.abstention) {
+    siguiente.abstention = sesion.abstention
+  }
+  if (sesion.agentTrace && !siguiente.agentTrace) {
+    siguiente.agentTrace = sesion.agentTrace
+  }
   return mapearRespuesta(siguiente)
 }
 

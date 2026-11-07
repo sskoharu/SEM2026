@@ -4,6 +4,7 @@ import type { MetricaSolicitud } from '../../../shared/metrics/metricas.types'
 import type { Analisis, Estado } from '../types/reclamo.types'
 import { PreguntasComplementarias } from './PreguntasComplementarias'
 import { ResultadoFinal } from './ResultadoFinal'
+import { EvidenciaRagCapa1 } from './EvidenciaRagCapa1'
 
 type Propiedades = {
   errorSolicitud: string
@@ -79,6 +80,14 @@ export function AnalisisInicial({ estado, analisis, respuestas, mensaje, errorSo
             ))}
           </ul>
         </div>}
+        <EvidenciaRagCapa1
+          ragEvidence={analisis.ragEvidence}
+          abstention={analisis.abstention}
+          agentTrace={analisis.agentTrace}
+          tipoReclamo={analisis.tipoReclamo}
+          tipoReclamoSecundario={analisis.tipoReclamoSecundario}
+          fuentes={analisis.fuentes}
+        />
         {estado === 'preguntas' && analisis.preguntas.length > 0 &&
           <PreguntasComplementarias analisis={analisis} respuestas={respuestas} cambiarRespuesta={cambiarRespuesta} completar={completar} />}
         {estado === 'final' && <ResultadoFinal analisis={analisis} evaluar={evaluarCapa3} aceptar={aceptarCapa3} seleccionarAccion={seleccionarAccion} enviarFormulario={enviarFormulario} datosProcedimiento={datosProcedimiento} cambiarDato={cambiarDato} />}
