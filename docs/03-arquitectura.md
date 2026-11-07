@@ -1,5 +1,7 @@
 # 03 · Arquitectura
 
+La interfaz React usa HTTP para comunicarse con Spring Boot. Redis conserva el estado temporal y respalda el límite por IP. PostgreSQL participa en el archivo de casos. El código configura Spring AI para chat y embeddings y usa Qdrant para recuperar fuentes. La prueba pública documentada cubre Capa 1. [Configuración y evidencia](evidencias/semana-4/README.md)
+
 ## 1. Diagrama
 
 ![Arquitectura del asistente agéntico](https://i.postimg.cc/7C7tz1sh/arquitectura.png)
@@ -12,7 +14,7 @@ El ciclo de vida de un caso sigue cinco capas secuenciales. La interpretación s
 
 2. **Capa 1 · Clasificación del reclamo.**
    - El agente analiza el relato (`NarrativeAnalysisAgent`) y lo traduce a una consulta jurídica (`LegalTranslatorAgent`).
-   - La herramienta de búsqueda consulta en Qdrant los fragmentos de la LODC, con umbral de similitud de 0,30.
+   - La herramienta de búsqueda consulta en Qdrant los fragmentos de la LODC, con evaluación de suficiencia mediante un umbral de abstención de 0,40 por defecto.
    - Un paso determinista infiere el tipo de reclamo (uno de ocho) a partir de los metadatos `tipo_reclamo_asociado` de los fragmentos recuperados.
    - Si la precisión es insuficiente, pide aclaraciones al usuario (`/layer1/clarify`).
 
@@ -39,7 +41,7 @@ El ciclo de vida de un caso sigue cinco capas secuenciales. La interpretación s
    - `PlanRenderer` convierte los marcadores en texto legible, por ejemplo "pendiente de determinar por la autoridad competente".
    - `DocumentDraftingAgent` redacta solo las secciones narrativas (hechos y pretensiones) con los datos validados y la cuantía calculada.
    - `DocumentGeneratorService` inyecta esos textos y los datos del consumidor, el proveedor, los artículos y la lista de evidencias en la plantilla fija `Plantilla_Reclamo_LODC.docx` (Apache POI, variables `{{...}}`). Añade al final la sección DPE.
-   - El usuario descarga el `.docx` desde el Frontend.
+   - React solicita la confirmación antes de llamar a `/generate`. El servidor genera y retorna el `.docx` si existe un plan de ejecución. [Contrato y límites](contratos-api.md)
 
 ## 3. Límites de la implementación actual
 

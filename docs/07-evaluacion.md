@@ -41,3 +41,14 @@ Recuperación >=85 %, respuesta correcta con cita >=80 %, abstención 100 %, rec
 - El evaluador no consulta Gemini/Qdrant y no puede determinar por sí solo la veracidad de una respuesta ni la vigencia normativa.
 - `/api/v1/claims/start` es un flujo de reclamos particulares, no un endpoint de preguntas jurídicas directas. Los casos `rag-001` a `rag-006` y parte de los casos multi-fragmento requieren un contrato de consulta RAG compatible para acreditar recuperación y citas.
 - No incorporar secretos, datos personales reales ni prompts privados a las evidencias.
+
+## Semana 4
+
+| Dimensión | Semana 3 | Semana 4 |
+|---|---|---|
+| Recuperación | 1 observación con datos. Cobertura insuficiente para acreditar la métrica | Artículos esperados en 11/12 casos positivos de Capa 1 |
+| Clasificación | Sin puntuación acreditada en el resumen de Semana 3 | Tipo esperado en 12/12 casos positivos |
+| Rechazo y abstención | 4/4 rechazos. Abstención sin denominador acreditado | 8/8 para el grupo de aclaración, rechazo e inyección, según el criterio de cada caso |
+| Respuesta correcta con cita | Sin observaciones acreditadas | Se observaron fragmentos en `ragEvidence`. Sin evaluación de exactitud jurídica de una respuesta final |
+
+La comparación indica cobertura adicional y usa los denominadores propios de cada registro. No permite calcular una mejora porcentual comparable. El fallo C09 se mantiene en el resultado original. [Resumen de Semana 3](evidencias/semana-3/resultados/evaluation-summary.md) · [Detalle de Semana 4](08-pruebas.md)

@@ -4,11 +4,11 @@
 - **URL probada:** https://asistente-inteligente-4kiq.onrender.com (Render, plan gratuito)
 - **Método:** `DeployedFunctionalTest` (JUnit, llamadas HTTP reales a `POST /api/v1/claims/start`) con pausa de 7 s entre llamadas por el rate limit (10 peticiones/60 s). Se verifica código HTTP, estado de Capa 1, tipo de reclamo, artículos esperados y abstención.
 - **Casos:** 20 de `eval/20_relatos_referencia/casos.csv` (criterios en `eval/20_relatos_referencia/conjunto_evaluacion.md`) + 1 prueba de humo extra de `/health`.
-- **Evidencia cruda:** `eval/20_relatos_referencia/resultados_url_publica_2026-11-07.csv` (respuesta completa de cada llamada) y `smoke_url_publica_2026-11-07.md`.
+- **Evidencia cruda:** [CSV de la batería](../eval/20_relatos_referencia/resultados_url_publica_2026-11-07.csv) y [registro de humo](../eval/20_relatos_referencia/smoke_url_publica_2026-11-07.md).
 
 ## Resultado global
 
-**19 de 20 casos OK; 1 fallo (C09).** 21 pruebas ejecutadas, 1 fallo.
+**19 de 20 casos OK; 1 fallo (C09).** El recuento de 21 incluye una comprobación adicional de salud. El humo de 3/3 se informa por separado.
 
 ## Casos
 
@@ -49,11 +49,11 @@
 
 ## Fallo conocido: C09
 
-Caso deliberadamente ambiguo. El tipo fue el correcto, pero esa corrida no devolvió el art. 16. La causa es la variabilidad de la normalización de la consulta por el LLM: la corrida local del mismo día sí devolvió el art. 16, y tres reintentos contra la URL pública también. Se reporta tal cual; no se modificó el CSV ni el criterio de éxito.
+Caso deliberadamente ambiguo. El tipo fue el correcto, pero esa corrida no devolvió el art. 16. El registro propone como explicación la variabilidad de la consulta normalizada: la corrida local del mismo día sí devolvió el art. 16, y tres reintentos contra la URL pública también. Se reporta tal cual; no se modificó el CSV ni el criterio de éxito.
 
 ## Prueba de humo adicional
 
-`SmokeTest`: `/health` 200; `/start` válido → `DONE` con `ragEvidence` `APROBADO`; `/start` fuera de alcance → 400. Resultado 3/3 el 2026-11-07, también tras el reinicio del servicio (ver `elementos_presentacion/s4c_indice_persistente.md`).
+`SmokeTest`: `/health` 200; `/start` válido → `DONE` con `ragEvidence` `APROBADO`; `/start` fuera de alcance → 400. Resultado 3/3 el 2026-11-07, según el registro de humo.
 
 ## Límites de esta evidencia
 
@@ -62,7 +62,13 @@ Caso deliberadamente ambiguo. El tipo fue el correcto, pero esa corrida no devol
 - Las respuestas dependen de un LLM externo y pueden variar entre corridas.
 - El corpus de la DPE (14 fragmentos) sigue pendiente de revisión humana.
 
+## Latencia y fallos del proveedor
+
+El CSV registra resultados y puntuaciones de similitud, sin duración HTTP por solicitud. El p95 queda sin acreditar. Una comprobación independiente de salud obtuvo 0,288 s y no se combina con la batería. Los controles ante fallos de IA se verificaron por lectura de código. [Seguridad y robustez](seguridad.md)
+
 ## Cómo reproducir
+
+Desde `backend/App`, con una instancia autorizada.
 
 ```
 .\mvnw.cmd test "-Dtest=SmokeTest" "-De2e=true" "-De2e.url=<URL>"

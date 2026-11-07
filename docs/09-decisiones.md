@@ -173,3 +173,9 @@ Contexto: el sistema orienta a ciudadanos en un trámite legal. Un error puede h
 - **Ingesta:** la reconstrucción del índice vectorial es un paso explícito, no automático al arrancar.
 
 Estas limitaciones se declaran de forma abierta. El sistema se presenta como apoyo y no como sustituto de un abogado.
+
+## 5. Decisiones documentadas para Semana 4
+
+- **D13. Salud y disponibilidad.** La evidencia separa la respuesta de `/health` y el readiness. El registro incluye un 503 transitorio en readiness y una recuperación posterior. [Registro de salud](evidencias/semana-4/s4a_url_publica_health.md)
+- **D14. Cobertura pública por etapa.** La evaluación HTTP registra clasificación, recuperación esperada, aclaración y rechazo en Capa 1. El resultado de cada etapa posterior se acredita por separado. [Resultados y límites](08-pruebas.md)
+- **D15. Confirmación de Word.** La interfaz exige confirmación antes de solicitar el archivo. El servidor verifica que exista un plan de ejecución. Los controles descritos en decisiones anteriores se interpretan según el [contrato de la versión entregada](contratos-api.md).

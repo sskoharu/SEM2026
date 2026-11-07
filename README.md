@@ -1,82 +1,38 @@
 # Generador Inteligente de Reclamos de Consumo
 
-Caso 02, Grupo 2, UNIANDES. Prototipo Java 21 + Spring Boot + Spring AI/Gemini + Qdrant + Redis + React/TypeScript.
+Caso 02 · Grupo 2 · UNIANDES. La aplicación guía a consumidores en Ecuador para convertir el relato de una compra o un servicio problemático en un reclamo formal. Organiza hechos y comprobantes declarados, solicita datos faltantes y presenta referencias normativas cuando hay evidencia suficiente.
 
-**Estado: PARCIALMENTE OPERATIVO.** El código se valida con pruebas automatizadas y dobles de servicios externos. No se certifica la corrida RAG real ni la vigencia del corpus. Los 60 fragmentos locales están pendientes de revisión; no se utilizan como fundamento aprobado. Las constantes jurídicas y la tasa de interés no revisadas producen abstención, no cifras inventadas.
+## Arquitectura
 
-## Requisitos y ejecución local
+React y TypeScript presentan el flujo. Java 21 y Spring Boot coordinan cinco capas mediante Spring AI. Qdrant recupera fragmentos de la Ley Orgánica de Defensa del Consumidor (LODC), Redis conserva el estado temporal y PostgreSQL guarda casos mediante el flujo de archivo. Apache POI construye el Word. [Arquitectura y alcance](docs/03-arquitectura.md)
 
-Se requieren Java 21 y Node.js 22 o posterior, además de los servicios configurados por el proyecto. No se cambiaron las dependencias ni los valores de credenciales. Las variables del proceso son LLM_API_KEY, QDRANT_API_KEY y REDIS_PASSWORD; sus valores nunca se incluyen en documentación ni evidencias. .env.example es un catálogo, no un cargador automático de Spring.
+## Ejecución local
 
-Desde la raíz:
+Use Java 21, Node.js 22, el wrapper de Maven y acceso a los servicios configurados. El [catálogo de variables](.env.example) se complementa con `DB_URL`, `DB_USER` y `DB_PASSWORD` para PostgreSQL. Configure `LLM_API_KEY`, `QDRANT_API_KEY` y `REDIS_PASSWORD` en el entorno del proceso. Para usar el backend local, configure `VITE_API_BASE_URL=http://localhost:8080` antes de iniciar Vite. Por defecto el cliente apunta a Render. Use dependencias aisladas para ensayos con escrituras.
+
+En Windows, desde la raíz, inicie el backend en una terminal y el frontend en otra.
 
 ~~~powershell
-.\backend\App\mvnw.cmd -f .\backend\App\pom.xml clean verify
+.\backend\App\mvnw.cmd -f backend/App/pom.xml spring-boot:run
+~~~
+
+~~~powershell
 cd frontend
 npm ci
-npm run build
-npm test
 npm run dev
 ~~~
 
-En otra terminal, desde la raíz:
+Para validar la copia local, ejecute `mvnw.cmd clean verify` desde `backend/App` y `npm test` y `npm run build` desde `frontend`. Las pruebas HTTP de Render tienen comandos y resultados separados. [Pruebas funcionales](docs/08-pruebas.md)
 
-~~~powershell
-.\backend\App\mvnw.cmd -f .\backend\App\pom.xml spring-boot:run
-~~~
+## Despliegue y resultados
 
-React usa http://localhost:8080 por defecto; VITE_API_BASE_URL permite apuntar a otra instancia. Las propiedades actuales conservan los hosts de servicios del proyecto. El arranque no modifica Qdrant por defecto: la ingesta y la consulta de ejemplo requieren habilitación explícita.
+El backend público responde en Render. La comprobación de esta entrega obtuvo HTTP 200 con `{"status":"UP"}` en `/health`. Los registros del 7 de noviembre contienen 19 de 20 casos de Capa 1 aprobados y una prueba de humo independiente de 3 de 3. El fallo C09 corresponde a un artículo esperado ausente. La ejecución CI #30 de la base documental figura como fallida. [Salud del backend](https://asistente-inteligente-4kiq.onrender.com/health) · [Evidencias de Semana 4](docs/evidencias/semana-4/README.md)
 
-## Ingesta y fuentes
+## Límites y documentación
 
-El runner Java lee backend/App/src/main/resources/data/lodc/*.json. Antes de escribir, valida todos los archivos y los IDs. Solo se insertan fuentes aprobadas; un error cancela el upsert. No hay borrados de colecciones ni registros.
+La prueba pública cubre la entrada y la clasificación. La URL pública del frontend y la demo completa con aprobación y descarga requieren evidencia adicional. La etiqueta `APROBADO` observada en la respuesta de Render describe metadatos del índice, cuya vigencia jurídica exige revisión humana. La discrepancia entre emisión y consumo del token de sesión está descrita en el contrato.
 
-Después de una revisión jurídica real, la ingesta se solicita explícitamente con:
-
-~~~powershell
-.\backend\App\mvnw.cmd -f .\backend\App\pom.xml spring-boot:run '-Dspring-boot.run.arguments=--rag.ingest-on-start=true'
-~~~
-
-No habilite reviewed ni VIGENTE por el mero hecho de tener un PDF o una URL. docs/manifiesto-corpus.json verifica los bytes JSON locales, no la vigencia jurídica. El reglamento no está normalizado: queda pendiente, sin reconstruirlo por memoria.
-
-## Flujo y seguridad
-
-1. El usuario aporta un relato sin datos personales reales. Se filtran patrones adversariales y se minimizan identificadores y contactos.
-2. Capa 1 analiza y clasifica con fuentes recuperadas.
-3. Capa 2 extrae y pregunta; Java valida claves, fechas, booleanos y montos.
-4. Capa 3 muestra citas textuales verificadas; sin respaldo, no permite continuar.
-5. El usuario acepta y elige una opción con respaldo textual.
-6. Capa 4 limita tareas, valida argumentos contra datos confirmados y bloquea reglas no revisadas.
-7. El usuario completa nombre, identificación, correo, teléfono y proveedor; RUC/dirección son opcionales.
-8. Se presenta el texto completo del DOCX; la aprobación se vincula a sus bytes y al estado de la sesión.
-9. Se descargan exactamente esos bytes y la sesión pasa a COMPLETED.
-
-POST /api/v1/claims/start devuelve X-Claim-Token una sola vez. React lo conserva solo en memoria y lo envía en todas las operaciones posteriores. Un UUID sin ese token no autoriza ninguna operación. El servidor persiste únicamente su hash; no lo expone en JSON. Al recargar la página se pierde el acceso de ese cliente y debe iniciarse un caso nuevo. La sesión dura 60 minutos. HTTPS es necesario fuera del entorno local. Los bloqueos de concurrencia son por instancia Java; múltiples réplicas requieren coordinación distribuida antes de habilitarse.
-
-El control por patrones no garantiza detectar toda inyección ni anonimizar cualquier nombre en texto libre. La interfaz pide no introducir PII real y los campos de identificación documental no se envían al modelo. La revisión humana de aplicabilidad sigue siendo indispensable.
-
-## Evaluación y pruebas
-
-~~~powershell
-node --test eval/evaluador.test.mjs
-node eval/ejecutar_sistema.mjs
-node eval/evaluar_resultados.mjs eval/resultados_observados.jsonl
-node eval/evaluar_clasificacion.mjs eval/resultados_clasificacion.jsonl
-~~~
-
-El ejecutor real necesita EVAL_BASE_URL de una instancia ya disponible. Si no existe, registra NO_VERIFICADO y no fabrica respuestas. No inventa respuestas a preguntas de Capa 2 ni revisiones de exactitud. Los evaluadores consumen observaciones reales revisadas y no convierten fixtures en evidencia del modelo.
-
-Hay 20 casos RAG, 12 casos de clasificación derivados del material original y 15 referencias de cálculo determinista. Los resultados de cálculos son de herramientas con datos sintéticos; no certifican la aplicabilidad de una regla legal. Consulte docs/07-evaluacion.md y docs/evidencias/semana-3/resultados/.
-
-## Documentación
-
-- docs/03-arquitectura.md: cinco capas y fronteras de confianza.
-- docs/06-rag.md: corpus, fragmentación y políticas de recuperación.
-- docs/07-evaluacion.md: métricas, comandos y límites de las corridas.
-- docs/09-decisiones.md: decisiones técnicas, privacidad y pendientes.
-- docs/10-correcciones.md: informe de entrega, cambios y verificación.
-- docs/contratos-api.md: rutas, autorización y respuestas.
-
-## Uso de IA y trabajo grupal
-
-Esta corrección fue asistida por Codex para código, pruebas y documentación. Se ejecutaron las verificaciones identificadas en el informe; las fuentes jurídicas no fueron aprobadas por IA. No se atribuyen commits, revisiones ni contribuciones a integrantes sin evidencia. El trabajo grupal permanece pendiente de acreditación.
+- [Arquitectura](docs/03-arquitectura.md) y [contratos HTTP](docs/contratos-api.md)
+- [Prompts](docs/05-prompts.md), [RAG](docs/06-rag.md) y [evaluación](docs/07-evaluacion.md)
+- [Pruebas](docs/08-pruebas.md), [seguridad](docs/seguridad.md) y [decisiones](docs/09-decisiones.md)
+- [Presentación de 12 minutos](docs/sustentacion-uniandes.pdf) y [registro de sustentación](docs/evidencias/semana-4/README.md)

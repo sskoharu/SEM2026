@@ -75,3 +75,7 @@ Con fragmentos de un artículo, un `topK` de 5 entrega como máximo cinco artíc
 - La recuperación es solo vectorial: no hay búsqueda híbrida (BM25) ni filtro por `tipo_reclamo_asociado` en la consulta, aunque el índice existe. Una consulta que cite "Art. 71" literal depende solo de la similitud.
 - El corpus contiene 57 artículos de la LODC (64 fragmentos), no la totalidad de la ley ni su reglamento. El sistema se abstiene cuando el caso queda fuera de ese alcance.
 - No se ha medido empíricamente el efecto del tamaño de fragmento (no hay comparación contra un divisor de tamaño fijo). La justificación es estructural y jurídica, respaldada por la métrica de recuperación, no por un experimento de ablación.
+
+## 10. Índice público y corpus local
+
+El CSV del 7 de noviembre registra fragmentos con `estadoRevision=APROBADO` y `corpusVersion` en las respuestas de Render. Ese dato acredita lo que devolvió la API. La revisión humana de vigencia y aplicabilidad requiere documentación de fuente independiente. El [manifiesto local](manifiesto-corpus.json) y el [registro de fuentes](04-fuentes.md) describen los recursos de trabajo. El runner LODC requiere `app.ingestion.enabled=true` para escribir. La verificación documental conservó la configuración y el índice. [Evaluación pública](07-evaluacion.md#semana-4)

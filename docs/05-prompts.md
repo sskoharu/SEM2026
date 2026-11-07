@@ -1,6 +1,6 @@
 # Estado de los prompts y su comparación
 
-Las tablas originales son antecedentes documentales, no resultados de esta corrección. Los agentes actuales construyen prompts en Java y comparten ModelInputPolicy.SYSTEM, con pruebas de construcción; los recursos system_v1/v2/v3 se conservan como historial. No se les atribuyen métricas reales actuales.
+Las tablas originales son antecedentes documentales, no resultados de esta corrección. Los agentes Java construyen entradas según su etapa y los recursos system_v1/v2/v3 se conservan como historial. La configuración de esta base identifica el chat como `gpt-5.6-sol` y los embeddings como `text-embedding-3-large` mediante Spring AI. Esto identifica la configuración versionada. La revisión y el proveedor efectivos de Render no se deducen de los registros HTTP. El uso de Gemini en el informe académico pertenece a una versión anterior. No se les atribuyen métricas reales actuales.
 
 # Comparación de versiones del prompt
 
