@@ -7,6 +7,7 @@ import { FormularioReclamo } from './modules/reclamos/components/FormularioRecla
 import { AnalisisInicial } from './modules/reclamos/components/AnalisisInicial'
 import { ReclamosGuardados } from './modules/reclamos/components/ReclamosGuardados'
 import { GuardarReclamo } from './modules/reclamos/components/GuardarReclamo'
+import { AvisoTransparenciaIa } from './modules/reclamos/components/AvisoTransparenciaIa'
 
 import {
   aceptarCapa3ConApi,
@@ -42,6 +43,7 @@ function App() {
   const [metrica, setMetrica] = useState<MetricaSolicitud | null>(null)
   const [historialVersion, setHistorialVersion] = useState(0)
   const [sesionActiva, setSesionActiva] = useState<string | null>(null)
+  const [modalAvisoAbierto, setModalAvisoAbierto] = useState(false)
   const solicitudActiva = useRef<AbortController | null>(null)
   const sessionId = useRef<string | null>(null)
 
@@ -442,13 +444,27 @@ function App() {
           >
             ▤ &nbsp; Mis reclamos / Consultar
           </a>
+          <button
+            type="button"
+            className="nav-transparency-btn"
+            onClick={() => setModalAvisoAbierto(true)}
+            aria-haspopup="dialog"
+          >
+            ⚖ &nbsp; Aviso de IA y Privacidad
+          </button>
         </nav>
-        <p className="sidebar-footer">
+        <div className="sidebar-footer">
+          <p style={{ margin: '0 0 6px' }}>
+            Orientación asistida por IA
+          </p>
+          <small style={{ color: '#8faed4', display: 'block', textAlign: 'left', marginBottom: '8px' }}>
+            LODC Ecuador · Minimización de datos
+          </small>
           Proyecto académico
           <strong>
             UNIANDES
           </strong>
-        </p>
+        </div>
       </aside>
       <main className="main-content">
         <header className="page-header">
@@ -464,6 +480,14 @@ function App() {
             Modo API · Backend conectado
           </span>
         </header>
+
+        {/* Banner permanente de transparencia, limitaciones y minimización de datos */}
+        <AvisoTransparenciaIa
+          abierto={modalAvisoAbierto}
+          alAbrir={() => setModalAvisoAbierto(true)}
+          alCerrar={() => setModalAvisoAbierto(false)}
+        />
+
         <section className="steps" aria-label="Etapas del proceso">
           {['Registrar reclamo', 'Análisis inicial', 'Información faltante', 'Resultado final'].map((nombre, indice) => (
             <div className={`step ${paso === indice + 1 ? 'step-active' : ''}`} key={nombre} aria-current={paso === indice + 1 ? 'step' : undefined}>
@@ -473,7 +497,7 @@ function App() {
           ))}
         </section>
         <div className="content-grid">
-          <FormularioReclamo form={form} errores={errores} estado={estado} cambiar={cambiar} analizar={analizar} reiniciar={reiniciar} />
+          <FormularioReclamo form={form} errores={errores} estado={estado} cambiar={cambiar} analizar={analizar} reiniciar={reiniciar} abrirAvisoTransparencia={() => setModalAvisoAbierto(true)} />
           <AnalisisInicial errorSolicitud={errorSolicitud} metrica={metrica} estado={estado} analisis={analisis} respuestas={respuestas} mensaje={mensaje} cambiarRespuesta={cambiarRespuesta} completar={completar} evaluarCapa3={evaluarCapa3} aceptarCapa3={aceptarCapa3} seleccionarAccion={(id) => ejecutarAccion('seleccionar', id)} enviarFormulario={() => ejecutarAccion('formulario')} datosProcedimiento={datosProcedimiento} cambiarDato={(clave, valor) => setDatosProcedimiento(actual => ({ ...actual, [clave]: valor }))} />
         </div>
         {sesionActiva && (
@@ -513,6 +537,14 @@ function App() {
             ) : (
               <div className="stage-status">
                 <p role="status">Cálculos completados correctamente.</p>
+
+                <div className="privacy-field-notice" role="note">
+                  <span className="privacy-notice-icon" aria-hidden="true">📄</span>
+                  <div>
+                    <strong>Tratamiento determinista de datos personales:</strong> La identificación y los datos personales ingresados a continuación se emplean únicamente por código determinista para completar la plantilla oficial Word (.docx). <em>Nunca se envían a ningún modelo de Inteligencia Artificial</em>.
+                  </div>
+                </div>
+
                 {(['fullName', 'idCard', 'email', 'phone', 'provider'] as const).map(campo => (
                   <label key={campo}>
                     {{ fullName: 'Nombre completo', idCard: 'Identificación', email: 'Correo electrónico', phone: 'Teléfono', provider: 'Nombre del proveedor' }[campo]}
@@ -563,7 +595,18 @@ function App() {
             )}
           </section>
         )}
-        <footer className="page-footer">UNIANDES · Proyecto académico · Sesión temporal de 60 minutos; orientación con IA, sin asesoría legal</footer>
+        <footer className="page-footer">
+          <div className="footer-content">
+            <span>UNIANDES · Proyecto académico · Sesión temporal de 60 minutos · Orientación con IA, sin asesoría legal vinculante.</span>
+            <button
+              type="button"
+              className="footer-link-btn"
+              onClick={() => setModalAvisoAbierto(true)}
+            >
+              Consultar aviso de IA, limitaciones y tratamiento de datos personales
+            </button>
+          </div>
+        </footer>
       </main>
     </div>
   )

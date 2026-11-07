@@ -91,6 +91,15 @@ export function ResultadoFinal({
       )}
 
       {analisis.estadoCapa3 === 'WAITING_FOR_DECISION' && !analisis.rutaAccion && (
+        <div className="ai-human-verification-box" role="note">
+          <span aria-hidden="true">ℹ️</span>
+          <div>
+            <strong>Revisión humana indispensable:</strong> La evaluación anterior fue generada con asistencia de IA. Revise que los hechos y artículos reflejen fielmente su situación antes de aceptar.
+          </div>
+        </div>
+      )}
+
+      {analisis.estadoCapa3 === 'WAITING_FOR_DECISION' && !analisis.rutaAccion && (
         <button type="button" className="btn btn-primary" onClick={aceptar}>
           Aceptar evaluación y generar ruta de acción
         </button>

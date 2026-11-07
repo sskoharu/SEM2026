@@ -34,8 +34,8 @@ export function AnalisisInicial({ estado, analisis, respuestas, mensaje, errorSo
         </p>
       </div>
       <div className="demo-warning">
-        <strong>Modo API:</strong>{' '}
-        el análisis se solicita al backend Spring Boot mediante el modelo configurado en el servidor.
+        <strong>Modo API · Asistencia con Inteligencia Artificial:</strong>{' '}
+        el análisis se solicita al backend Spring Boot mediante modelos de IA sobre la LODC. Las orientaciones son de apoyo y no constituyen asesoría jurídica vinculante.
       </div>
       {estado === 'inicio' && <div className="analysis-placeholder">
         <div className="analysis-symbol">✦</div>

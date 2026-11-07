@@ -67,6 +67,13 @@ export function GuardarReclamo({
         </p>
       </div>
 
+      <div className="privacy-field-notice" role="note">
+        <span className="privacy-notice-icon" aria-hidden="true">🔒</span>
+        <div>
+          <strong>Tratamiento de datos personales:</strong> Sus datos se almacenan exclusivamente en la base de datos de resguardo para permitirle consultar o retomar su trámite. <em>No se comparten ni se envían a ningún modelo de Inteligencia Artificial</em>.
+        </div>
+      </div>
+
       <form onSubmit={manejarEnvio} className="guardar-reclamo-form" noValidate>
         <div className="form-grid">
           <label>
@@ -143,4 +150,3 @@ export function GuardarReclamo({
     </section>
   )
 }
-
