@@ -40,10 +40,6 @@ public class WebSecurityConfig {
 
         log.info("Configurando autorización de solicitudes HTTP");
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/v1/rag/query")
-                .hasRole("RAG_USER")
-                .requestMatchers(HttpMethod.GET, "/api/v1/rag/search")
-                .hasRole("RAG_USER")
                 .requestMatchers(
                         HttpMethod.POST, "/api/v1/claims/**"
                 ).permitAll()

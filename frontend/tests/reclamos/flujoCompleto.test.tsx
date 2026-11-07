@@ -34,8 +34,7 @@ it('recorre las cinco capas desde React y genera el documento con el contrato re
     } }))
     .mockResolvedValueOnce(json({ ...session, layer3State: 'DONE', executionPlan: { action_title: 'Opción sintética' } }))
     .mockResolvedValueOnce(json({ sessionId: id, status: 'CALCULATIONS_COMPLETED', nextPhase: 'DOCUMENT_GENERATION', executionPlan: { calculationStatus: 'COMPLETED' } }))
-    .mockResolvedValueOnce(json({ previewId: 'preview', hechosRedactados: 'Hechos sintéticos.', pretensionesRedactadas: 'Petición sintética.', documentoCompleto: 'Contenido íntegro sintético para revisión.' }))
-    .mockResolvedValueOnce(new Response(new TextEncoder().encode('synthetic-docx'), {
+    .mockResolvedValueOnce(new Response(new Blob(['synthetic-docx']), {
       headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },
     }))
   vi.stubGlobal('fetch', fetchMock)

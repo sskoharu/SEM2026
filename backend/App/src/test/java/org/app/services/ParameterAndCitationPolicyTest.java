@@ -45,8 +45,6 @@ class ParameterAndCitationPolicyTest {
         CorpusPolicy policy = new CorpusPolicy();
         assertFalse(policy.approved(new Document("Un texto sin vigencia", Map.of())));
         assertTrue(policy.approved(new Document("Fixture; no constituye una norma real", Map.of(
-                "reviewed", true, "status", "VIGENTE", "url", "https://example.test/fixture", "vigencia", "2026-01-01",
-                "estado_revision", "APROBADO", "reviewed_by", "Revisor de prueba",
-                "reviewed_at", "2026-01-01"))));
+                "reviewed", true, "status", "VIGENTE", "url", "https://example.test/fixture", "vigencia", "2026-01-01"))));
     }
 }

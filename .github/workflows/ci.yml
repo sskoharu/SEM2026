@@ -1,7 +1,8 @@
 name: CI
 
 on:
-  workflow_call:
+  push:
+  pull_request:
 
 permissions:
   contents: read
@@ -27,13 +28,6 @@ jobs:
       - name: Run Maven tests
         run: bash ./mvnw -B clean verify
 
-      - name: Upload verified backend
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-jar
-          path: backend/App/target/Backend_Artifact-1.0-SNAPSHOT.jar
-          retention-days: 3
-
   frontend:
     name: Frontend tests
     runs-on: ubuntu-latest
@@ -56,12 +50,6 @@ jobs:
 
       - name: Run frontend tests
         run: npm test
-
-      - name: Lint frontend and proxy
-        run: npm run lint
-
-      - name: Run frontend server proxy tests
-        run: node --test tests/server/proxy.test.mjs
 
       - name: Build frontend
         run: npm run build

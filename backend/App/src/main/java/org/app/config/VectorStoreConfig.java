@@ -2,6 +2,7 @@ package org.app.config;
 
 import io.qdrant.client.QdrantClient;
 import io.qdrant.client.QdrantGrpcClient;
+import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class VectorStoreConfig {
+
     @Value("${spring.ai.vectorstore.qdrant.host}")
     private String qdrantHost;
 
@@ -20,32 +22,25 @@ public class VectorStoreConfig {
     @Value("${spring.ai.vectorstore.qdrant.api-key}")
     private String qdrantApiKey;
 
-    @Value("${app.qdrant.tls-enabled:true}")
-    private boolean qdrantTlsEnabled;
-
     @Value("${spring.ai.vectorstore.qdrant.collection-name}")
     private String collectionName;
 
     @Bean
-    public QdrantClient qdrantClient(IndexingMode indexingMode) {
-        // Validar primero el modo evita crear clientes con opciones de
-        // mantenimiento incompatibles con el funcionamiento normal.
-        QdrantGrpcClient.Builder builder = QdrantGrpcClient.newBuilder(
-                qdrantHost, qdrantPort, qdrantTlsEnabled);
-        if (qdrantApiKey != null && !qdrantApiKey.isBlank()
-                && !"local-development-placeholder".equals(qdrantApiKey)) {
-            builder.withApiKey(qdrantApiKey);
-        }
-        return new QdrantClient(builder.build());
+    public QdrantClient qdrantClient() {
+        // El 'true' del final es OBLIGATORIO para Qdrant Cloud (Habilita TLS/SSL)
+        return new QdrantClient(
+                QdrantGrpcClient.newBuilder(qdrantHost, qdrantPort, true)
+                        .withApiKey(qdrantApiKey)
+                        .build()
+        );
     }
 
     @Bean
     @Primary
-    public VectorStore vectorStore(QdrantClient qdrantClient,
-            GoogleEmbeddingModel googleEmbeddingModel, IndexingMode indexingMode) {
-        return QdrantVectorStore.builder(qdrantClient, googleEmbeddingModel)
+    public VectorStore vectorStore(QdrantClient qdrantClient, EmbeddingModel embeddingModel) {
+        return QdrantVectorStore.builder(qdrantClient, embeddingModel)
                 .collectionName(collectionName)
-                .initializeSchema(indexingMode.initializeSchema())
+                .initializeSchema(true)
                 .build();
     }
 

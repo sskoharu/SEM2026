@@ -31,19 +31,12 @@ public class BuscandoFuentesStep implements Layer1Step {
         log.info("-> BUSCANDO_FUENTES | Query: '{}'", session.getCurrentSearchQuery());
 
         // 1. Ejecutamos la búsqueda vectorial en Qdrant
-        List<Document> retrievedDocs;
-        try {
-            retrievedDocs = vectorSearchTool.search(session.getCurrentSearchQuery(), topK);
-        } catch (RuntimeException unavailable) {
-            session.setClarificationMessage("No fue posible consultar las fuentes jurídicas en este momento. "
-                    + "No se ha determinado que falte fundamento legal.");
-            throw unavailable;
-        }
+        List<Document> retrievedDocs = vectorSearchTool.search(session.getCurrentSearchQuery(), 5);
 
         // 2. Guardamos los documentos en el contexto para que el siguiente paso los evalúe
         context.setRetrievedDocs(retrievedDocs);
 
-        log.info("Se recuperaron {} documentos aprobados mediante búsqueda híbrida.", retrievedDocs.size());
+        log.info("   Se recuperaron {} documentos de Qdrant.", retrievedDocs.size());
 
         // 3. Pasamos al siguiente estado (evaluar la precisión)
         return Layer1InternalState.EVALUANDO_PRECISION;

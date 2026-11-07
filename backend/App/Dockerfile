@@ -1,11 +1,28 @@
-# Construir después de mvn clean verify, desde backend/App.
-# Runtime público e inmutable: CI no necesita acceso al registro privado.
-FROM eclipse-temurin:21-jre-jammy@sha256:1eac8b8fee11ca7d6725a48bc5d41992ed1561504ebae25490d2d062847e8269
-RUN groupadd --system --gid 10001 app \
-    && useradd --system --uid 10001 --gid app --home-dir /app app
+# ---------- Etapa 1: build ----------
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /build
+
+# Cache de dependencias
+COPY pom.xml .
+RUN mvn -B -q dependency:go-offline
+
+COPY src ./src
+RUN mvn -B -q clean package -Dmaven.test.skip=true
+
+# ---------- Etapa 2: runtime ----------
+FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --chown=app:app target/Backend_Artifact-1.0-SNAPSHOT.jar /app/app.jar
+
+RUN groupadd --system app && useradd --system --gid app app
+
+COPY --from=build /build/target/Backend_Artifact-1.0-SNAPSHOT.jar app.jar
+RUN chown app:app app.jar
 USER app
-ENV PORT=8080
+
+# Secretos: se inyectan en runtime, nunca en la imagen
+#   LLM_API_KEY, QDRANT_API_KEY, REDIS_PASSWORD
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError"
+
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "exec java -Dserver.port=\"${PORT:-8080}\" -jar /app/app.jar"]
+
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]

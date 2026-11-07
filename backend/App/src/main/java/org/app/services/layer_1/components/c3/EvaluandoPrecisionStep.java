@@ -38,10 +38,9 @@ public class EvaluandoPrecisionStep implements Layer1Step {
             log.info("   Precisión alcanzada ({}). Pasando a Clasificación.", currentScore);
             sessionRepository.save(session);
             return Layer1InternalState.CLASIFICACION_POR_METADATA;
-        } else {
-            log.warn("No se encontraron documentos sobre el umbral de similitud. Solicitando aclaración.");
-            session.setClarificationMessage("No hay fuentes jurídicas aprobadas suficientes para fundamentar "
-                    + "el reclamo. Se requiere revisión documental antes de continuar.");
+        } else if (session.getRagRetryCount() >= MAX_RETRIES) {
+            log.warn("Precisión no alcanzada. Solicitando aclaración.");
+            session.setClarificationMessage("No pudimos encontrar una base legal exacta...");
             sessionRepository.save(session);
             return Layer1InternalState.SOLICITANDO_ACLARACION;
         } else {

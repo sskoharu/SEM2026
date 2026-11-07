@@ -1,5 +1,7 @@
-*
-!Dockerfile
-!target/
-target/*
-!target/Backend_Artifact-1.0-SNAPSHOT.jar
+target/
+.git/
+.idea/
+*.iml
+.mvn/wrapper/maven-wrapper.jar
+.env*
+*.md
