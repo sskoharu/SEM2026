@@ -54,13 +54,31 @@ async function ejecutarIntento<T>(url: string, opciones: OpcionesHttp<T>, timeou
     if (!respuesta.ok) {
       const tipo = respuesta.status === 429 ? 'limite' : respuesta.status >= 500 ? 'servidor' : 'http'
       const espera = leerRetryAfter(respuesta.headers.get('Retry-After'))
-      // No se conservan cuerpos de error: podrían incluir datos personales.
-      try {
-        await respuesta.body?.cancel()
-      } catch {
-        // Descartar el cuerpo no debe ocultar el estado recibido del servidor.
+      // Para errores 4xx (negocio), intentar leer el mensaje del backend si existe y es seguro.
+      // Los 5xx descartan el cuerpo porque podrían exponer información interna del servidor.
+      let mensajeBackend: string | undefined
+      if (respuesta.status >= 400 && respuesta.status < 500) {
+        try {
+          const textoError = await respuesta.text()
+          const jsonError = JSON.parse(textoError) as unknown
+          if (typeof jsonError === 'object' && jsonError !== null) {
+            const obj = jsonError as Record<string, unknown>
+            const candidato = obj['error'] ?? obj['message'] ?? obj['mensaje']
+            if (typeof candidato === 'string' && candidato.trim().length > 0 && candidato.length <= 500) {
+              mensajeBackend = candidato.trim()
+            }
+          }
+        } catch {
+          // Si no se puede parsear el cuerpo, se usa el mensaje genérico.
+        }
+      } else {
+        try {
+          await respuesta.body?.cancel()
+        } catch {
+          // Descartar el cuerpo no debe ocultar el estado recibido del servidor.
+        }
       }
-      throw crearError(tipo, respuesta.status, espera)
+      throw crearError(tipo, respuesta.status, espera, mensajeBackend)
     }
     const texto = await respuesta.text()
     if (controlador.signal.aborted) throw crearError('cancelacion', respuesta.status)

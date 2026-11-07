@@ -25,8 +25,9 @@ export function crearError(
   tipo: TipoError,
   codigoHttp: number | null = null,
   esperaServidorMs: number | null = null,
+  mensajePersonalizado?: string,
 ): ErrorSolicitud {
-  return { tipo, mensaje: mensajes[tipo], codigoHttp, esperaServidorMs, intentos: 0 }
+  return { tipo, mensaje: mensajePersonalizado ?? mensajes[tipo], codigoHttp, esperaServidorMs, intentos: 0 }
 }
 
 export function esErrorSolicitud(error: unknown): error is ErrorSolicitud {
