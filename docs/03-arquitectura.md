@@ -1,33 +1,49 @@
-# Arquitectura de las cinco capas
+# 03 · Arquitectura
 
-Se conserva Java 21, Spring Boot, Spring AI/Gemini, Qdrant, Redis y React/TypeScript. No se incorporan otros frameworks ni se sustituyen servicios.
+## 1. Diagrama
 
-React → filtro de autorización → controladores → orquestadores → pasos/DTO → repositorio de sesión Redis.
+![Arquitectura del asistente agéntico](https://i.postimg.cc/7C7tz1sh/arquitectura.png)
 
-## Capa 1
+## 2. Descripción del flujo de una consulta de principio a fin
 
-InitialAnalysisService valida/minimiza la entrada; NarrativeAnalysisAgent analiza el dominio. Layer1Orchestrator coordina traducción, búsqueda híbrida y clasificación. CorpusPolicy excluye fuentes no aprobadas y texto con patrones adversariales. Sin fuentes, se solicita aclaración.
+El ciclo de vida de un caso sigue cinco capas secuenciales. La interpretación semántica la hace el modelo de lenguaje; las decisiones procesales y los cálculos los hace el código Java. El estado del caso se guarda en la sesión (Redis) y puede persistirse en PostgreSQL para retomarlo.
 
-## Capa 2
+1. **Recepción del caso.** El usuario escribe el relato desde el Frontend (`POST /api/v1/claims/start`). Cada petición pasa por el limitador de tasa por IP, que usa Redis, y se crea una sesión.
 
-ExtractionAgentFactory usa el extractor específico de vicios ocultos o GenericExtractionAgent. PrePopulatingParametersStep acepta únicamente claves requeridas validadas por ParameterValidator; no permite que el modelo retire requisitos. Las respuestas manuales y lotes usan validación determinista. Datos desconocidos permanecen pendientes.
+2. **Capa 1 · Clasificación del reclamo.**
+   - El agente analiza el relato (`NarrativeAnalysisAgent`) y lo traduce a una consulta jurídica (`LegalTranslatorAgent`).
+   - La herramienta de búsqueda consulta en Qdrant los fragmentos de la LODC, con umbral de similitud de 0,30.
+   - Un paso determinista infiere el tipo de reclamo (uno de ocho) a partir de los metadatos `tipo_reclamo_asociado` de los fragmentos recuperados.
+   - Si la precisión es insuficiente, pide aclaraciones al usuario (`/layer1/clarify`).
 
-## Capa 3
+3. **Capa 2 · Recolección de parámetros.**
+   - Un agente extractor propio del tipo de reclamo pre-llena los parámetros a partir del relato y de la evidencia declarada (fechas, montos, proveedor).
+   - El sistema determina qué datos faltan según `parametros_requeridos`, genera preguntas (`QuestionGeneratorAgent`) y valida cada respuesta (`ValidationClassifierAgent` y `ValidationTools`).
+   - Repite hasta completar los datos (`/layer2/answer`).
 
-LegalReasoningAgent entrega fragmentos delimitados con IDs. CitationPolicy exige citas textuales exactas y rechaza prosa jurídica sin respaldo. Esto verifica correspondencia textual, no sustituye revisión humana de aplicabilidad. La falta de citas produce ERROR terminal. Las opciones deben identificar su fuente y quote exacto. Las correcciones solo se admiten antes de la aceptación e invalidan resultados derivados.
+4. **Capa 3 · Viabilidad y procedimiento.**
+   - **Compuerta DPE:** el código comprueba los requisitos de admisión de la Defensoría del Pueblo con la colección `dpe_orientacion`.
+   - **Razonamiento legal:** `LegalReasoningAgent` analiza los hechos frente a los artículos de la LODC y evalúa la viabilidad.
+   - **Informe y validación del usuario (human-in-the-loop):** el backend presenta un informe estructurado. El usuario lo revisa, lo corrige con `/batch-update` y lo acepta con `/accept`. Este informe aún no es el documento final.
+   - **Ruta de acción:** `ActionRouteAgent` propone opciones procesales con base en los artículos procedimentales. El usuario elige una (`/select-action`) y completa su formulario (`/submit-procedural-form`).
+   - **Plan de ejecución:** el paso final arma el `executionPlan` con el artículo base, los datos del formulario y las variables por calcular, marcadas como `PENDIENTE_CALCULO`.
 
-## Capa 4
+5. **Capa 4 · Cálculos deterministas (código en lugar de alucinación).** El modelo no calcula montos ni fechas.
+   - El **resolutor por catálogo** busca cada variable pendiente en `data/calculations/<tipo>/catalog.json`, que la vincula con su artículo, y obtiene los argumentos de los datos recolectados.
+   - Según la entrada del catálogo, copia un dato existente, aplica una constante legal o invoca una herramienta Java de cálculo con `BigDecimal` y `java.time` (por ejemplo, plazo del Art. 22, multa mínima del Art. 71, interés legal del Art. 93).
+   - Solo las variables sin regla en el catálogo pasan al planificador LLM de respaldo (`CalculationPlannerAgent`), que se limita a ellas.
+   - Los valores que debe fijar una autoridad (por ejemplo, la indemnización por daños y perjuicios) quedan como `A_DEFINIR_POR_AUTORIDAD`. Los datos que faltan quedan como `DATO_FALTANTE` y los fallos como `ERROR_CALCULO`.
+   - El catálogo cubre hoy los tipos 1, 2 y 4.
 
-El modelo propone un plan, sin ejecutar herramientas directamente. Java limita tres intentos, impide destinos nuevos o reservados, verifica argumentos confirmados y comprueba pendientes/errores antes de avanzar. Las fechas usan fecha inicial explícita. Interés no revisado y constantes jurídicas del modelo quedan bloqueados. LegalRuleRegistry permite únicamente reglas explícitas revisadas en config/reglas_juridicas.json; el registro entregado está vacío. Un marcador ERROR_CALCULO se restaura a pendiente para reintentar.
+6. **Capa 5 · Generación del documento.**
+   - `PlanRenderer` convierte los marcadores en texto legible, por ejemplo "pendiente de determinar por la autoridad competente".
+   - `DocumentDraftingAgent` redacta solo las secciones narrativas (hechos y pretensiones) con los datos validados y la cuantía calculada.
+   - `DocumentGeneratorService` inyecta esos textos y los datos del consumidor, el proveedor, los artículos y la lista de evidencias en la plantilla fija `Plantilla_Reclamo_LODC.docx` (Apache POI, variables `{{...}}`). Añade al final la sección DPE.
+   - El usuario descarga el `.docx` desde el Frontend.
 
-## Capa 5
+## 3. Límites de la implementación actual
 
-El DTO valida datos documentales separados del modelo. La vista previa genera el DOCX una sola vez, extrae todo su texto y conserva sus bytes. Un snapshot vincula identidad aportada, relato, parámetros, fuentes, selección y plan. La descarga exige aprobación, previewId y snapshot iguales; no vuelve a redactar. Se marca COMPLETED y React cierra el flujo.
-
-## Autorización y concurrencia
-
-SessionAuthorizationFilter protege todas las rutas sensibles por token aleatorio de 256 bits separado del UUID. SessionAccess compara hashes en tiempo constante. El token no se persiste en el navegador ni aparece en cuerpos de respuesta. El mapper Redis conserva hash y bytes; JSON de API los excluye. Los locks locales serializan solicitudes de la misma sesión en una instancia. La coordinación entre réplicas no está implementada.
-
-## Límites acreditados
-
-Las pruebas de integración usan dobles de IA/vectorial/Redis; las de DOCX usan POI y plantilla reales. No hay demostración con los servicios externos en esta corrida. Ninguna prueba sintética acredita precisión RAG ni vigencia normativa.
+- No hay anonimización de datos personales antes de enviar texto al modelo.
+- El modelo redacta los hechos y las pretensiones; la plantilla, los datos de las partes, los artículos y la cuantía los impone el código.
+- No se verifican el contenido ni la autenticidad de los adjuntos: la evidencia se gestiona como lista declarada.
+- El catálogo de cálculo no cubre los tipos 3, 5, 6, 7 y 8.
