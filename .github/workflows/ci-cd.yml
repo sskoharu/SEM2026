@@ -94,7 +94,18 @@ jobs:
         run: |
           docker run -d --rm --name sem2026-frontend-ci -p 127.0.0.1:18080:8080 sem2026-frontend:ci
           trap 'docker stop sem2026-frontend-ci' EXIT
-          curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:18080/health
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error --max-time 2 http://127.0.0.1:18080/health; then
+              exit 0
+            fi
+            if [ "$(docker inspect --format '{{.State.Running}}' sem2026-frontend-ci)" != true ]; then
+              docker logs sem2026-frontend-ci
+              exit 1
+            fi
+            sleep 1
+          done
+          docker logs sem2026-frontend-ci
+          exit 1
 
   deploy-candidate:
     needs: [tests, security, dependencies, workflow-validation, docker]
