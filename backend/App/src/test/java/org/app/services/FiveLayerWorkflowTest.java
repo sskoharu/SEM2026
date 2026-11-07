@@ -56,16 +56,26 @@ class FiveLayerWorkflowTest {
         when(translator.translateAndEvaluate(anyString(), any(), anyInt())).thenReturn(
                 new LegalTranslationResult("calidad", true, "fixture", "VICIOS_OCULTOS_CALIDAD", 5,
                         true, true, false, false, false));
-        var vector = mock(VectorSearchTool.class);
         String quote = "Fragmento sintético exclusivamente para probar las conexiones.";
-        var document = new Document(quote, Map.of(
-                "original_id", "fixture", "numero_articulo", "20", "ley", "PRUEBA",
+        var metadata = new java.util.HashMap<String, Object>();
+        metadata.putAll(Map.of("original_id", "fixture", "numero_articulo", "20", "ley", "PRUEBA",
                 "tipo_reclamo_asociado", List.of("VICIOS_OCULTOS_CALIDAD"),
                 "parametros_requeridos", List.of("pricePaid")));
-        when(vector.search(anyString(), anyInt())).thenReturn(List.of(document));
-        when(vector.getArticlesByNumbers(anyList())).thenReturn(List.of(document));
+        metadata.putAll(Map.of("reviewed", true, "estado_revision", "APROBADO", "status", "VIGENTE",
+                "reviewed_by", "FIXTURE_NO_APROBACION_REAL", "reviewed_at", "2026-01-01",
+                "url", "https://example.test/source", "vigencia", "Solo prueba"));
+        var document = new Document(quote, metadata);
+        var store = mock(org.springframework.ai.vectorstore.VectorStore.class);
+        when(store.similaritySearch(any(org.springframework.ai.vectorstore.SearchRequest.class)))
+                .thenReturn(List.of(document));
+        var reader = mock(QdrantArticleReader.class);
+        when(reader.read(anySet())).thenReturn(List.of(document));
+        var vector = new VectorSearchTool(store, new CorpusPolicy(), new CorpusCatalog(List.of()), reader);
+        org.springframework.test.util.ReflectionTestUtils.setField(vector, "similarityThreshold", 0.75);
+        var searching = new BuscandoFuentesStep(vector);
+        org.springframework.test.util.ReflectionTestUtils.setField(searching, "topK", 5);
         var first = new Layer1Orchestrator(List.of(
-                new TraduciendoQueryStep(translator, repository), new BuscandoFuentesStep(vector),
+                new TraduciendoQueryStep(translator, repository), searching,
                 new EvaluandoPrecisionStep(repository),
                 new ClasificacionPorMetadataStep(new MetadataClassificationService(), repository)), repository);
         first.process(session);

@@ -1,0 +1,3 @@
+# Exact historical finding only; password revoked and new AUTH rejected on 2026-11-06.
+# Evidence and residual-session scope: docs/seguridad-publicacion.md.
+b6fd4ad688693dad4b20dfab564127249c5d4e97:backend/App/src/main/resources/application.properties:generic-api-key:62

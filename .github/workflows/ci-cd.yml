@@ -1,0 +1,204 @@
+
+name: SEM2026 CI and candidate preparation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      deploy_candidate:
+        description: Request candidate deployment after protected-environment approval
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sem2026-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    uses: ./.github/workflows/ci.yml
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install checksum-verified Gitleaks
+        env:
+          VERSION: 8.30.1
+        run: |
+          curl --fail --silent --show-error --location -O "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz"
+          curl --fail --silent --show-error --location -O "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_checksums.txt"
+          grep " gitleaks_${VERSION}_linux_x64.tar.gz$" "gitleaks_${VERSION}_checksums.txt" | sha256sum --check
+          tar -xzf "gitleaks_${VERSION}_linux_x64.tar.gz" gitleaks
+
+      - name: Scan complete history with redaction
+        run: ./gitleaks git . --log-opts=--all --redact=100 --no-banner
+
+  dependencies:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Audit all dependencies, rejecting moderate or worse findings
+        run: npm audit --audit-level=moderate
+
+      - name: Audit runtime dependencies, rejecting moderate or worse findings
+        run: npm audit --omit=dev --audit-level=moderate
+
+  workflow-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install checksum-verified actionlint
+        env:
+          VERSION: 1.7.12
+        run: |
+          curl --fail --silent --show-error --location -O "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/actionlint_${VERSION}_linux_amd64.tar.gz"
+          curl --fail --silent --show-error --location -O "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/actionlint_${VERSION}_checksums.txt"
+          grep " actionlint_${VERSION}_linux_amd64.tar.gz$" "actionlint_${VERSION}_checksums.txt" | sha256sum --check
+          tar -xzf "actionlint_${VERSION}_linux_amd64.tar.gz" actionlint
+          ./actionlint
+
+  docker:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/App/target
+
+      - name: Build backend and frontend images
+        run: |
+          docker build -t sem2026-rag:ci backend/App
+          docker build -t sem2026-frontend:ci frontend
+          docker pull redis:7.4-alpine
+
+      - name: Backend security and health smoke tests
+        shell: pwsh
+        run: ./backend/App/scripts/Test-Container.ps1 -Image sem2026-rag:ci
+
+      - name: Redis TLS, ACL and readiness regression
+        shell: pwsh
+        run: ./backend/App/scripts/Test-RedisReadiness.ps1 -Image sem2026-rag:ci
+
+      - name: Frontend container health
+        run: |
+          docker run -d --rm --name sem2026-frontend-ci -p 127.0.0.1:18080:8080 sem2026-frontend:ci
+          trap 'docker stop sem2026-frontend-ci' EXIT
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error --max-time 2 http://127.0.0.1:18080/health; then
+              exit 0
+            fi
+
+            if [ "$(docker inspect --format '{{.State.Running}}' sem2026-frontend-ci)" != true ]; then
+              docker logs sem2026-frontend-ci
+              exit 1
+            fi
+
+            echo "Frontend health check: intento ${attempt}/30 fallido; reintentando..."
+            sleep 1
+          done
+
+          docker logs sem2026-frontend-ci
+          exit 1
+
+  deploy-candidate:
+    needs: [tests, security, dependencies, workflow-validation, docker]
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/main' &&
+      inputs.deploy_candidate &&
+      vars.ENABLE_CLOUD_RUN_CANDIDATE == 'true'
+    runs-on: ubuntu-latest
+    environment: cloud-run-candidate
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PROJECT: ${{ vars.GCP_PROJECT_ID }}
+      REGION: ${{ vars.GCP_REGION }}
+      REPOSITORY: ${{ vars.GCP_ARTIFACT_REPOSITORY }}
+      SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required non-secret configuration
+        env:
+          WIF_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          SERVICE_ACCOUNT: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          PROTECTION_CONFIRMED: ${{ vars.CANDIDATE_ENVIRONMENT_PROTECTION_CONFIRMED }}
+        run: |
+          test "$PROTECTION_CONFIRMED" = true
+          test -n "$PROJECT" && test -n "$REGION" && test -n "$REPOSITORY" && test -n "$SERVICE"
+          test -n "$WIF_PROVIDER" && test -n "$SERVICE_ACCOUNT"
+
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v3
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/App/target
+
+      - name: Publish immutable candidate and preserve production traffic
+        run: |
+          gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+
+          image="${REGION}-docker.pkg.dev/${PROJECT}/${REPOSITORY}/sem2026-rag:${GITHUB_SHA}"
+
+          docker build -t "$image" backend/App
+          docker push "$image"
+
+          digest=$(gcloud artifacts docker images describe "$image" --format='value(image_summary.digest)')
+          test -n "$digest"
+
+          immutable="${REGION}-docker.pkg.dev/${PROJECT}/${REPOSITORY}/sem2026-rag@${digest}"
+
+          gcloud run services describe "$SERVICE" \
+            --project "$PROJECT" \
+            --region "$REGION" \
+            --format='json(status.traffic,status.latestReadyRevisionName,spec.template.spec.containers[0].image)' \
+            > candidate-before.json
+
+          gcloud run deploy "$SERVICE" \
+            --project "$PROJECT" \
+            --region "$REGION" \
+            --image "$immutable" \
+            --no-traffic \
+            --tag "candidate-${GITHUB_RUN_ID}"
+
+      - name: Preserve pre-deployment state for authorized rollback
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-before-${{ github.run_id }}
+          path: candidate-before.json
+          retention-days: 14
+          if-no-files-found: ignore
