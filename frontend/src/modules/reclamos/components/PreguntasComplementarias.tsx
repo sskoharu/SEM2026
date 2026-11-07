@@ -16,6 +16,12 @@ export function PreguntasComplementarias({ analisis, respuestas, cambiarRespuest
       <p>
         Responda lo que conozca. Puede dejar preguntas sin respuesta.
       </p>
+      <div className="privacy-field-notice" role="note" style={{ margin: '8px 0 14px' }}>
+        <span className="privacy-notice-icon" aria-hidden="true">🛡️</span>
+        <div>
+          <strong>Minimización de datos:</strong> Estas respuestas son procesadas por Inteligencia Artificial. Evite proporcionar nombres reales, números de cédula, direcciones o datos de contacto.
+        </div>
+      </div>
       {analisis.preguntas.map(pregunta => (
         <label className="question-field" key={pregunta.id}>
           {pregunta.texto}
