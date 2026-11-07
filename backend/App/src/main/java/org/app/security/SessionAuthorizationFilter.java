@@ -26,7 +26,8 @@ public class SessionAuthorizationFilter extends OncePerRequestFilter {
             FilterChain chain) throws ServletException, IOException {
         String uri = request.getRequestURI();
         if (!uri.startsWith("/api/v1/claims/") || "OPTIONS".equals(request.getMethod())
-                || (uri.equals("/api/v1/claims/start") && "POST".equals(request.getMethod()))) {
+                || (uri.equals("/api/v1/claims/start") && "POST".equals(request.getMethod()))
+                || uri.startsWith("/api/v1/claims/saved")) {
             chain.doFilter(request, response);
             return;
         }

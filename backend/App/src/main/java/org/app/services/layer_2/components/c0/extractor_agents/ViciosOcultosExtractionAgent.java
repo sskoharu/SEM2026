@@ -1,14 +1,15 @@
 package org.app.services.layer_2.components.c0.extractor_agents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.app.prompts.PromptLoader;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ViciosOcultosExtractionAgent extends BaseExtractionAgent {
 
-    public ViciosOcultosExtractionAgent(ChatClient.Builder builder, ObjectMapper objectMapper) {
-        super(builder, objectMapper);
+    public ViciosOcultosExtractionAgent(ChatClient.Builder builder, ObjectMapper objectMapper, PromptLoader promptLoader) {
+        super(builder, objectMapper, promptLoader);
     }
 
     @Override
@@ -18,31 +19,16 @@ public class ViciosOcultosExtractionAgent extends BaseExtractionAgent {
 
     @Override
     protected String getExtractionRules() {
-        return """
-               - purchaseDate: Fecha de compra.
-               - pricePaid: Monto pagado.
-               - defectDescription: Falla del producto.
-               - hasInvoice: Si tiene factura.
-               - hasWarranty: Si tiene garantía.
-               - thirdPartyIntervention: Si un tercero lo manipuló.
-               - hasPhotosOrVideos: Si tiene fotos del defecto.
-               - hasWarrantyDocument: Si tiene el documento físico de garantía.
-               """;
+        return promptLoader.load("layer_2/extraction/vicios_ocultos/extraction_rules");
     }
 
     @Override
     protected String getIrrelevantRules() {
-        return """
-               - missingWeightOrMeasure: Es irrelevante si el bien es un electrodoméstico o un producto que no se vende a granel.
-               """;
+        return promptLoader.load("layer_2/extraction/vicios_ocultos/irrelevant_rules");
     }
 
     @Override
     protected String getProceduralRules() {
-        return """
-               - claimsIndemnification
-               - art71Causal
-               - chosenRemedy
-               """;
+        return promptLoader.load("layer_2/extraction/vicios_ocultos/procedural_rules");
     }
 }

@@ -1,0 +1,137 @@
+{
+  "claimType": "INFORMACION_PRECIOS_FACTURACION",
+  "entries": [
+    {
+      "variable": "monto_cobrado_en_exceso",
+      "aliases": ["monto_devolucion", "monto_restitucion", "diferencia_precio", "monto_total_devolucion", "valor_cobrado_de_mas", "monto_reembolso_diferencia"],
+      "articles": ["9", "19", "7"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_overcharge",
+      "arguments": {
+        "chargedAmount": {"source": "COLLECTED", "key": "chargedPrice"},
+        "legitimateAmount": {"source": "COLLECTED", "key": "displayedPriceWithTaxes"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Arts. 9 y 19: el precio exhibido debe ser el valor final con impuestos y recargos; el consumidor no debe pagar más que ese valor.",
+      "note": "chargedPrice y displayedPriceWithTaxes existen como claves de primer nivel en InformacionFacturacionParams."
+    },
+    {
+      "variable": "monto_recargo_no_informado",
+      "aliases": ["valor_recargo", "monto_recargo", "recargo_cobrado"],
+      "articles": ["7", "9", "19"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_percentage",
+      "arguments": {
+        "amount": {"source": "COLLECTED", "key": "displayedPriceWithTaxes"},
+        "percentage": {"source": "COLLECTED", "key": "surchargePercentage"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Arts. 7 num. 2 y 9: el precio debe incluir los montos adicionales por impuestos y otros recargos.",
+      "note": "surchargePercentage está en PrecioExhibidoParams y también se menciona como parámetro del Art. 7/9; confirmar que Capa 2 lo deje como clave plana."
+    },
+    {
+      "variable": "rango_multa_publicidad_enganosa",
+      "aliases": ["multa_publicidad", "sancion_publicidad_enganosa", "multa_art72", "rango_multa"],
+      "articles": ["72"],
+      "resolution": "CONSTANT",
+      "valueType": "TEXT",
+      "contextKeys": [],
+      "constantValue": "de 1.000 a 4.000 USD",
+      "onMissing": "AUTHORITY",
+      "legalBasis": "Art. 72: multa de mil a cuatro mil dólares de los Estados Unidos de América.",
+      "note": "Rango que la autoridad aplica al anunciante; no hay un monto único a calcular."
+    },
+    {
+      "variable": "difusion_minima_rectificacion",
+      "aliases": ["porcentaje_rectificacion", "porcentaje_minimo_rectificacion", "difusion_rectificacion"],
+      "articles": ["72"],
+      "resolution": "CONSTANT",
+      "valueType": "TEXT",
+      "contextKeys": [],
+      "constantValue": "no menor al 30% de la difusión del mensaje sancionado",
+      "onMissing": "AUTHORITY",
+      "legalBasis": "Art. 72: la difusión de la rectificación no será menor al treinta por ciento (30%) de la difusión del mensaje sancionado.",
+      "note": "Aplica solo si requestsAdvertisingRectification = true."
+    },
+    {
+      "variable": "segundos_redondeados_facturados",
+      "aliases": ["tiempo_redondeado", "segundos_cobrados_de_mas", "diferencia_segundos_facturados"],
+      "articles": ["91"],
+      "resolution": "TOOL",
+      "valueType": "INTEGER",
+      "tool": "calculate_art91_rounded_seconds",
+      "arguments": {
+        "billedSeconds": {"source": "COLLECTED", "key": "billedTimeSeconds"},
+        "realSeconds": {"source": "COLLECTED", "key": "realTimeUsedSeconds"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 91: no se podrán aplicar mecanismos de redondeo de tarifas; la facturación es por el tiempo real de uso.",
+      "note": "billedTimeSeconds y realTimeUsedSeconds viven en TelefoniaBillingParams; confirmar que Capa 2 los deje como claves planas."
+    },
+    {
+      "variable": "monto_cobrado_en_exceso_telefonia",
+      "aliases": ["monto_devolucion_telefonia", "monto_restitucion_telefonia", "diferencia_facturacion_telefonia", "monto_total_devolucion"],
+      "articles": ["91"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_overcharge",
+      "arguments": {
+        "chargedAmount": {"source": "COLLECTED", "key": "chargedAmountForCall"},
+        "legitimateAmount": {"source": "COLLECTED", "key": "realAmountForCall"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 91: la facturación se hará por el tiempo real de uso, en minutos y segundos.",
+      "note": "chargedAmountForCall y realAmountForCall viven en TelefoniaBillingParams. Si el usuario no conoce el monto real, ASK_USER."
+    },
+    {
+      "variable": "interes_legal_correspondiente",
+      "aliases": ["interes_legal_mora", "interes_legal", "monto_interes_legal"],
+      "articles": ["93"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_art93_legal_interest",
+      "arguments": {
+        "principal": {"source": "COLLECTED", "key": "principalAmount"},
+        "daysLate": {"source": "COLLECTED", "key": "actualDaysLate"},
+        "annualRatePercent": {"source": "COLLECTED", "key": "legalInterestRate"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 93: el consumidor pagará el interés legal por el tiempo efectivo de mora.",
+      "note": "La tasa legal vigente la publica la autoridad; el sistema no la inventa. Si legalInterestRate falta, ASK_USER. Debe ir expresada en porcentaje anual."
+    },
+    {
+      "variable": "exceso_interes_cobrado",
+      "aliases": ["monto_devolucion_intereses", "excessAmount", "monto_total_devolucion", "diferencia_interes", "monto_restitucion_intereses"],
+      "articles": ["93"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_overcharge",
+      "arguments": {
+        "chargedAmount": {"source": "COLLECTED", "key": "interestAmountCharged"},
+        "legitimateAmount": {"source": "EXECUTION_PLAN", "key": "interes_legal_correspondiente"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 93: solo procede el interés legal por el tiempo efectivo de mora; lo cobrado por encima es excesivo.",
+      "note": "Depende de interes_legal_correspondiente: el executor debe resolverla primero."
+    },
+    {
+      "variable": "monto_honorarios_acordado",
+      "aliases": ["honorarios_acordados", "valor_honorarios", "monto_honorarios"],
+      "articles": ["27"],
+      "resolution": "FROM_CONTEXT",
+      "valueType": "MONEY",
+      "contextKeys": ["agreedFee"],
+      "onMissing": "AUTHORITY",
+      "legalBasis": "Art. 27: el proveedor debe informar desde el inicio el monto o parámetros de sus honorarios, con equidad respecto del servicio prestado.",
+      "note": "Se copia lo acordado. Si no hubo acuerdo, el monto no se inventa y queda a definir por la autoridad."
+    }
+  ]
+}

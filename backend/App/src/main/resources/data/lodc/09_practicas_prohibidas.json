@@ -3,19 +3,13 @@
     "id": "lodc_ley_art_55_num_1",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 1. Condicionar la venta de un bien a la compra de otro o a la contratación de un servicio, salvo que por disposición legal el consumidor deba cumplir con algún requisito;",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "1",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Venta Condicionada o Atada",
-      "tipo_reclamo_asociado": [
-        "PRACTICAS_ABUSIVAS_MERCADO"
-      ],
+      "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
       "parametros_requeridos": [
         "tiedSaleOfGoods",
         "tiedSaleOfServices",
@@ -27,32 +21,20 @@
         "hasWrittenCommunication",
         "hasWitnesses"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_2",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 2. Rehusar atender a los consumidores cuando su stock lo permita;",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "2",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Negativa Injustificada de Venta",
-      "tipo_reclamo_asociado": [
-        "PRACTICAS_ABUSIVAS_MERCADO"
-      ],
+      "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
       "parametros_requeridos": [
         "refusedToServe",
         "hadStockAvailable",
@@ -61,32 +43,20 @@
         "hasPhotosOrVideos",
         "hasWitnesses"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_3",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 3. Enviar al consumidor cualquier servicio o producto sin que éste lo haya solicitado. En tal hipótesis, se entenderá como muestras gratis los bienes y/o servicios enviados;",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "3",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Envío de Productos No Solicitados",
-      "tipo_reclamo_asociado": [
-        "PRACTICAS_ABUSIVAS_MERCADO"
-      ],
+      "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
       "parametros_requeridos": [
         "receivedUnsolicitedProduct",
         "chargedForUnsolicitedProduct",
@@ -96,32 +66,20 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_4",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 4. Aprovecharse dolosamente de la edad, salud, instrucción o capacidad del consumidor para venderle determinado bien o servicio;",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "4",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Aprovechamiento de Vulnerabilidad",
-      "tipo_reclamo_asociado": [
-        "PRACTICAS_ABUSIVAS_MERCADO"
-      ],
+      "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
       "parametros_requeridos": [
         "exploitedAge",
         "exploitedHealth",
@@ -132,32 +90,20 @@
         "hasWrittenCommunication",
         "hasInvoiceOrReceipt"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_5",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 5. Colocar en el mercado productos u ofertar la prestación de servicios que no cumplan con las normas técnicas y de calidad expedidas por los órganos competentes;",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "5",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Productos que Incumplen Normas Técnicas",
-      "tipo_reclamo_asociado": [
-        "PRACTICAS_ABUSIVAS_MERCADO"
-      ],
+      "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
       "parametros_requeridos": [
         "missingSanitaryRegistry",
         "failsTechnicalStandards",
@@ -169,33 +115,20 @@
         "hasWrittenCommunication",
         "hasComplaintBookRecord"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "71"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "71"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_6",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 6. Aplicar fórmulas de reajuste diversas a las legales o contractuales;",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "6",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Fórmulas de Reajuste Ilegales",
-      "tipo_reclamo_asociado": [
-        "PRACTICAS_ABUSIVAS_MERCADO"
-      ],
+      "tipo_reclamo_asociado": ["PRACTICAS_ABUSIVAS_MERCADO"],
       "parametros_requeridos": [
         "appliedIllegalAdjustmentFormula",
         "adjustmentNotInContract",
@@ -206,32 +139,20 @@
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_7",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 7. Dejar de fijar plazo para el cumplimiento de sus obligaciones, o dejarlo a su único criterio; y,",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "7",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Falta de Plazo en Obligaciones",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA"
-      ],
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
       "parametros_requeridos": [
         "providerSetNoDeadline",
         "noDeadlineSet",
@@ -242,32 +163,20 @@
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_55_num_8",
     "document": "Art. 55.- Constituyen prácticas abusivas de mercado, y están absolutamente prohibidas al proveedor, entre otras, las siguientes: 8. El redondeo de tiempos para efectivizar el cobro de intereses, multas u otras sanciones económicas en tarjetas de crédito, préstamos bancarios y otros similares.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "55",
       "numeral": "8",
       "capitulo": "Capítulo IX: Prácticas Prohibidas",
       "tema_principal": "Redondeo Ilegal de Tiempos",
-      "tipo_reclamo_asociado": [
-        "FINANCIEROS_CREDITOS_COBRANZAS"
-      ],
+      "tipo_reclamo_asociado": ["FINANCIEROS_CREDITOS_COBRANZAS"],
       "parametros_requeridos": [
         "appliedTimeRounding",
         "roundedAmount",
@@ -276,15 +185,7 @@
         "hasWrittenCommunication",
         "hasComplaintBookRecord"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "91",
-        "93"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "91", "93"]
     }
   }
 ]

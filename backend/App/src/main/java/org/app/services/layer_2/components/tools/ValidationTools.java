@@ -13,24 +13,14 @@ public class ValidationTools {
     @Tool(description = "Valida si un texto corresponde a una fecha pasada (no futura) con formato DD/MM/AAAA.")
     public String validateDate(String parameterName, String userInput) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(java.time.format.ResolverStyle.STRICT);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate date = LocalDate.parse(userInput, formatter);
             if (date.isAfter(LocalDate.now())) {
                 return "ERROR: La fecha no puede estar en el futuro. Usa DD/MM/AAAA.";
             }
             return "OK";
-        } catch (RuntimeException e) {
+        } catch (DateTimeParseException e) {
             return "ERROR: La fecha ingresada no es válida. Usa el formato DD/MM/AAAA (ej. 15/05/2026).";
-        }
-    }
-
-    @Tool(description = "Valida un monto decimal no negativo; no decide su aplicabilidad jurídica.")
-    public String validateAmount(String parameterName, String userInput) {
-        try {
-            new org.app.services.ParameterValidator().normalize("amount", userInput);
-            return "OK";
-        } catch (RuntimeException invalid) {
-            return "ERROR: Monto no válido.";
         }
     }
 

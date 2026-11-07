@@ -3,18 +3,12 @@
     "id": "lodc_ley_art_32",
     "document": "Art. 32.- Obligaciones.- Las empresas encargadas de la provisión de servicios públicos domiciliarios, sea directamente o en virtud de contratos de concesión, están obligadas a prestar servicios eficientes, de calidad, oportunos, continuos y permanentes a precios justos.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "32",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Obligaciones Generales de Servicios Públicos",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "serviceNotEfficient",
         "serviceNotQuality",
@@ -27,33 +21,19 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "38",
-        "78",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["38", "78", "70"]
     }
   },
   {
     "id": "lodc_ley_art_33",
     "document": "Art. 33.- Información al Consumidor.- Las condiciones, obligaciones, modificaciones y derechos de las partes en la contratación del servicio público domiciliario, deberán ser cabalmente conocidas por ellas en virtud de la celebración de un instrumento escrito. Sin perjuicio de dicho instrumento, los proveedores de servicios públicos domiciliarios mantendrán dicha información a disposición permanente de los consumidores en las oficinas de atención al público. El consumidor tiene el derecho de ser oportuna y verazmente informado sobre la existencia o no de seguros accesorios al contrato de prestación del servicio, cobertura y demás condiciones. En caso de seguros de vida, su monto nunca podrá ser menor al establecido en el Código del Trabajo. Sin perjuicio de la cobertura que los seguros accesorios den para el caso de muerte o perjuicio a la salud del consumidor, la empresa proveedora de servicios públicos domiciliarios, será directamente responsable de indemnizar por los daños causados a los consumidores por negligencia o mala calidad en la prestación de dichos servicios.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "33",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Información, Contrato y Seguros Accesorios",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "lacksWrittenContract",
         "infoNotAvailableAtOffices",
@@ -64,32 +44,19 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "75"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
     "id": "lodc_ley_art_34",
     "document": "Art. 34.- Reciprocidad.- Las empresas proveedoras de servicios públicos domiciliarios están en la obligación de otorgar un trato recíproco a los consumidores, aplicando en lo referente a reintegros y devoluciones, los mismos criterios que se utilicen para los recargos por mora en el pago del servicio",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "34",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Principio de Reciprocidad",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "recargoPorMoraAplicado",
         "reintegroNoAplicado",
@@ -98,32 +65,19 @@
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "38",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["38", "70"]
     }
   },
   {
     "id": "lodc_ley_art_35",
     "document": "Art. 35.- Registro de Reclamos.- Las empresas proveedoras de servicios públicos domiciliarios deben contar con una oficina y un registro de reclamaciones en donde constarán las presentadas por los consumidores. Dichos reclamos deberán ser subsanados en el plazo perentorio que contendrá el Reglamento a la presente Ley.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "35",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Registro y Plazos de Reclamos",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "hasComplaintOffice",
         "hasComplaintRegistry",
@@ -132,31 +86,19 @@
         "hasComplaintBookRecord",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_36",
     "document": "Art. 36.- Seguridad de las Instalaciones.- Los consumidores de servicios públicos que se prestan a domicilio y requieren instalaciones específicas, deben ser convenientemente informados sobre las condiciones de seguridad de las instalaciones y de los artefactos.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "36",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Seguridad de Instalaciones",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "missingSafetyInfo",
         "safetyAccidentOccurred",
@@ -165,32 +107,19 @@
         "hasWitnesses",
         "otherEvidenceDescription"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "75"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
     "id": "lodc_ley_art_37",
     "document": "Art. 37.- Instrumentos y Unidades de Medición.- La autoridad competente queda facultada para intervenir de oficio, o a petición de parte interesada, en la verificación del buen funcionamiento de los instrumentos de medición de energía, combustible, comunicaciones, agua potable, o cualquier otro similar, cuando existan dudas sobre las lecturas efectuadas por las empresas proveedoras del servicio. Tanto los instrumentos como las unidades de medición deberán ser legalmente reconocidos y autorizados. Las empresas proveedoras del servicio garantizarán al consumidor el control individual de los consumos. Las facturas deberán ser entregadas al usuario con no menos de diez días de anticipación a su vencimiento.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "37",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Instrumentos de Medición y Facturación",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "measurementInstrumentNotCertified",
         "deniedIndividualConsumptionControl",
@@ -199,32 +128,19 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "40"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "40"]
     }
   },
   {
     "id": "lodc_ley_art_38",
     "document": "Art. 38.- Interrupción de la Prestación del Servicio.- Cuando la prestación del servicio público domiciliario se interrumpa o sufra alteraciones por causas imputables al proveedor, este deberá reintegrar los valores cobrados por servicios no prestados, dentro del plazo de treinta días, contados desde la fecha en que se realice el reclamo. Sin perjuicio de lo señalado, el proveedor reconocerá los daños y perjuicios ocasionados al consumidor por la alteración o interrupción culposa del servicio.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "38",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Interrupción de Servicio y Reintegros",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "serviceInterrupted",
         "interruptionCausedByProvider",
@@ -238,33 +154,19 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "78",
-        "75",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["78", "75", "70"]
     }
   },
   {
     "id": "lodc_ley_art_39",
     "document": "Art. 39.- Facturación de Consumo Excesivo.- Cuando el consumidor considere que existe facturación excesiva en la planilla de un período, podrá cancelar únicamente un valor equivalente al promedio del consumo mensual de los seis meses inmediatamente anteriores. Para poder ejercer este derecho, el consumidor debe presentar hasta dentro de los diez días posteriores al vencimiento de la factura o planilla, las correspondientes al período de seis meses inmediatos anteriores a la objetada. De no contar con los documentos anotados, el consumidor podrá solicitar las respectivas copias a la empresa prestadora del servicio, en cuyo caso, el plazo anotado comenzará a correr desde la fecha en que se entreguen las copias. La empresa proveedora del servicio dispondrá de un plazo de treinta días a partir del reclamo del usuario para acreditar que el consumo facturado fue efectivamente realizado, en cuyo caso tendrá derecho a reclamar el pago de la diferencia más los intereses legales correspondientes. Si el pago efectuado por el consumidor en ejercicio del derecho contemplado en el inciso primero del presente artículo excede del valor real de consumo, la empresa otorgará un crédito idéntico a dicho exceso a favor del consumidor, el mismo que deberá hacerse efectivo en la planilla inmediata posterior. Mientras se desarrolle el trámite previsto en los incisos precedentes, la empresa proveedora estará obligada a seguir prestando el servicio sin interrupción alguna.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "39",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Facturación de Consumo Excesivo",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "excessiveBillingClaimed",
         "averageOfLastSixMonths",
@@ -276,31 +178,19 @@
         "hasComplaintBookRecord",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_40",
     "document": "Art. 40.- Valores de las Planillas.- En las planillas emitidas por las empresas proveedoras de los servicios públicos domiciliarios, deberá constar exclusivamente el valor del consumo respectivo, más los recargos legales pertinentes y cobros adicionales establecidos expresamente por leyes y ordenanzas. Queda prohibido incluir en dichas planillas rubros adicionales a los señalados. Es un derecho del consumidor el conocer el valor exacto que debe cancelar por concepto de consumo y recargos legales adicionales, por tanto, queda prohibido el planillaje en base de sistemas diferentes a la medición directa, tales como valores presuntivos o estimativos, con excepción del sector rural que no disponga de instrumentos de medición. Por excepción, en caso de pérdida, daño o imposibilidad física de acceder al sistema de medición, la planilla correspondiente al período inmediatamente posterior al momento del daño, podrá ser emitida por un valor equivalente al promedio mensual de los seis períodos inmediatamente anteriores. En tal caso, es obligación de quien presta el servicio público domiciliario, reparar o reponer el sistema de medición respectivo o notificar al consumidor sobre la imposibilidad física de acceder al medidor para que éste solucione dicha situación, con la finalidad de que la factura o planilla del siguiente período sea emitida en función de datos reales. Sí quien presta el servicio no cumple con la obligación de reparar o reponer el sistema de medición, en ningún caso los montos de las planillas de los periodos posteriores podrán ser aumentados presuntiva o estimativamente, siendo obligación del consumidor en los siguientes periodos, pagar exclusivamente un valor igual al del promedio mensual de las planillas de los seis meses inmediatamente anteriores. Los proveedores de servicios públicos domiciliarios que sufrieren pérdidas por deficiencias técnicas, u otras causas debidamente comprobadas, imputables a la empresa, deberán asumirlas en su totalidad, quedando prohibido el traslado de dichas pérdidas a las planillas de los consumidores.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "40",
       "capitulo": "Capítulo VI: Servicios Públicos Domiciliarios",
       "tema_principal": "Valores de Planillas y Prohibición de Estimativos",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
       "parametros_requeridos": [
         "hasUnauthorizedCharges",
         "isEstimatedBilling",
@@ -312,14 +202,7 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "78"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "78"]
     }
   }
 ]

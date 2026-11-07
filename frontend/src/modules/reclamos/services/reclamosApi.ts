@@ -35,6 +35,12 @@ type BackendSession = {
   message?: string | null
 }
 
+type Layer3CompletionResponse = {
+  status: 'DONE'
+  message?: string
+  executionPlan?: Record<string, unknown> | null
+}
+
 function esCadena(valor: unknown): valor is string {
   return typeof valor === 'string'
 }
@@ -66,6 +72,15 @@ export function esRespuestaSesion(valor: unknown): valor is BackendSession {
     })) return false
   }
   return true
+}
+
+function esRespuestaFinalCapa3(valor: unknown): valor is Layer3CompletionResponse {
+  if (typeof valor !== 'object' || valor === null) return false
+  const respuesta = valor as Record<string, unknown>
+  if (respuesta.status !== 'DONE') return false
+  if (respuesta.message != null && typeof respuesta.message !== 'string') return false
+  return respuesta.executionPlan == null ||
+    (typeof respuesta.executionPlan === 'object' && !Array.isArray(respuesta.executionPlan))
 }
 
 function crearHechos(respuesta: BackendSession): string[] {
@@ -163,7 +178,9 @@ function mapearRespuesta(respuesta: BackendSession): Analisis {
   }
 }
 
-const baseUrl = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080').replace(/\/+$/, '')
+const baseUrl = (
+  import.meta.env.VITE_API_BASE_URL ?? 'https://asistente-inteligente-4kiq.onrender.com'
+).replace(/\/+$/, '')
 
 const TIMEOUT_ANALISIS_IA_MS = 120_000
 
@@ -230,18 +247,28 @@ export async function aceptarCapa3ConApi(sessionId: string, senal?: AbortSignal)
   return mapearRespuesta(sesion)
 }
 async function solicitarPasoCapa3(ruta: string, cuerpo: unknown, sessionId: string, senal?: AbortSignal): Promise<Analisis> {
-  const sesion = await solicitarJson<BackendSession>(`${baseUrl}${ruta}`, {
+  const respuesta = await solicitarJson<BackendSession | Layer3CompletionResponse>(`${baseUrl}${ruta}`, {
     operacion: 'analisis-inicial',
     metodo: 'POST',
     cabeceras: { 'Content-Type': 'application/json', Accept: 'application/json', ...sessionHeaders(sessionId) },
     cuerpo: JSON.stringify(cuerpo),
     senal,
-    validar: esRespuestaSesion,
+    validar: (valor): valor is BackendSession | Layer3CompletionResponse =>
+      esRespuestaSesion(valor) || esRespuestaFinalCapa3(valor),
   })
-  if (sesion.sessionId !== sessionId) {
+  if (esRespuestaFinalCapa3(respuesta)) {
+    return mapearRespuesta({
+      sessionId,
+      layer3State: 'DONE',
+      executionPlan: respuesta.executionPlan ?? null,
+      status: respuesta.status,
+      message: respuesta.message ?? null,
+    })
+  }
+  if (respuesta.sessionId !== sessionId) {
     throw new Error('La sesión devuelta no corresponde al reclamo solicitado.')
   }
-  return mapearRespuesta(sesion)
+  return mapearRespuesta(respuesta)
 }
 
 export async function seleccionarAccionConApi(sessionId: string, optionId: string, senal?: AbortSignal): Promise<Analisis> {
@@ -271,8 +298,7 @@ function esResultadoCalculos(valor: unknown): valor is ResultadoCalculos {
     datos.nextPhase === 'DOCUMENT_GENERATION' &&
     typeof datos.executionPlan === 'object' &&
     datos.executionPlan !== null &&
-    !Array.isArray(datos.executionPlan) &&
-    (datos.executionPlan as Record<string, unknown>).calculationStatus === 'COMPLETED'
+    !Array.isArray(datos.executionPlan)
   )
 }
 
@@ -301,57 +327,15 @@ export async function ejecutarCalculosConApi(
 export type DatosDocumento = {
   fullName: string
   idCard: string
-  email: string
-  phone: string
+  contactInfo: string
   providerCommercialName: string
   providerRuc: string
   providerAddress: string
 }
 
-export type VistaPreviaDocumento = {
-  previewId: string
-  hechosRedactados: string
-  pretensionesRedactadas: string
-  documentoCompleto: string
-}
-
-export async function prepararVistaPreviaConApi(
-  sessionId: string,
-  datos: DatosDocumento,
-  senal?: AbortSignal,
-): Promise<VistaPreviaDocumento> {
-  const respuesta = await fetch(
-    `${baseUrl}/api/v1/claims/${encodeURIComponent(sessionId)}/layer5/preview`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...sessionHeaders(sessionId) },
-      body: JSON.stringify({ ...datos, confirmGeneration: true }),
-      signal: senal,
-    },
-  )
-
-  if (!respuesta.ok) {
-    throw new Error(`No fue posible preparar la vista previa (HTTP ${respuesta.status}).`)
-  }
-
-  const vista: unknown = await respuesta.json()
-  if (
-    !vista || typeof vista !== 'object' ||
-    typeof (vista as VistaPreviaDocumento).previewId !== 'string' ||
-    typeof (vista as VistaPreviaDocumento).hechosRedactados !== 'string' ||
-    typeof (vista as VistaPreviaDocumento).pretensionesRedactadas !== 'string' ||
-    typeof (vista as VistaPreviaDocumento).documentoCompleto !== 'string'
-  ) {
-    throw new Error('El backend devolvió una vista previa incompleta.')
-  }
-
-  return vista as VistaPreviaDocumento
-}
-
 export async function generarDocumentoConApi(
   sessionId: string,
   datos: DatosDocumento,
-  previewId: string,
   senal?: AbortSignal,
 ): Promise<Blob> {
   const respuesta = await fetch(
@@ -363,7 +347,7 @@ export async function generarDocumentoConApi(
         ...sessionHeaders(sessionId),
         Accept: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       },
-      body: JSON.stringify({ ...datos, confirmGeneration: true, approveFinalText: true, previewId }),
+      body: JSON.stringify(datos),
       signal: senal,
     },
   )

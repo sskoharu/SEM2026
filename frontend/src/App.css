@@ -494,6 +494,121 @@ small {
   outline-offset: 3px;
 }
 
+.saved-claims-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #d4e0ee;
+  padding-bottom: 8px;
+}
+
+.saved-claims-tab {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #eef3f9;
+  border: 1px solid #d4e0ee;
+  color: #52647d;
+  transition: all 0.2s ease;
+}
+
+.saved-claims-tab:hover {
+  background: #e1ebf6;
+  color: #12345d;
+}
+
+.saved-claims-tab.active {
+  background: #1766cc;
+  border-color: #1766cc;
+  color: #ffffff;
+}
+
+.saved-claims-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.saved-claim-card {
+  background: #ffffff;
+  border: 1px solid #d4e0ee;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.saved-claim-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.saved-claim-title {
+  font-weight: 700;
+  color: #12345d;
+  font-size: 14px;
+}
+
+.saved-claim-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #e6efff;
+  color: #1758a8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.saved-claim-meta {
+  font-size: 12px;
+  color: #52647d;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saved-claim-meta code {
+  background: #f1f4f9;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.saved-claim-success {
+  background: #eaf7ef;
+  border: 1px solid #b5e4c6;
+  color: #1b6d39;
+  padding: 12px 14px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.saved-claim-success code {
+  background: #d8f1e2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.saved-session-actions {
+  background: #ffffff;
+  border: 1px solid #d4e0ee;
+  margin-top: 20px;
+}
+
+.saved-claims {
+  margin-top: 24px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spinner {
     animation: none;

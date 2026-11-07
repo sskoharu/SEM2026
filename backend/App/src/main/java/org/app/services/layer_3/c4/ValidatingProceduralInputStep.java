@@ -12,7 +12,6 @@ import org.app.services.layer_3.dto.ProceduralOption;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -36,62 +35,64 @@ public class ValidatingProceduralInputStep implements Layer3Step {
             return Layer3InternalState.ERROR;
         }
 
-        List<ActionParameter> required = selectedOption.getUserInputsRequired() == null
-                ? List.of() : selectedOption.getUserInputsRequired();
         Map<String, Object> formData = context.getProceduralFormData();
 
+        // CASO A: El usuario acaba de enviar el formulario (Tenemos datos)
         if (formData != null && !formData.isEmpty()) {
             log.info("Validando los datos del formulario de proceder...");
             boolean hasErrors = false;
+
             for (Map.Entry<String, Object> entry : formData.entrySet()) {
                 String paramName = entry.getKey();
-                ActionParameter parameter = required.stream()
-                        .filter(p -> p.getParameterName().equals(paramName))
-                        .findFirst().orElse(null);
-                if (parameter == null) {
-                    log.warn("Se recibió un parámetro no solicitado en el formulario.");
-                    hasErrors = true;
-                    continue;
-                }
-                String value = entry.getValue() == null ? "" : String.valueOf(entry.getValue()).trim();
-                if (value.isEmpty()) {
-                    updateParameterError(selectedOption, paramName, "El campo es obligatorio.");
-                    hasErrors = true;
-                    continue;
-                }
+                String value = String.valueOf(entry.getValue());
+
+                // Usamos el Agente de la Capa 2 para validar
                 String result = validationAgent.validateParameter(paramName, value);
-                if (result == null || !result.startsWith("OK:")) {
+
+                if (result.startsWith("ERROR")) {
                     hasErrors = true;
-                    String error = result != null && result.startsWith("ERROR:")
-                            ? result.substring("ERROR:".length()).trim()
-                            : "No se pudo validar este dato.";
-                    updateParameterError(selectedOption, paramName, error);
-                    continue;
+                    updateParameterError(selectedOption, paramName, result.replace("ERROR:", "").trim());
+                } else {
+                    // Si es válido, lo guardamos en proceduralFormData (Map)
+                    String normalizedValue = result.startsWith("OK:") ? result.replace("OK:", "").trim() : value;
+
+                    if (session.getProceduralFormData() == null) {
+                        session.setProceduralFormData(new java.util.HashMap<>());
+                    }
+                    session.getProceduralFormData().put(paramName, normalizedValue);
+
+                    updateParameterValue(selectedOption, paramName, normalizedValue);
                 }
-                String normalizedValue = result.substring("OK:".length()).trim();
-                if (normalizedValue.isEmpty()) {
-                    hasErrors = true;
-                    updateParameterError(selectedOption, paramName, "El dato validado está vacío.");
-                    continue;
-                }
-                if (session.getProceduralFormData() == null) {
-                    session.setProceduralFormData(new java.util.HashMap<>());
-                }
-                session.getProceduralFormData().put(paramName, normalizedValue);
-                updateParameterValue(selectedOption, paramName, normalizedValue);
             }
+
             if (hasErrors) {
+                log.warn("El formulario tiene errores. Volviendo a pausar para corregir.");
                 return Layer3InternalState.WAITING_FOR_PROCEDURAL_INPUT;
+            }
+
+            log.info("Formulario validado exitosamente. Pasando a FINALIZING_PROCEDURE.");
+            return Layer3InternalState.FINALIZING_PROCEDURE; // <-- CORRECCIÓN AQUÍ
+        }
+
+        // CASO B: Es la primera vez que entramos (o no hay datos)
+        // Verificamos si faltan datos por llenar
+        boolean missingData = false;
+        java.util.List<ActionParameter> required = selectedOption.getUserInputsRequired() != null
+                ? selectedOption.getUserInputsRequired() : java.util.List.of();
+        for (ActionParameter param : required) {
+            if (param.getCurrentValue() == null || param.getCurrentValue().isEmpty()) {
+                missingData = true;
+                break;
             }
         }
 
-        boolean missingData = required.stream().anyMatch(param ->
-                param.getCurrentValue() == null || param.getCurrentValue().isBlank());
         if (missingData) {
-            log.info("Faltan datos obligatorios del proceder.");
+            log.info("Faltan datos del proceder. Pausando para mostrar el formulario.");
             return Layer3InternalState.WAITING_FOR_PROCEDURAL_INPUT;
         }
-        return Layer3InternalState.FINALIZING_PROCEDURE;
+
+        log.info("Todos los datos del proceder ya estaban llenos. Pasando a FINALIZING_PROCEDURE.");
+        return Layer3InternalState.FINALIZING_PROCEDURE; // <-- CORRECCIÓN AQUÍ
     }
 
     // --- Métodos auxiliares ---
@@ -105,6 +106,7 @@ public class ValidatingProceduralInputStep implements Layer3Step {
     }
 
     private void updateParameterError(ProceduralOption option, String paramName, String errorMsg) {
+        if (option.getUserInputsRequired() == null) return;
         option.getUserInputsRequired().stream()
                 .filter(p -> p.getParameterName().equals(paramName))
                 .findFirst()
@@ -112,6 +114,7 @@ public class ValidatingProceduralInputStep implements Layer3Step {
     }
 
     private void updateParameterValue(ProceduralOption option, String paramName, String value) {
+        if (option.getUserInputsRequired() == null) return;
         option.getUserInputsRequired().stream()
                 .filter(p -> p.getParameterName().equals(paramName))
                 .findFirst()

@@ -21,4 +21,5 @@ public class DocumentContext {
 
     private String cuantia;                // Monto final del executionPlan
     private List<String> listaEvidencias;  // Ej: ["Factura", "Nota de ingreso"]
+    private List<String> dpeSectionLines;  // Sección "Siguientes pasos" (Defensoría del Pueblo)
 }

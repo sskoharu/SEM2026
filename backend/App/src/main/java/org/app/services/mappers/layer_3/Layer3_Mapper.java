@@ -20,8 +20,6 @@ public class Layer3_Mapper {
                 .sessionId(session.getSessionId())
                 .layer3State(session.getLayer3State() != null ? session.getLayer3State().name() : null)
                 .viabilityReport(session.getViabilityReport())
-                .legalSources(session.getLegalSources())
-                .citedSourceIds(session.getCitedSourceIds())
                 .clarificationMessage(session.getClarificationMessage())
                 .selectedOptionId(session.getSelectedOptionId())
                 .executionPlan(session.getExecutionPlan());

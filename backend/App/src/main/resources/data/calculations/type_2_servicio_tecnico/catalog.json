@@ -1,0 +1,124 @@
+{
+  "claimType": "SERVICIO_TECNICO_CUSTODIA",
+  "entries": [
+    {
+      "variable": "fecha_limite_cumplimiento",
+      "aliases": ["fecha_limite_reparacion", "fecha_limite_reposicion", "plazo_cumplimiento", "fecha_maxima_cumplimiento", "fecha_limite_nueva_reparacion"],
+      "articles": ["22"],
+      "resolution": "TOOL",
+      "valueType": "DATE",
+      "tool": "calculate_date_plus_days",
+      "arguments": {
+        "baseDate": {"source": "TODAY"},
+        "days": {"source": "CONSTANT", "value": 30}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 22: reparar sin costo adicional o reponer el bien \"en un plazo no superior a treinta días\".",
+      "note": "El plazo corre desde hoy (fecha en que se presenta el reclamo)."
+    },
+    {
+      "variable": "fecha_limite_reclamo_reparacion",
+      "aliases": ["fecha_limite_derecho_reclamo", "fecha_vencimiento_derecho_art22", "fecha_limite_90_dias"],
+      "articles": ["22"],
+      "resolution": "TOOL",
+      "valueType": "DATE",
+      "tool": "calculate_art22_claim_deadline",
+      "arguments": {
+        "repairDeliveryDate": {"source": "COLLECTED", "key": "repairDeliveryDate"},
+        "warrantyDays": {"source": "CONSTANT", "value": 0}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 22: el derecho se ejerce dentro de los noventa días desde la recepción del bien; si la garantía es mayor, se estará a esta.",
+      "note": "warrantyDays vale 0 porque ServicioTecnicoParams no registra la duración de la garantía. Si se agrega, cambiar el origen a COLLECTED."
+    },
+    {
+      "variable": "dias_desde_entrega_reparacion",
+      "aliases": ["dias_transcurridos_desde_entrega", "dias_desde_recepcion_bien", "daysSinceRepairDelivery"],
+      "articles": ["22"],
+      "resolution": "TOOL",
+      "valueType": "INTEGER",
+      "tool": "calculate_days_between",
+      "arguments": {
+        "startDate": {"source": "COLLECTED", "key": "repairDeliveryDate"},
+        "endDate": {"source": "TODAY"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 22: los días desde la recepción del bien se comparan contra el límite de 90 días.",
+      "note": "Equivale a ServicioTecnicoParams.daysSinceRepairDelivery. Si no hay repairDeliveryDate, probar con deliveryDate."
+    },
+    {
+      "variable": "dentro_de_plazo_art22",
+      "aliases": ["esta_dentro_de_90_dias", "reclamo_dentro_de_plazo", "isRepairWarrantyExpired"],
+      "articles": ["22"],
+      "resolution": "TOOL",
+      "valueType": "BOOLEAN",
+      "tool": "evaluate_art22_period",
+      "arguments": {
+        "repairDeliveryDate": {"source": "COLLECTED", "key": "repairDeliveryDate"},
+        "warrantyDays": {"source": "CONSTANT", "value": 0},
+        "referenceDate": {"source": "TODAY"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 22: el consumidor tiene derecho \"dentro de los noventa días contados a partir de la recepción del bien\".",
+      "note": "Devuelve true si aún está dentro del plazo. isRepairWarrantyExpired de la Capa 2 es la negación de este valor."
+    },
+    {
+      "variable": "monto_restitucion_valor_declarado",
+      "aliases": ["monto_restitucion_valor_bien", "valor_declarado_nota_ingreso", "monto_restitucion", "valor_bien_declarado", "monto_indemnizacion_bien"],
+      "articles": ["23"],
+      "resolution": "FROM_CONTEXT",
+      "valueType": "MONEY",
+      "contextKeys": ["itemDeclaredValue"],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 23: el prestador debe \"restituir el valor del bien, declarado en la nota de ingreso\".",
+      "note": "Se copia el valor declarado; no se calcula. Si el usuario solo dio el valor del bien en el relato y no el de la nota de ingreso, confirmar que son el mismo antes de usarlo."
+    },
+    {
+      "variable": "monto_restitucion_servicio",
+      "aliases": ["monto_devolucion_servicio", "valor_cancelado_servicio", "monto_total_devolucion", "monto_restitucion_valor_cancelado", "costo_reparacion"],
+      "articles": ["75"],
+      "resolution": "FROM_CONTEXT",
+      "valueType": "MONEY",
+      "contextKeys": ["repairCost"],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 75: los consumidores tienen derecho a que \"le sea restituido el valor cancelado\".",
+      "note": "Se copia lo pagado por el servicio (repairCost)."
+    },
+    {
+      "variable": "rango_multa_servicio_defectuoso",
+      "aliases": ["multa_servicio_defectuoso", "sancion_pecuniaria_art75"],
+      "articles": ["75"],
+      "resolution": "CONSTANT",
+      "valueType": "TEXT",
+      "contextKeys": [],
+      "constantValue": "de 50 a 500 USD",
+      "onMissing": "AUTHORITY",
+      "legalBasis": "Art. 75: multa de cincuenta a quinientos dólares de los Estados Unidos de América.",
+      "note": "Es un rango que la autoridad aplica al proveedor; no hay un monto único a calcular."
+    },
+    {
+      "variable": "indemnizacion_danos_perjuicios",
+      "aliases": ["monto_indemnizacion", "valor_indemnizacion", "indemnizacion", "monto_indemnizacion_perdida", "indemnizacion_perdida_ocasionada", "monto_danos_perjuicios"],
+      "articles": ["22", "23", "24", "75"],
+      "resolution": "AUTHORITY",
+      "valueType": "MONEY",
+      "contextKeys": ["indemnificationEstimatedAmount"],
+      "legalBasis": "Arts. 22, 23, 24 y 75: el consumidor tiene derecho a la indemnización por daños y perjuicios.",
+      "note": "No hay fórmula legal. indemnificationEstimatedAmount es solo la estimación del usuario; el documento debe indicar que el monto final lo determina la autoridad o un juez."
+    },
+    {
+      "variable": "periodo_suministro_repuestos",
+      "aliases": ["plazo_suministro_repuestos", "periodo_razonable_repuestos", "vida_util_bien"],
+      "articles": ["25"],
+      "resolution": "AUTHORITY",
+      "valueType": "TEXT",
+      "contextKeys": [],
+      "legalBasis": "Art. 25: el período razonable de suministro \"será determinado de conformidad con las normas técnicas del INEN\".",
+      "note": "Lo define el INEN, no el sistema."
+    }
+  ]
+}

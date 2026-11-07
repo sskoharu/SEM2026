@@ -2,15 +2,15 @@ package org.app.services.layer_4;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.app.exceptions.ClientException;
 import org.app.repositories.SessionRepository;
 import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer3InternalState;
-import org.app.schemas.session_object.enums.ClaimSessionState;
 import org.app.services.layer_4.dto.Layer4ResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/claims/{sessionId}/layer4")
@@ -30,32 +30,16 @@ public class Layer4Controller {
         log.info("Endpoint /calculate llamado para sesión: {}", sessionId);
 
         SessionObject session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+                .orElseThrow(() -> ClientException.status(HttpStatus.NOT_FOUND).error("Sesión no encontrada: " + sessionId));
 
         // Validación: La Capa 3 debe haber terminado
         if (session.getLayer3State() != Layer3InternalState.DONE) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "error", "La Capa 3 no ha finalizado. No se pueden ejecutar los cálculos."
-            ));
-        }
-
-        // Una vez iniciada la generación documental, no se permiten recálculos.
-        ClaimSessionState phase = session.getCurrentPhase();
-        if (phase != ClaimSessionState.ACTION_SELECTION
-                && phase != ClaimSessionState.ALGORITHMIC_PROCESSING) {
-            return ResponseEntity.status(409).body(Map.of(
-                    "error", "No se pueden repetir cálculos en esta fase. "
-                            + "El documento o su vista previa deben permanecer inalterados."
-            ));
+            throw ClientException.status(HttpStatus.CONFLICT)
+                    .error("La Capa 3 no ha finalizado. No se pueden ejecutar los cálculos.");
         }
 
         // Ejecutamos el Orquestador de la Capa 4
-        SessionObject updatedSession;
-        try {
-            updatedSession = layer4Orchestrator.process(session);
-        } catch (IllegalStateException ex) {
-            return ResponseEntity.status(409).body(Map.of("error", ex.getMessage()));
-        }
+        SessionObject updatedSession = layer4Orchestrator.process(session);
 
         // Construimos la respuesta ligera
         Layer4ResponseDto response = Layer4ResponseDto.builder()

@@ -14,28 +14,19 @@ public class Layer5Mapper {
 
     public DocumentContext mapToDocumentContext(SessionObject session, Layer5RequestDto request) {
         // 1. Formatear Artículos
-        String articulos = session.getLegalSources().stream()
-                .filter(source -> session.getCitedSourceIds().contains(source.getId()))
-                .map(source -> "[" + source.getId() + "] " + source.getLaw() + " Art. "
-                        + source.getArticle() + " — Vigencia: " + source.getValidity()
-                        + " — " + source.getUrl() + "\n" + source.getText())
-                .collect(java.util.stream.Collectors.joining("\n\n"));
+        String articulos = String.join(", ", session.getApplicableArticles());
 
         // 2. Extraer Cuantía del ExecutionPlan (si existe)
-        String monto = "A determinar";
-        if (session.getExecutionPlan() != null && session.getExecutionPlan().containsKey("monto_total_restitucion")) {
-            monto = String.valueOf(session.getExecutionPlan().get("monto_total_restitucion"));
+        String monto = "A determinar por la autoridad competente";
+        String planAmount = org.app.services.layer_4.resolver.PlanRenderer.mainAmount(session.getExecutionPlan());
+        if (planAmount != null) {
+            monto = planAmount;
         } else if (session.getCollectedParameters().containsKey("pricePaid")) {
             monto = String.valueOf(session.getCollectedParameters().get("pricePaid"));
         }
 
         // 3. Transformar Evidencias Booleanas a Lista de Textos
-        /*List<String> evidencias = new ArrayList<>();
-        if (session.getEvidence() != null) {
-            if (session.getEvidence().isHasInvoice()) evidencias.add("Copia de Factura");
-            if (session.getEvidence().isHasVoucher()) evidencias.add("Comprobante de Pago");
-            if (session.getEvidence().isHasAdditionalReceipt()) evidencias.add("Comprobante Adicional");
-        }*/
+        List<String> evidencias = buildEvidenceList(session.getEvidence());
 
         // 4. Construir el Contexto
         return DocumentContext.builder()
@@ -47,12 +38,32 @@ public class Layer5Mapper {
                 .providerAddress(request.getProviderAddress())
                 .applicableArticles(articulos)
                 .cuantia(monto)
-                .listaEvidencias(session.getCollectedParameters().entrySet().stream()
-                        .filter(entry -> entry.getKey().startsWith("has") && "true".equals(String.valueOf(entry.getValue())))
-                        .map(entry -> entry.getKey() + ": declarado por el usuario; no verificado documentalmente")
-                        .toList())
+                .listaEvidencias(evidencias)
                 // hechosRedactados y pretensionesRedactadas se llenarán en la Subtarea 2
                 .build();
+    }
+
+    List<String> buildEvidenceList(SessionObject.Evidence ev) {
+        List<String> evidencias = new ArrayList<>();
+        if (ev == null) return evidencias;
+
+        if (ev.isHasInvoice()) evidencias.add("Copia de la factura de compra");
+        if (ev.isHasPaymentReceipt()) evidencias.add("Comprobante de pago o transferencia");
+        if (ev.isHasContract()) evidencias.add("Contrato suscrito con el proveedor");
+        if (ev.isHasWarrantyDocument()) evidencias.add("Documento de garantía");
+        if (ev.isHasUserManual()) evidencias.add("Manual o instrucciones de uso");
+        if (ev.isHasEntryNote()) evidencias.add("Nota de ingreso al taller o servicio técnico");
+        if (ev.isHasPhotosOrVideos()) evidencias.add("Fotografías o videos del defecto o daño");
+        if (ev.isHasBillingHistory()) evidencias.add("Planillas o historial de facturación");
+        if (ev.isHasAdvertisingEvidence()) evidencias.add("Captura o fotografía de la publicidad");
+        if (ev.isHasPriceTagEvidence()) evidencias.add("Fotografía del precio exhibido");
+        if (ev.isHasLabelingEvidence()) evidencias.add("Fotografía del rotulado o etiqueta del producto");
+        if (ev.isHasWrittenCommunication()) evidencias.add("Comunicaciones escritas con el proveedor (correos, mensajes o cartas)");
+        if (ev.isHasComplaintBookRecord()) evidencias.add("Constancia o registro del libro de reclamos");
+        if (ev.isHasWitnesses()) evidencias.add("Testigos dispuestos a declarar");
+        String other = ev.getOtherEvidenceDescription();
+        if (other != null && !other.isBlank()) evidencias.add(other.trim());
+        return evidencias;
     }
 
     public void injectDraftingResult(DocumentContext context, DraftingResult result) {

@@ -20,13 +20,11 @@ public class SessionObject {
 
     // 1. Metadatos de la Sesión y Concurrencia
     @Id
-    private String sessionId;
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private String accessTokenHash; // Identificador único del usuario o chat
+    private String sessionId; // Identificador único del usuario o chat
     private ClaimSessionState currentPhase; // Estado macro (Ej: TRIAGE_PROCESSING, LEGAL_GROUNDING,) etc.)
 
     @TimeToLive
-    private Long expiration = 3600L; // 60 minutos
+    private Long expiration = 86400L; // 24 horas
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -43,33 +41,6 @@ public class SessionObject {
     private String clarificationMessage;
     // Artículos que fundamentaron la clasificación de la Capa 1
     private List<String> applicableArticles;
-    // Fragmentos jurídicos recuperados para fundamentar el informe.
-    private List<LegalSource> legalSources = new ArrayList<>();
-
-    public void setLegalSources(List<?> sources) {
-        this.legalSources = sources == null ? new ArrayList<>() : sources.stream()
-                .map(source -> {
-                    if (source instanceof LegalSource legalSource) {
-                        return legalSource;
-                    }
-                    if (source instanceof Map<?, ?> values) {
-                        return new LegalSource(
-                                value(values, "id"),
-                                value(values, "law"),
-                                value(values, "article"),
-                                value(values, "text"),
-                                value(values, "url"),
-                                value(values, "validity"));
-                    }
-                    throw new IllegalArgumentException("Tipo de fuente jurídica no soportado.");
-                })
-                .toList();
-    }
-
-    private static String value(Map<?, ?> values, String key) {
-        return String.valueOf(values.containsKey(key) ? values.get(key) : "");
-    }
-    private List<String> citedSourceIds = new ArrayList<>();
 
 
     // ==========================================
@@ -113,16 +84,6 @@ public class SessionObject {
     private List<String> proceduralArticles = new ArrayList<>();
     private Map<String, Object> proceduralFormData; // Datos que envía el usuario desde el formulario
     private Map<String, Object> executionPlan = new HashMap<>();
-
-    // Borrador persistido para revisión; no equivale a aprobación.
-    private String documentPreviewId;
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private byte[] documentPreviewBytes;
-    private String documentPreviewText;
-    private String documentPreviewFacts;
-    private String documentPreviewRequests;
-    private String documentPreviewRequestSnapshot;
-
 
     // ==========================================
     // Datos del Conflicto (Acumulativos)

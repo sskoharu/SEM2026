@@ -1,0 +1,1 @@
+- missingWeightOrMeasure: Es irrelevante si el bien es un electrodoméstico o un producto que no se vende a granel.

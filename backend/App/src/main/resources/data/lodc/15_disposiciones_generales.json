@@ -3,58 +3,28 @@
     "id": "lodc_ley_art_91",
     "document": "Art. 91.- Servicio de Telefonía.- Las empresas públicas o privadas que presten servicios de telefonía fija o móvil celular, bajo ningún concepto podrán aplicar mecanismos de redondeo de tarifas; la facturación se hará por el tiempo real de uso, expresado en minutos y segundos, según corresponda.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "91",
       "capitulo": "Capítulo XV: Disposiciones Generales",
       "tema_principal": "Prohibición de Redondeo en Telefonía",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
-      "parametros_requeridos": [
-        "telefonia"
-      ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "75"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["telefonia"],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   },
   {
     "id": "lodc_ley_art_93",
     "document": "Art. 93.- Intereses por Mora.- Cuando fuere procedente el cobro de intereses por mora en el pago atrasado de facturas y planillas de servicio, el consumidor pagará el interés legal por el tiempo efectivo de mora. Caso contrario, el afectado podrá acudir ante la autoridad competente para la tutela de su derecho.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "93",
       "capitulo": "Capítulo XV: Disposiciones Generales",
       "tema_principal": "Cobro de Intereses por Mora",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
-      "parametros_requeridos": [
-        "interesesMora"
-      ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "75"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["interesesMora"],
+      "articulos_procedimentales_asociados": ["70", "75"]
     }
   }
 ]

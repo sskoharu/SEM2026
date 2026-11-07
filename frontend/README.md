@@ -124,7 +124,7 @@ Los componentes dependen de los tipos compartidos; el formulario también depend
 
 El frontend no genera análisis localmente ni contiene un modo de demostración. La sesión se conserva en el backend; recargar la página pierde únicamente el estado visual local. Guardar borrador y Mis reclamos permanecen pendientes. El comprobante solo se declara; no hay carga de archivos ni OCR.
 
-El adaptador `services/reclamosApi.ts` usa los endpoints reales del backend: `/api/v1/claims/start`, `/{sessionId}/layer1/clarify`, `/{sessionId}/layer2/start` y `/{sessionId}/layer2/answer`. La URL se configura con `VITE_API_BASE_URL` y usa `http://localhost:8080` por defecto.
+El adaptador `services/reclamosApi.ts` usa los endpoints reales del backend: `/api/v1/claims/start`, `/{sessionId}/layer1/clarify`, `/{sessionId}/layer2/start` y `/{sessionId}/layer2/answer`. La URL se configura con `VITE_API_BASE_URL` y usa `https://asistente-inteligente-4kiq.onrender.com` por defecto. Para desarrollo local, defina `VITE_API_BASE_URL=http://localhost:8080`.
 
 ## Semana 2
 
@@ -132,7 +132,7 @@ El frontend usa el cliente fetch con AbortController, política de reintentos, e
 
 La carga bloquea campos y doble envío. Limpiar cancela; los errores conservan los datos y permiten volver a analizar. Se muestra la latencia local medida y tokens no disponibles.
 
-El cliente HTTP admite timeout configurable (15000 ms por intento), 429 y Retry-After, hasta tres intentos con espera exponencial, conexión, servidor, respuesta vacía o inválida y cancelación. POST y otras operaciones modificadoras no se reintentan sin garantía explícita de idempotencia del servidor y clave estable. Los reintentos incluyen pausas que también pueden cancelarse.
+El cliente HTTP admite timeout configurable (60000 ms por intento), 429 y Retry-After, hasta tres intentos con espera exponencial, conexión, servidor, respuesta vacía o inválida y cancelación. POST y otras operaciones modificadoras no se reintentan sin garantía explícita de idempotencia del servidor y clave estable. Los reintentos incluyen pausas que también pueden cancelarse.
 
 Las métricas guardan identificador, fecha, operación técnica, duración total, estado, código, intentos y tokens. Se conservan hasta 100 registros en memoria y no contienen datos del formulario. Los tokens ausentes se guardan como null, sin estimaciones. obtenerMetricas y limpiarMetricas están disponibles en shared/metrics/metricasService.ts para consumidores internos.
 
@@ -148,6 +148,6 @@ Ejecute también `npm audit`. No coloque credenciales en variables `VITE_`: todo
 
 El informe vigente está en `../docs/semana-2/10-auditoria-final.md`. Los documentos y el Word del 20 de octubre conservan las evidencias históricas de 63 pruebas; el informe final registra las 79 actuales. Los recursos de plantilla en `src/assets` y `public/icons.svg` no tienen referencias en la aplicación y se conservan por trazabilidad; no afectan al JavaScript generado.
 
-El backend debe permitir CORS para el origen del frontend y estar disponible antes de enviar el formulario. Los POST no se reintentan sin garantía explícita de idempotencia; el flujo actual conserva los datos y muestra el error cuando la conexión o la respuesta no son válidas.
+El backend debe permitir CORS para el origen del frontend y estar disponible antes de enviar el formulario. La aplicación usa por defecto el backend desplegado en Render; para desarrollo local, configure `VITE_API_BASE_URL`. Los POST no se reintentan sin garantía explícita de idempotencia; el flujo actual conserva los datos y muestra el error cuando la conexión o la respuesta no son válidas.
 
 Para publicar posteriormente, revise primero `git status --short` y el contenido preparado con `git diff --cached`. Versione fuente, pruebas, configuraciones, README, package.json, package-lock.json, documentos y evidencias académicas seleccionadas. Excluya node_modules, dist, entornos privados, logs, cachés, archivos temporales y frontend.zip. La publicación debe realizarla el responsable del repositorio; esta auditoría no ejecuta push ni crea remotos.

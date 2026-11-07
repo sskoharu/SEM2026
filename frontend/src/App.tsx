@@ -5,6 +5,8 @@ import { inicial } from './modules/reclamos/constants/reclamo.constants'
 import { validarReclamo } from './modules/reclamos/utils/validarReclamo'
 import { FormularioReclamo } from './modules/reclamos/components/FormularioReclamo'
 import { AnalisisInicial } from './modules/reclamos/components/AnalisisInicial'
+import { ReclamosGuardados } from './modules/reclamos/components/ReclamosGuardados'
+import { GuardarReclamo } from './modules/reclamos/components/GuardarReclamo'
 
 import {
   aceptarCapa3ConApi,
@@ -16,8 +18,6 @@ import {
   enviarFormularioConApi,
   ejecutarCalculosConApi,
   generarDocumentoConApi,
-  prepararVistaPreviaConApi,
-  type VistaPreviaDocumento,
   type DatosDocumento,
 } from './modules/reclamos/services/reclamosApi'
 import { forgetSessions } from './modules/reclamos/services/sessionAccess'
@@ -35,13 +35,13 @@ function App() {
   const [datosProcedimiento, setDatosProcedimiento] = useState<Record<string, string>>({})
   const [calculosCompletos, setCalculosCompletos] = useState(false)
   const [confirmarDocumento, setConfirmarDocumento] = useState(false)
-  const [aprobarTexto, setAprobarTexto] = useState(false)
   const [documentoCompletado, setDocumentoCompletado] = useState(false)
-  const [vistaPrevia, setVistaPrevia] = useState<VistaPreviaDocumento | null>(null)
   const [rucProveedor, setRucProveedor] = useState('')
   const [direccionProveedor, setDireccionProveedor] = useState('')
   const [errorSolicitud, setErrorSolicitud] = useState('')
   const [metrica, setMetrica] = useState<MetricaSolicitud | null>(null)
+  const [historialVersion, setHistorialVersion] = useState(0)
+  const [sesionActiva, setSesionActiva] = useState<string | null>(null)
   const solicitudActiva = useRef<AbortController | null>(null)
   const sessionId = useRef<string | null>(null)
 
@@ -52,8 +52,6 @@ function App() {
     setDocumentoCompletado(false)
     setCalculosCompletos(false)
     setConfirmarDocumento(false)
-    setAprobarTexto(false)
-    setVistaPrevia(null)
     setDatosProcedimiento({})
     setAnalisis(null)
     setRespuestas({})
@@ -106,6 +104,7 @@ function App() {
         setMensaje('La sesión quedó detenida porque el estado recibido no permite continuar de forma segura.')
       }
       sessionId.current = resultado.sessionId
+      setSesionActiva(resultado.sessionId)
     } catch (error) {
       if (controlador.signal.aborted || solicitudActiva.current !== controlador) return
       setEstado('error')
@@ -259,8 +258,6 @@ function App() {
     }
     setCalculosCompletos(false)
     setConfirmarDocumento(false)
-    setAprobarTexto(false)
-    setVistaPrevia(null)
     const controlador = new AbortController()
     solicitudActiva.current = controlador
     setEstado('cargando')
@@ -326,15 +323,31 @@ function App() {
     return {
       fullName: form.fullName.trim(),
       idCard: form.idCard.trim(),
-      email: form.email.trim(),
-      phone: form.phone.trim(),
+      contactInfo: [form.phone.trim(), form.email.trim()].filter(Boolean).join(' - '),
       providerCommercialName: form.provider.trim(),
       providerRuc: rucProveedor.trim(),
       providerAddress: direccionProveedor.trim(),
     }
   }
 
-  async function prepararVistaPrevia() {
+  function reanudarSesion(id: string, siguienteAnalisis: Analisis) {
+    sessionId.current = id
+    setSesionActiva(id)
+    setAnalisis(siguienteAnalisis)
+    setRespuestas({})
+    setDatosProcedimiento({})
+    setCalculosCompletos(false)
+    setConfirmarDocumento(false)
+    setDocumentoCompletado(false)
+    setErrorSolicitud('')
+    setEstado(siguienteAnalisis.preguntas.length > 0 ? 'preguntas' : 'final')
+    setMensaje('Reclamo reanudado. Puede continuar desde el estado guardado.')
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  async function descargarDocumento() {
     const id = sessionId.current
     if (!id || !calculosCompletos || !confirmarDocumento || solicitudActiva.current) {
       return
@@ -344,57 +357,18 @@ function App() {
     solicitudActiva.current = controlador
     setEstado('cargando')
     setErrorSolicitud('')
-    setVistaPrevia(null)
-    setAprobarTexto(false)
 
     try {
       const datos = datosDocumento()
-      if (!datos.fullName || !/^[A-Za-z0-9-]{5,20}$/.test(datos.idCard)
-          || !/^[^\s@]+@[^\s@]+[.][^\s@]+$/.test(datos.email)
-          || !/^[+0-9() -]{7,25}$/.test(datos.phone) || !datos.providerCommercialName
+      if (!datos.fullName || !/^\d{10}$/.test(datos.idCard)
+          || !/^[^\s@]+@[^\s@]+[.][^\s@]+$/.test(form.email.trim())
+          || !/^[+0-9() -]{7,25}$/.test(form.phone.trim()) || !datos.providerCommercialName
           || (datos.providerRuc && !/^[0-9]{13}$/.test(datos.providerRuc))) {
-        setErrorSolicitud('Complete nombre, identificación, correo, teléfono y proveedor. Revise el formato del RUC opcional.')
+        setErrorSolicitud('Complete nombre, cédula de 10 dígitos, correo, teléfono y proveedor. Revise el formato del RUC opcional.')
         return
       }
-      const vista = await prepararVistaPreviaConApi(id, datos, controlador.signal)
-      if (!controlador.signal.aborted) {
-        setVistaPrevia(vista)
-        setMensaje('Revise los hechos y pretensiones antes de aprobar el documento.')
-      }
-    } catch (error) {
-      if (!controlador.signal.aborted) {
-        setErrorSolicitud(normalizarError(error).mensaje)
-      }
-    } finally {
-      if (solicitudActiva.current === controlador) {
-        solicitudActiva.current = null
-        setEstado('final')
-      }
-    }
-  }
-
-  async function descargarDocumento() {
-    const id = sessionId.current
-    if (!id || !vistaPrevia || !aprobarTexto || solicitudActiva.current) {
-      return
-    }
-
-    const controlador = new AbortController()
-    solicitudActiva.current = controlador
-    setEstado('cargando')
-    setErrorSolicitud('')
-
-    try {
-      const archivo = await generarDocumentoConApi(
-        id,
-        datosDocumento(),
-        vistaPrevia.previewId,
-        controlador.signal,
-      )
-      if (controlador.signal.aborted) {
-        return
-      }
-
+      const archivo = await generarDocumentoConApi(id, datos, controlador.signal)
+      if (controlador.signal.aborted) return
       const url = URL.createObjectURL(archivo)
       const enlace = document.createElement('a')
       enlace.href = url
@@ -404,8 +378,7 @@ function App() {
       enlace.remove()
       setTimeout(() => URL.revokeObjectURL(url), 1000)
       setDocumentoCompletado(true)
-      setVistaPrevia(null)
-      setMensaje('Documento aprobado y descargado. Verifique su contenido antes de presentarlo.')
+      setMensaje('Documento generado y descargado. Revíselo antes de presentarlo.')
     } catch (error) {
       if (!controlador.signal.aborted) {
         setErrorSolicitud(normalizarError(error).mensaje)
@@ -433,12 +406,11 @@ function App() {
     setDatosProcedimiento({})
     setCalculosCompletos(false)
     setConfirmarDocumento(false)
-    setAprobarTexto(false)
-    setVistaPrevia(null)
     setRucProveedor('')
     setDireccionProveedor('')
     setMensaje('')
     sessionId.current = null
+    setSesionActiva(null)
   }
 
   const paso = estado === 'final' ? 4 : estado === 'preguntas' ? 3 : estado === 'cargando' ? 2 : 1
@@ -455,8 +427,21 @@ function App() {
           </span>
         </div>
         <nav aria-label="Navegación principal">
-          <div className="nav-active">▣ &nbsp; Nuevo reclamo</div>
-          <div className="nav-disabled">▤ &nbsp; Mis reclamos (pendiente)</div>
+          <a href="#nuevo-reclamo" className="nav-active" style={{ textDecoration: 'none', color: '#fff', display: 'block' }}>
+            ▣ &nbsp; Nuevo reclamo
+          </a>
+          <a
+            href="#seccion-mis-reclamos"
+            className="nav-active"
+            style={{
+              textDecoration: 'none',
+              color: '#fff',
+              background: 'rgba(255,255,255,0.15)',
+              display: 'block',
+            }}
+          >
+            ▤ &nbsp; Mis reclamos / Consultar
+          </a>
         </nav>
         <p className="sidebar-footer">
           Proyecto académico
@@ -491,13 +476,31 @@ function App() {
           <FormularioReclamo form={form} errores={errores} estado={estado} cambiar={cambiar} analizar={analizar} reiniciar={reiniciar} />
           <AnalisisInicial errorSolicitud={errorSolicitud} metrica={metrica} estado={estado} analisis={analisis} respuestas={respuestas} mensaje={mensaje} cambiarRespuesta={cambiarRespuesta} completar={completar} evaluarCapa3={evaluarCapa3} aceptarCapa3={aceptarCapa3} seleccionarAccion={(id) => ejecutarAccion('seleccionar', id)} enviarFormulario={() => ejecutarAccion('formulario')} datosProcedimiento={datosProcedimiento} cambiarDato={(clave, valor) => setDatosProcedimiento(actual => ({ ...actual, [clave]: valor }))} />
         </div>
-        {documentoCompletado && <p role="status">Sesión COMPLETED. Documento generado y aprobado.</p>}
+        {sesionActiva && (
+          <GuardarReclamo
+            sessionId={sesionActiva}
+            initialIdCard={form.idCard}
+            initialFullName={form.fullName}
+            initialContactInfo={[form.phone.trim(), form.email.trim()].filter(Boolean).join(' - ')}
+            onGuardadoExitoso={(reclamo) => {
+              setHistorialVersion((v) => v + 1)
+              if (reclamo.idCard && !form.idCard) {
+                setForm((actual) => ({ ...actual, idCard: reclamo.idCard ?? actual.idCard }))
+              }
+              if (reclamo.fullName && !form.fullName) {
+                setForm((actual) => ({ ...actual, fullName: reclamo.fullName ?? actual.fullName }))
+              }
+            }}
+          />
+        )}
+        <ReclamosGuardados onReanudar={reanudarSesion} refreshKey={historialVersion} />
+        {documentoCompletado && <p role="status">Sesión COMPLETED. Documento generado y descargado.</p>}
         {estado === 'final' && analisis?.estadoCapa3 === 'DONE' && !documentoCompletado && (
           <section className="analysis-card" aria-label="Generación del documento">
             <h2>Documento del reclamo</h2>
             <p>
               Primero ejecute los cálculos. Después confirme los datos para
-              generar un archivo Word que deberá revisar antes de utilizar.
+              generar y descargar el archivo Word.
             </p>
             {!calculosCompletos ? (
               <button
@@ -517,8 +520,6 @@ function App() {
                       type={campo === 'email' ? 'email' : 'text'} value={form[campo]}
                       onChange={evento => {
                         setForm(actual => ({ ...actual, [campo]: evento.target.value }))
-                        setVistaPrevia(null)
-                        setAprobarTexto(false)
                       }} />
                   </label>
                 ))}
@@ -529,8 +530,6 @@ function App() {
                     value={rucProveedor}
                     onChange={evento => {
                         setRucProveedor(evento.target.value)
-                        setVistaPrevia(null)
-                        setAprobarTexto(false)
                       }}
                   />
                 </label>
@@ -541,8 +540,6 @@ function App() {
                     value={direccionProveedor}
                     onChange={evento => {
                         setDireccionProveedor(evento.target.value)
-                        setVistaPrevia(null)
-                        setAprobarTexto(false)
                       }}
                   />
                 </label>
@@ -552,42 +549,16 @@ function App() {
                     checked={confirmarDocumento}
                     onChange={evento => setConfirmarDocumento(evento.target.checked)}
                   />
-                  Confirmo que deseo generar el borrador con los datos proporcionados.
+                  Confirmo que deseo generar el documento con los datos proporcionados.
                 </label>
                 <button
                   type="button"
                   className="btn btn-primary"
                   disabled={!confirmarDocumento}
-                  onClick={prepararVistaPrevia}
+                  onClick={descargarDocumento}
                 >
-                  Preparar vista previa
+                  Generar y descargar Word
                 </button>
-                {vistaPrevia && (
-                  <div className="document-preview" aria-label="Vista previa del reclamo">
-                    <h3>Documento completo para revisión</h3>
-                    <pre style={{ whiteSpace: 'pre-wrap' }}>{vistaPrevia.documentoCompleto}</pre>
-                    <h3>Hechos redactados</h3>
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{vistaPrevia.hechosRedactados}</p>
-                    <h3>Pretensiones redactadas</h3>
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{vistaPrevia.pretensionesRedactadas}</p>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={aprobarTexto}
-                        onChange={evento => setAprobarTexto(evento.target.checked)}
-                      />
-                      He leído y apruebo el documento completo mostrado, sus datos, fuentes y pretensiones.
-                    </label>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      disabled={!aprobarTexto}
-                      onClick={descargarDocumento}
-                    >
-                      Aprobar y descargar Word
-                    </button>
-                  </div>
-                )}
               </div>
             )}
           </section>

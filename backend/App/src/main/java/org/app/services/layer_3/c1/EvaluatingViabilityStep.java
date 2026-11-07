@@ -6,6 +6,7 @@ import org.app.schemas.session_object.SessionObject;
 import org.app.schemas.session_object.enums.Layer3InternalState;
 import org.app.schemas.structured_outputs.FeasibilityReport;
 import org.app.services.context.layer_3.Layer3ExecutionContext;
+import org.app.services.layer_3.dpe.DpeViabilityNotes;
 import org.springframework.stereotype.Component;
 import lombok.extern.log4j.Log4j2;
 import org.app.schemas.session_object.enums.ClaimFeasibility;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class EvaluatingViabilityStep implements Layer3Step {
 
     private final LegalReasoningAgent reasoningAgent;
+    private final DpeViabilityNotes dpeNotes;
 
     @Override
     public Layer3InternalState getState() {
@@ -34,7 +36,8 @@ public class EvaluatingViabilityStep implements Layer3Step {
         FeasibilityReport report = reasoningAgent.analyze(session);
 
         // 2. Guardamos el texto que verá el usuario
-        String reportText = "Informe de Viabilidad: " + report.overallViability() + ".\n\n" + report.reasoning();
+        String reportText = "Informe de Viabilidad: " + report.overallViability() + ".\n\n" + report.reasoning()
+                + dpeNotes.build(session);
         session.setViabilityReport(reportText);
 
         // 3. Mapeamos el resultado al objeto estructurado del SessionObject
@@ -54,17 +57,7 @@ public class EvaluatingViabilityStep implements Layer3Step {
         // Opcional: Guardar los "parameterStrengths" en la sesión si quieres mostrarlos en detalle
         log.info("Razonamiento completado. Viabilidad: {}", report.overallViability());
 
-        // Sin citas válidas no existe evaluación jurídica verificable.
-        // No confundir esta abstención con una viabilidad BAJO sustentada.
-        if (session.getCitedSourceIds() == null || session.getCitedSourceIds().isEmpty()) {
-            session.setClarificationMessage(
-                    "No se pudo emitir una evaluación jurídica respaldada por fuentes verificables. "
-                    + "No es posible aceptar el informe ni generar una ruta de acción.");
-            log.warn("Evaluación jurídica sin respaldo: sesión {}", session.getSessionId());
-            return Layer3InternalState.ERROR;
-        }
-
-        // 4. Solo presentamos informes respaldados por citas verificadas.
+        // 4. Pasamos a presentar el informe
         return Layer3InternalState.PRESENTING_REPORT;
     }
 }

@@ -1,53 +1,50 @@
 package org.app.services.layer_2.components.c2;
 
+import org.app.prompts.PromptLoader;
 import org.app.schemas.session_object.enums.ClaimType;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.retry.TransientAiException;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
+
+import java.util.Map;
 
 @Service
 public class QuestionGeneratorAgent {
 
     private final ChatClient chatClient;
+    private final PromptLoader promptLoader;
 
-    public QuestionGeneratorAgent(ChatClient.Builder builder) {
+    public QuestionGeneratorAgent(ChatClient.Builder builder, PromptLoader promptLoader) {
         this.chatClient = builder.build();
+        this.promptLoader = promptLoader;
     }
 
     // NUEVO PARÁMETRO: narrative (el relato original)
+    @Retryable(
+            value = {
+                    TransientAiException.class, // Límites de tasa (429) y errores transitorios del proveedor
+                    ResourceAccessException.class, // Timeouts de red/conexión
+                    RuntimeException.class // Respuestas vacías o inválidas
+            },
+            maxRetries = 3,
+            delay = 1000L,
+            multiplier = 2.0
+    )
     public String generateQuestion(String parameterName, ClaimType claimType, String previousError, String previousQuestion, String narrative) {
         String errorContext = (previousError != null && !previousError.trim().isEmpty())
                 ? "ATENCIÓN: El usuario intentó responder antes, pero cometió este error: '" + previousError + "'. Disculpate brevemente."
                 : "Es la primera vez que le preguntamos esto.";
 
-        String prompt = """
-            <ROL>
-            Eres un asistente legal empático y servicial.
-            </ROL>
-            
-            <ESCENARIO>
-            Relato original del usuario: "%s"
-            Estamos armando un reclamo de tipo: %s.
-            La pregunta anterior que le hiciste fue: "%s".
-            Ahora necesitamos que el usuario nos diga el dato técnico: "%s".
-            %s
-            </ESCENARIO>
-            
-            <CONSIGNA>
-            Redacta UNA SOLA PREGUNTA para pedir el nuevo dato al usuario.
-            
-            REGLAS ESTRICTAS:
-            1. NO uses jerga legal ni nombres técnicos.
-            2. Sé conversacional y directo.
-            3. Si hay un error previo, explica cómo debe responder.
-            4. **PROHIBIDO** decir que vas a "revisar", "investigar" o "analizar" documentos.
-            5. **REGLA CRÍTICA PARA PRECIOS**: Si el parámetro es un precio (como `displayedPriceWithTaxes`, `chargedPrice`, `missingUnitPrice`), DEBES especificar a qué precio te refieres. 
-               - Si el relato menciona un precio de anuncio y otro cobrado, pregunta específicamente: "¿A cuál de los precios te refieres: al que decía el anuncio o al que te cobraron finalmente?"
-               - Si el parámetro es `missingUnitPrice`, pregunta: "En el anuncio se mostraba un precio total, ¿te cobraron un precio unitario diferente al que esperabas?"
-            6. Devuelve ÚNICAMENTE el texto de la pregunta.
-            </CONSIGNA>
-            """.formatted(narrative, claimType.name(), previousQuestion != null ? previousQuestion : "Ninguna", parameterName, errorContext);
+        String prompt = promptLoader.render("layer_2/question_generator", PromptLoader.vars(
+                "relato", narrative,
+                "tipo_reclamo", claimType.name(),
+                "pregunta_anterior", previousQuestion != null ? previousQuestion : "Ninguna",
+                "parametro", parameterName,
+                "contexto_error", errorContext));
 
-        return chatClient.prompt().system(org.app.services.ModelInputPolicy.SYSTEM)
+        return chatClient.prompt()
                 .user(prompt)
                 .call()
                 .content()

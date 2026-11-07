@@ -3,18 +3,12 @@
     "id": "lodc_ley_art_6",
     "document": "Art. 6.- Publicidad Prohibida.- Quedan prohibidas todas las formas de publicidad engañosa o abusiva, que induzcan a error en la elección del bien o servicio que puedan afectar los intereses y derechos del consumidor.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "6",
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Prohibición de Publicidad Engañosa y Abusiva",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "isAbusiveAdvertising",
         "advertisedInfo",
@@ -23,31 +17,19 @@
         "hasPhotosOrVideos",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "72"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["72"]
     }
   },
   {
     "id": "lodc_ley_art_7",
     "document": "Art. 7.- Infracciones Publicitarias.- Comete infracción a esta Ley el proveedor que a través de cualquier tipo de mensaje induce al error o engaño en especial cuando se refiere a: 1. País de origen, comercial o de otra índole del bien ofrecido o sobre el lugar de prestación del servicio pactado o la tecnología empleada; 2. Los beneficios y consecuencias del uso del bien o de la contratación del servicio, así como el precio, tarifa, forma de pago, financiamiento y costos del crédito; 3. Las características básicas del bien o servicio ofrecidos, tales como componentes, ingredientes, dimensión, cantidad, calidad, utilidad, durabilidad, garantías, contraindicaciones, eficiencia, idoneidad del bien o servicio para los fines que se pretende satisfacer y otras; y, 4. Los reconocimientos, aprobaciones o distinciones oficiales o privadas, nacionales o extranjeras, tales como medallas, premios, trofeos o diplomas.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "7",
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Supuestos Específicos de Publicidad Engañosa",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "advertisingInfractionType",
         "surchargePercentage",
@@ -59,43 +41,25 @@
         "hasLabelingEvidence",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "72"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["72"]
     }
   },
   {
     "id": "lodc_ley_art_8",
     "document": "Art. 8.- Controversias Derivadas de la Publicidad.- En las controversias que pudieren surgir como consecuencia del incumplimiento de lo dispuesto en los artículos precedentes, el anunciante deberá justificar adecuadamente la causa de dicho incumplimiento. El proveedor, en la publicidad de sus productos o servicios mantendrá en su poder, para información de los legítimos interesados, los datos técnicos, fácticos y científicos que dieron sustento al mensaje.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "8",
       "capitulo": "Capítulo III: Regulación de la Publicidad y su Contenido",
       "tema_principal": "Carga de la Prueba en Controversias Publicitarias",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "providerFailedToJustifyAd",
         "hasWrittenCommunication",
         "hasWitnesses"
       ],
-      "articulos_procedimentales_asociados": [
-        "72"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["72"]
     }
   }
 ]

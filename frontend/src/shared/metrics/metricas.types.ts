@@ -1,4 +1,5 @@
-export type Operacion = 'analisis-inicial' | 'analisis-complementario' | 'verificacion-http'
+export type Operacion = 'analisis-inicial' | 'analisis-complementario' | 'verificacion-http' |
+  'guardar-reclamo' | 'listar-reclamos-guardados' | 'obtener-reclamo-guardado' | 'reanudar-reclamo'
 export type Tokens = {
   entrada: number | null
   salida: number | null

@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.ai.retry.NonTransientAiException;
 import org.springframework.ai.retry.TransientAiException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.core.retry.RetryException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import tools.jackson.core.JacksonException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -53,7 +54,45 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.error("Error en GlobalExceptionHandler", ex);
-        return badRequest().body(of(resolver.get("exception.internal-server-error")));
+        return status(HttpStatus.INTERNAL_SERVER_ERROR).body(of(resolver.getOrDefault("exception.internal-server-error",
+                "Ocurrió un error interno. Intenta nuevamente en unos momentos."), HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Argumento inválido: {}", ex.getMessage());
+        return badRequest().body(of(resolver.getOrDefault("exception.bad-request",
+                "La solicitud no es válida.")));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return badRequest().body(of(resolver.getOrDefault("exception.invalid-parameter-type",
+                "El parámetro '" + ex.getName() + "' tiene un formato inválido.", ex.getName())));
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException ex) {
+        log.error("Error de acceso a datos (Redis o PostgreSQL)", ex);
+        return status(HttpStatus.SERVICE_UNAVAILABLE).body(of(resolver.getOrDefault("exception.data-unavailable",
+                "El almacenamiento de sesiones no está disponible en este momento. Intenta nuevamente en unos minutos."),
+                HttpStatus.SERVICE_UNAVAILABLE));
+    }
+
+    @ExceptionHandler(TransientAiException.class)
+    public ResponseEntity<ErrorResponse> handleTransientAiException(TransientAiException ex) {
+        log.warn("Proveedor de IA saturado: {}", ex.getMessage());
+        return status(HttpStatus.TOO_MANY_REQUESTS).body(of(resolver.getOrDefault("exception.ai-busy",
+                "El proveedor de IA está saturado. Por favor, espera un momento e intenta de nuevo."),
+                HttpStatus.TOO_MANY_REQUESTS));
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<ErrorResponse> handleResourceAccessException(ResourceAccessException ex) {
+        log.warn("Sin conexión con el servicio de IA: {}", ex.getMessage());
+        return status(HttpStatus.GATEWAY_TIMEOUT).body(of(resolver.getOrDefault("exception.ai-timeout",
+                "No se pudo establecer conexión con el servicio de IA. Intenta nuevamente."),
+                HttpStatus.GATEWAY_TIMEOUT));
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -102,7 +141,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
-        return badRequest().body(of(resolver.get("exception.media-type-not-supported", ex.getContentType(), ex.getSupportedMediaTypes())));
+        return status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(of(
+                resolver.get("exception.media-type-not-supported", ex.getContentType(), ex.getSupportedMediaTypes()),
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE));
     }
 
     @ExceptionHandler(InvalidContentTypeException.class)
@@ -166,17 +207,11 @@ public class GlobalExceptionHandler {
         return badRequest().body(of(resolver.get("exception.read-error")));
     }
 
-    @ExceptionHandler(JacksonException.class)
-    public ResponseEntity<ErrorResponse> handleJacksonException(JacksonException ex) {
-        log.error("La respuesta estructurada del modelo no es un JSON válido.", ex);
-        return status(HttpStatus.BAD_GATEWAY)
-                .body(of("La respuesta del servicio de IA no pudo interpretarse.", HttpStatus.BAD_GATEWAY));
-    }
-
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        return badRequest().body(of(resolver.get("exception.method-not-supported", ex.getMethod())));
+        return status(HttpStatus.METHOD_NOT_ALLOWED).body(of(
+                resolver.get("exception.method-not-supported", ex.getMethod()), HttpStatus.METHOD_NOT_ALLOWED));
     }
 
 
@@ -187,33 +222,34 @@ public class GlobalExceptionHandler {
 
     //Manejo de errores de reintentos agotados de Spring Retry
     @ExceptionHandler(RetryException.class)
-    public ResponseEntity<String> handleRetryExhausted(RetryException ex) {
-        // Obtenemos la excepción real que causó que se agotaran los intentos
+    public ResponseEntity<ErrorResponse> handleRetryExhausted(RetryException ex) {
+        log.error("Reintentos agotados", ex);
         Throwable rootCause = ex.getCause();
 
         if (rootCause instanceof TransientAiException) {
-            return ResponseEntity
-                    .status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("El proveedor de IA sigue saturado tras 2 intentos. Por favor, espera un momento.");
+            return status(HttpStatus.TOO_MANY_REQUESTS).body(of(
+                    "El proveedor de IA sigue saturado tras varios intentos. Por favor, espera un momento.",
+                    HttpStatus.TOO_MANY_REQUESTS));
         }
 
         if (rootCause instanceof ResourceAccessException) {
-            return ResponseEntity
-                    .status(HttpStatus.GATEWAY_TIMEOUT)
-                    .body("No se pudo establecer conexión con el servicio de IA después de 2 intentos.");
+            return status(HttpStatus.GATEWAY_TIMEOUT).body(of(
+                    "No se pudo establecer conexión con el servicio de IA después de múltiples intentos.",
+                    HttpStatus.GATEWAY_TIMEOUT));
         }
 
-        // Fallback genérico para cualquier otra RuntimeException
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("No fue posible completar la operación. Intente más tarde.");
+        return status(HttpStatus.BAD_GATEWAY).body(of(
+                "El servicio de IA no pudo completar la operación. Intenta nuevamente.",
+                HttpStatus.BAD_GATEWAY));
     }
 
     @ExceptionHandler(NonTransientAiException.class)
     public ResponseEntity<ErrorResponse> handleNonTransientAiException(NonTransientAiException ex) {
-        // NonTransientAiException representa errores que no deben reintentarse (como 400, 401)
-        return status(HttpStatus.BAD_REQUEST)
-                .body(of(resolver.get("exception.bad-request"), HttpStatus.BAD_REQUEST));
+        // Errores del proveedor que no deben reintentarse (400, 401, etc.)
+        log.error("Error no transitorio del proveedor de IA", ex);
+        return status(HttpStatus.BAD_GATEWAY)
+                .body(of(resolver.getOrDefault("exception.ai-rejected",
+                        "El servicio de IA rechazó la solicitud."), HttpStatus.BAD_GATEWAY));
     }
 
 

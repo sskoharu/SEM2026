@@ -9,8 +9,6 @@ public class ProceduralOption {
     private String optionId;
     private String title;
     private String description;
-    private String sourceId;
-    private String supportingQuote;
     private String basedOnArticle; // Ej. "71"
 
     // Parámetros que el usuario debe llenar en el formulario

@@ -48,4 +48,15 @@ public class VectorStoreConfig {
                 .initializeSchema(indexingMode.initializeSchema())
                 .build();
     }
+
+    // Colección separada para no contaminar la recuperación de artículos de la LODC
+    @Bean(name = "dpeVectorStore")
+    public VectorStore dpeVectorStore(QdrantClient qdrantClient,
+                                      EmbeddingModel embeddingModel,
+                                      @Value("${app.dpe.collection-name:dpe_orientacion}") String dpeCollectionName) {
+        return QdrantVectorStore.builder(qdrantClient, embeddingModel)
+                .collectionName(dpeCollectionName)
+                .initializeSchema(true)
+                .build();
+    }
 }

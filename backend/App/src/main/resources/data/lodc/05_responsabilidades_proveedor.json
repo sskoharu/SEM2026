@@ -3,49 +3,31 @@
     "id": "lodc_ley_art_17",
     "document": "Art. 17.- Obligaciones del Proveedor.- Es obligación de todo proveedor, entregar al consumidor información veraz, suficiente, clara, completa y oportuna de los bienes o servicios ofrecidos, de tal modo que éste pueda realizar una elección adecuada y razonable.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "17",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Deber de Información Veraz",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "informationDeficiencyType",
         "omissionDescription",
         "hasWrittenCommunication",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_18",
     "document": "Art. 18.- Entrega del Bien o Prestación del Servicio.- Todo proveedor está en la obligación de entregar o prestar, oportuna y eficientemente el bien o servicio, de conformidad a las condiciones establecidas de mutuo acuerdo con el consumidor. Ninguna variación en cuanto a precio, tarifa, costo de reposición u otras ajenas a lo expresamente acordado entre las partes, será motivo de diferimiento.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "18",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Entrega Oportuna y Eficiente",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA"
-      ],
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
       "parametros_requeridos": [
         "promisedDeliveryDate",
         "actualDeliveryDate",
@@ -54,62 +36,37 @@
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "30",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["30", "70"]
     }
   },
   {
     "id": "lodc_ley_art_19",
     "document": "Art. 19.- Indicación del Precio.- Los proveedores deberán dar conocimiento al público de los valores finales de los bienes que expendan o los servicios que ofrezcan, con excepción de los que por sus características deban regularse convencionalmente. El valor final deberá indicarse de un modo claramente visible que permita al consumidor, de manera efectiva, el ejercicio de su derecho a elección, antes de formalizar o perfeccionar el acto de consumo. El valor final se establecerá y su monto se difundirá en moneda de curso legal. Las farmacias, boticas, droguerías y similares deberán exhibir de manera visible, además del valor final impreso en cada uno de los medicamentos o bienes de expendio, la lista de precios oficiales de los medicamentos básicos, aprobados por la autoridad competente.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "19",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Indicación y Visibilidad del Precio Final",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "precioExhibido",
         "hasPriceTagEvidence",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70"]
     }
   },
   {
     "id": "lodc_ley_art_20",
     "document": "Art. 20.- Defectos y Vicios Ocultos.- El consumidor podrá optar por la rescisión del contrato, la reposición del bien o la reducción del precio, sin perjuicio de la indemnización por daños y perjuicios, cuando la cosa objeto del contrato tenga defectos o vicios ocultos que la hagan inadecuada o disminuyan de tal modo su calidad o la posibilidad del uso al que habitualmente se le destine, que, de haberlos conocido el consumidor, no la habría adquirido o hubiera dado un menor precio por ella.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "20",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Defectos y Vicios Ocultos",
-      "tipo_reclamo_asociado": [
-        "VICIOS_OCULTOS_CALIDAD"
-      ],
+      "tipo_reclamo_asociado": ["VICIOS_OCULTOS_CALIDAD"],
       "parametros_requeridos": [
         "thirdPartyIntervention",
         "defectDescription",
@@ -118,32 +75,19 @@
         "hasWarrantyDocument",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "71"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["71"]
     }
   },
   {
     "id": "lodc_ley_art_21",
     "document": "Art. 21.- Facturas.- El proveedor está obligado a entregar al consumidor, factura que documente el negocio realizado, de conformidad con las disposiciones que en esta materia establece el ordenamiento jurídico tributario. En caso de que al momento de efectuarse la transacción, no se entregue el bien o se preste el servicio, deberá extenderse un comprobante adicional firmado por las partes, en el que constará el lugar y la fecha en la que se lo hará y las consecuencias del incumplimiento o retardo. En concordancia con lo previsto en los incisos anteriores, en el caso de prestación de servicios, el comprobante adicional deberá detallar además, los componentes y materiales que se empleen con motivo de la prestación del servicio, el precio por unidad de los mismos y de la mano de obra, así como los términos en que el proveedor se obliga, en los casos en que el uso práctico lo permita.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "21",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Facturación y Comprobantes Adicionales",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA",
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA", "INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "invoiceProvided",
         "providerRefusedInvoice",
@@ -154,32 +98,19 @@
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "70",
-        "30"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["70", "30"]
     }
   },
   {
     "id": "lodc_ley_art_22",
     "document": "Art. 22.- Reparación Defectuosa.- Cuando un bien objeto de reparación presente defectos relacionados con el servicio realizado e imputables al prestador del mismo, el consumidor tendrá derecho, dentro de los noventa días contados a partir de la recepción del bien, a que se le repare sin costo adicional o se reponga el bien en un plazo no superior a treinta días, sin perjuicio a la indemnización que corresponda. Si se hubiere otorgado garantía por un plazo mayor, se estará a este último.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "22",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Reparación Defectuosa",
-      "tipo_reclamo_asociado": [
-        "SERVICIO_TECNICO_CUSTODIA"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
       "parametros_requeridos": [
         "repairDeliveryDate",
         "daysSinceRepairDelivery",
@@ -188,32 +119,19 @@
         "hasEntryNote",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "75",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["75", "70"]
     }
   },
   {
     "id": "lodc_ley_art_23",
     "document": "Art. 23.- Deterioro de los Bienes.- Cuando el bien objeto del servicio de acondicionamiento, reparación, limpieza u otro similar sufriere tal menoscabo o deterioro que disminuya su valor o lo torne parcial o totalmente inapropiado para el uso normal al que está destinado, el prestador del servicio deberá restituir el valor del bien, declarado en la nota de ingreso, e indemnizar al consumidor por la pérdida ocasionada.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "23",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Deterioro en Custodia",
-      "tipo_reclamo_asociado": [
-        "SERVICIO_TECNICO_CUSTODIA"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
       "parametros_requeridos": [
         "custodyDamageDescription",
         "itemDeclaredValue",
@@ -222,63 +140,37 @@
         "hasPhotosOrVideos",
         "hasWitnesses"
       ],
-      "articulos_procedimentales_asociados": [
-        "73",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["73", "70"]
     }
   },
   {
     "id": "lodc_ley_art_24",
     "document": "Art. 24.- Repuestos.- En los contratos de prestación de servicios cuyo objeto sea la reparación de cualquier tipo de bien, se entenderá implícita la obligación de cargo del prestador del servicio, de emplear en tal reparación, componentes o repuestos nuevos y adecuados al bien de que se trate, a excepción de que las partes convengan expresamente lo contrario. El incumplimiento de esta obligación dará lugar, además de las sanciones e indemnizaciones que correspondan, a que se obligue al prestador del servicio a sustituir, sin cargo adicional alguno, los componentes o repuestos de que se trate.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "24",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Repuestos Nuevos y Adecuados",
-      "tipo_reclamo_asociado": [
-        "SERVICIO_TECNICO_CUSTODIA"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
       "parametros_requeridos": [
         "usedInadequateParts",
         "hasInvoice",
         "hasPhotosOrVideos"
       ],
-      "articulos_procedimentales_asociados": [
-        "75",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["75", "70"]
     }
   },
   {
     "id": "lodc_ley_art_25",
     "document": "Art. 25.- Servicio Técnico.- Los productores, fabricantes, importadores, distribuidores y comerciantes de bienes deberán asegurar el suministro permanente de componentes, repuestos y servicio técnico, durante el lapso en que sean producidos, fabricados, ensamblados, importados o distribuidos y posteriormente, durante un período razonable de tiempo en función a la vida útil de los bienes en cuestión, lo cual será determinado de conformidad con las normas técnicas del Instituto Ecuatoriano de Normalización - INEN-.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "25",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Suministro de Repuestos y Servicio Postventa",
-      "tipo_reclamo_asociado": [
-        "SERVICIO_TECNICO_CUSTODIA"
-      ],
+      "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
       "parametros_requeridos": [
         "requiresSparePartOrService",
         "providerRefusedSupply",
@@ -287,108 +179,62 @@
         "hasInvoice",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "71",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["71", "70"]
     }
   },
   {
     "id": "lodc_ley_art_26",
     "document": "Art. 26.- Reposición.- Se considerará un solo bien, aquel que se ha vendido como un todo, aunque esté formado por distintas unidades, partes, piezas o módulos, no obstante que estas puedan o no prestar una utilidad en forma independiente unas de otras. Sin perjuicio de ello, tratándose de su reposición, esta se podrá efectuar respecto de una unidad, parte, pieza o módulo, siempre que sea por otra igual a la que se restituya y se garantice su funcionalidad.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "26",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Reposición de Bienes Compuestos",
-      "tipo_reclamo_asociado": [
-        "VICIOS_OCULTOS_CALIDAD"
-      ],
+      "tipo_reclamo_asociado": ["VICIOS_OCULTOS_CALIDAD"],
       "parametros_requeridos": [
         "isPartOfCompositeGood",
         "hasInvoice",
         "hasWarrantyDocument"
       ],
-      "articulos_procedimentales_asociados": [
-        "71",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["71", "70"]
     }
   },
   {
     "id": "lodc_ley_art_27",
     "document": "Art. 27.- Servicios Profesionales.- Es deber del proveedor de servicios profesionales, atender a sus clientes con calidad y sometimiento estricto a la ética profesional, la ley de su profesión y otras conexas. En lo relativo al cobro de honorarios, el proveedor deberá informar a su cliente, desde el inicio de su gestión, el monto o parámetros en los que se regirá para fijarlos dentro del marco legal vigente en la materia y guardando la equidad con el servicio prestado.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "27",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Servicios Profesionales y Honorarios",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
       "parametros_requeridos": [
         "servicioProfesional",
         "hasContract",
         "hasInvoice",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "75",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["75", "70"]
     }
   },
   {
     "id": "lodc_ley_art_30",
     "document": "Art. 30.- Resolución.- La mora en el cumplimiento de las obligaciones a cargo del proveedor de bienes o servicios, permitirá al consumidor pedir la resolución del contrato, sin perjuicio de las indemnizaciones que pudieren corresponder.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "30",
       "capitulo": "Capítulo V: Responsabilidades y Obligaciones del Proveedor",
       "tema_principal": "Resolución del Contrato por Mora",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA"
-      ],
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
       "parametros_requeridos": [
         "hasContract",
         "hasPaymentReceipt",
         "hasWrittenCommunication"
       ],
-      "articulos_procedimentales_asociados": [
-        "71",
-        "70"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "articulos_procedimentales_asociados": ["71", "70"]
     }
   }
 ]

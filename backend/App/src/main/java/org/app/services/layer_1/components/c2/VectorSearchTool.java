@@ -45,6 +45,17 @@ public class VectorSearchTool {
         this.articleReader = articleReader;
     }
 
+    // La búsqueda genera embeddings con el proveedor de IA
+    @Retryable(
+            value = {
+                    TransientAiException.class, // Límites de tasa (429) y errores transitorios del proveedor
+                    ResourceAccessException.class, // Timeouts de red/conexión
+                    RuntimeException.class // Respuestas vacías o inválidas
+            },
+            maxRetries = 3,
+            delay = 1000L,
+            multiplier = 2.0
+    )
     public List<Document> search(String query, int topK) {
         if (query == null || query.isBlank() || topK < 1) {
             return List.of();

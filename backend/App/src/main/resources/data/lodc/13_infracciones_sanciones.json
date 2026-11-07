@@ -3,247 +3,130 @@
     "id": "lodc_ley_art_70",
     "document": "Art. 70.- Sanción General.- Las infracciones a lo dispuesto en esta Ley, siempre que no tengan una sanción específica, serán sancionadas con multa de cien a mil dólares de los Estados Unidos de América o su equivalente en moneda de curso legal, y si es del caso, el comiso de los bienes, o la suspensión del derecho a ejercer actividades en el campo de la prestación del servicios o publicidad, sin perjuicio de las demás sanciones a las que hubiere lugar. El pago de las sanciones pecuniarias no libera al proveedor de cumplir con las obligaciones que le impone la Ley.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "70",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción General",
       "tipo_reclamo_asociado": [],
-      "parametros_requeridos": [],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "parametros_requeridos": []
     }
   },
   {
     "id": "lodc_ley_art_71",
     "document": "Art. 71.- Indemnización, Reparación, Reposición y Devolución.- Los consumidores tendrán derecho, además de la indemnización por daños y perjuicios ocasionados, a la reparación gratuita del bien y, cuando no sea posible, a su reposición o a la devolución de la cantidad pagada, en un plazo no superior a treinta días, en los siguientes casos: 1. Cuando en el producto que se hubiere adquirido con determinada garantía y, dentro del plazo de ella, se pusiere de manifiesto la deficiencia o características del bien garantizado, siempre que se hubiere destinado al uso o consumo normal de acuerdo a la naturaleza de dicho bien. Este derecho se ejercerá siempre y cuando el proveedor haya incumplido con la garantía; 2. Cuando cualquier producto, por sus deficiencias de fabricación, elaboración, estructura, calidad o condiciones sanitarias, en su caso, no sea apto para el uso al cual está destinado; y, 3. Cuando considerados los límites de tolerancia permitidos, el contenido neto de un producto resulte inferior al que deben ser o la cantidad sea menor a la indicada en el envase o empaque. Sin perjuicio de las acciones civiles, penales o administrativas a que hubiere lugar, el proveedor que incurriere en uno de los casos contemplados en este artículo, e incumpliere su obligación una vez fenecido el plazo establecido, será sancionado con una multa equivalente al valor del bien o servicio, que en ningún caso será inferior a ciento veinte dólares de los Estados Unidos de América o su equivalente en moneda de curso legal, sin que ello se extinga su obligación de reparar o reponer el bien, o en su caso restituir lo pagado.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "71",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Indemnización, Reparación y Devolución",
-      "tipo_reclamo_asociado": [
-        "VICIOS_OCULTOS_CALIDAD"
-      ],
-      "parametros_requeridos": [
-        "hasWarranty",
-        "warrantyProviderRefused",
-        "providerFailedToRepair",
-        "claimsIndemnification",
-        "art71Causal"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["VICIOS_OCULTOS_CALIDAD"],
+      "parametros_requeridos": ["hasWarranty", "warrantyProviderRefused", "providerFailedToRepair", "claimsIndemnification", "art71Causal"]
     }
   },
   {
     "id": "lodc_ley_art_72",
     "document": "Art. 72.- El proveedor cuya publicidad sea considerada engañosa o abusiva, según lo dispuesto en el artículo 7 de esta Ley, será sancionado con una multa de mil a cuatro mil dólares de los Estados Unidos de América o su equivalente en moneda de curso legal. Cuando un mensaje publicitario sea engañoso o abusivo, la autoridad competente dispondrá la suspensión de la difusión publicitaria, y además ordenará la difusión de la rectificación de su contenido, a costa del anunciante, por los mismos medios, espacios y horarios. La difusión de la rectificación no será menor al treinta por ciento (30%) de la difusión del mensaje sancionado.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "72",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción por Publicidad Engañosa y Rectificación",
-      "tipo_reclamo_asociado": [
-        "INFORMACION_PRECIOS_FACTURACION"
-      ],
-      "parametros_requeridos": [
-        "requestsAdvertisingRectification"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["INFORMACION_PRECIOS_FACTURACION"],
+      "parametros_requeridos": ["requestsAdvertisingRectification"]
     }
   },
   {
     "id": "lodc_ley_art_73",
     "document": "Art. 73.- El proveedor que incurra en lo establecido en el artículo 23 de la presente Ley, e incumpla las obligaciones allí establecidas, será sancionado con la clausura temporal o definitiva del establecimiento.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "73",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción por Deterioro en Custodia",
-      "tipo_reclamo_asociado": [
-        "SERVICIO_TECNICO_CUSTODIA"
-      ],
-      "parametros_requeridos": [
-        "providerRefusedIndemnification"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
+      "parametros_requeridos": ["providerRefusedIndemnification"]
     }
   },
   {
     "id": "lodc_ley_art_75",
     "document": "Art. 75.- Servicios Defectuosos.- Cuando los servicios prestados sean manifiestamente defectuosos, ineficaces, causen daño o no se ajusten a lo expresamente acordado, los consumidores tendrán derecho, además de la correspondiente indemnización por daños y perjuicios, a que le sea restituido el valor cancelado. Además, el proveedor de tales servicios, será sancionado con una multa de cincuenta a quinientos dólares de los Estados Unidos de América o su equivalente en moneda de curso legal, sin perjuicio de las demás acciones a que hubiere lugar.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "75",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Servicios Defectuosos y Restitución",
-      "tipo_reclamo_asociado": [
-        "SERVICIO_TECNICO_CUSTODIA"
-      ],
-      "parametros_requeridos": [
-        "claimsRefundOfServiceCost",
-        "claimsIndemnification"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["SERVICIO_TECNICO_CUSTODIA"],
+      "parametros_requeridos": ["claimsRefundOfServiceCost", "claimsIndemnification"]
     }
   },
   {
     "id": "lodc_ley_art_76",
     "document": "Art. 76.- Espectáculos Públicos.- Serán sancionados con multa equivalente al diez por ciento (10%) del valor recaudado en taquilla, las personas naturales o jurídicas organizadores de espectáculos públicos, incluidos los artísticos y deportivos, que pongan en venta una cantidad de localidades que supere la capacidad de los respectivos recintos; sin perjuicio de su obligación de restituir lo pagado, a quienes, a causa de lo señalado, no hayan podido ingresar al espectáculo. En caso de reincidencia a lo dispuesto en el presente artículo, la multa será equivalente al veinte por ciento (20%) del valor de la taquilla, sin perjuicio de las sanciones civiles o penales que hubiere lugar.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "76",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción por Sobreventa de Espectáculos",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA"
-      ],
-      "parametros_requeridos": [
-        "isEventOrSpectacle",
-        "eventCapacityExceeded",
-        "wasDeniedEntry"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
+      "parametros_requeridos": ["isEventOrSpectacle", "eventCapacityExceeded", "wasDeniedEntry"]
     }
   },
   {
     "id": "lodc_ley_art_77",
     "document": "Art. 77.- Suspensión Injustificada del Servicio.- El que suspendiere, paralizare o no prestare, sin justificación o arbitrariamente, un servicio previamente contratado y por el cual se hubiere pagado derecho de conexión, instalación, incorporación, mantenimiento o tarifa de consumo, será sancionado con una multa de mil a cinco mil dólares de los Estados Unidos de América o su equivalente en moneda de curso legal, sin perjuicio de las demás acciones a las que hubiere lugar. Adicionalmente, el Estado y las entidades seccionales autónomas y/o los concesionarios del ejercicio del derecho para la prestación de servicios, responderán civilmente por los daños y perjuicios ocasionados a los habitantes, por su negligencia y descuido en la atención a la prestación de los servicios públicos que estén a su cargo, y por la carencia de servicios que hayan sido pagados.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "77",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Suspensión Injustificada de Servicio",
-      "tipo_reclamo_asociado": [
-        "INCUMPLIMIENTO_CONTRATOS_MORA"
-      ],
-      "parametros_requeridos": [
-        "civilDamagesDescription"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["INCUMPLIMIENTO_CONTRATOS_MORA"],
+      "parametros_requeridos": ["civilDamagesDescription"]
     }
   },
   {
     "id": "lodc_ley_art_78",
     "document": "Art. 78.- Cobro Durante la Suspensión del Servicio.- El proveedor de servicios públicos o privados, no podrá efectuar cobro alguno por el mismo, durante el tiempo en que se encuentre interrumpido y, en todo caso, estará obligado a descontar o reembolsar al consumidor el valor del servicio pagado y no devengado.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "78",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Prohibición de Cobro Durante Suspensión",
-      "tipo_reclamo_asociado": [
-        "SERVICIOS_PUBLICOS_DOMICILIARIOS"
-      ],
-      "parametros_requeridos": [
-        "chargedDuringInterruption",
-        "refundOrDiscountApplied",
-        "undevolvedAmount"
-      ],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "tipo_reclamo_asociado": ["SERVICIOS_PUBLICOS_DOMICILIARIOS"],
+      "parametros_requeridos": ["chargedDuringInterruption", "refundOrDiscountApplied", "undevolvedAmount"]
     }
   },
   {
     "id": "lodc_ley_art_79",
     "document": "Art. 79.- Requerimiento de Información.- Sin perjuicio de la facultad de las autoridades de asistirse por la fuerza pública, será sancionado con multa de quinientos a cinco mil dolares de los Estados Unidos de América o su equivalente en moneda de curso legal, el proveedor que se negare a proporcionar la información requerida por autoridad competente o que proporcionare información falsa. La misma pena será impuesta al proveedor que impida a la autoridad competente, por cualquier medio, la inspección de los lugares de prestación de servicios, producción, expendio o almacenamiento de bienes, productos o que se oponga a la verificación de la información proporcionada.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "79",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción por Negativa de Información a la Autoridad",
       "tipo_reclamo_asociado": [],
-      "parametros_requeridos": [],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "parametros_requeridos": []
     }
   },
   {
     "id": "lodc_ley_art_80",
     "document": "Art. 80.- Reincidencia.- En caso de reincidencia en las infracciones que establece la presente Ley, la multa señalada podrá ser elevada al doble, además de la clausura temporal o definitiva del establecimiento; se considerará reincidente al proveedor que sea sancionado por una misma infracción a esta Ley, dos veces o más dentro del mismo año calendario. Para la aplicación de las multas, la autoridad competente tendrá en cuenta de manera especial, la gravedad de la infracción, la cuantía de lo disputado y las condiciones económicas del infractor.",
     "metadata": {
-      "source_url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "source_version": "Ley 21, Registro Oficial Suplemento 116 de 10-jul-2000; ultima modificacion 11-feb-2022",
-      "source_accessed_at": "2026-11-02",
-      "review_status": "APROBADO",
       "documento_tipo": "LEY",
       "ley": "LODC",
       "numero_articulo": "80",
       "capitulo": "Capítulo XIII: Infracciones y Sanciones",
       "tema_principal": "Sanción por Reincidencia",
       "tipo_reclamo_asociado": [],
-      "parametros_requeridos": [],
-      "reviewed": true,
-      "status": "VIGENTE",
-      "url": "https://produccion.gob.ec/wp-content/uploads/2025/03/LEY-ORGANICA-DE-DEFENSA-DEL-CONSUMIDOR_2022_02_11.pdf",
-      "vigencia": "Vigente al 2026-11-02"
+      "parametros_requeridos": []
     }
   }
 ]

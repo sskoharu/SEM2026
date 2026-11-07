@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "app.indexing.enabled", havingValue = "true")
 @Order(1)
 @Log4j2
+@ConditionalOnProperty(name = "app.ingestion.enabled", havingValue = "true")
 public class LodcDataIngestionRunner implements CommandLineRunner {
     private final VectorStore vectorStore;
     private final ObjectMapper objectMapper;

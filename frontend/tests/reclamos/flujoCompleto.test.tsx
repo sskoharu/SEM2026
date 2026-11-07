@@ -12,7 +12,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-it('recorre las cinco capas desde React, revisa datos completos y aprueba la descarga con token', async () => {
+it('recorre las cinco capas desde React y genera el documento con el contrato real', async () => {
   const id = '11111111-1111-1111-1111-111111111111'
   const token = 'b'.repeat(43)
   const session = {
@@ -55,7 +55,7 @@ it('recorre las cinco capas desde React, revisa datos completos y aprueba la des
   await screen.findByText('Cálculos completados correctamente.')
   for (const [name, value] of [
     ['Nombre completo', 'Consumidor de prueba'],
-    ['Identificación', 'TEST12345'],
+    ['Identificación', '0102030405'],
     ['Correo electrónico', 'prueba@example.test'],
     ['Teléfono', '0999999999'],
     ['Nombre del proveedor', 'Proveedor ficticio'],
@@ -63,20 +63,16 @@ it('recorre las cinco capas desde React, revisa datos completos y aprueba la des
     fireEvent.change(screen.getByLabelText(name), { target: { value } })
   }
   await user.click(screen.getByRole('checkbox', { name: /Confirmo que deseo generar/ }))
-  await user.click(screen.getByRole('button', { name: 'Preparar vista previa' }))
-  await screen.findByText('Contenido íntegro sintético para revisión.')
-  const approve = screen.getByRole('button', { name: 'Aprobar y descargar Word' }) as HTMLButtonElement
-  expect(approve.disabled).toBe(true)
-  await user.click(screen.getByRole('checkbox', { name: /He leído y apruebo el documento completo/ }))
-  await user.click(approve)
-  await screen.findByText('Sesión COMPLETED. Documento generado y aprobado.')
-  expect(fetchMock).toHaveBeenCalledTimes(8)
+  await user.click(screen.getByRole('button', { name: 'Generar y descargar Word' }))
+  await screen.findByText('Sesión COMPLETED. Documento generado y descargado.')
+  expect(fetchMock).toHaveBeenCalledTimes(7)
   for (const call of fetchMock.mock.calls.slice(1)) {
     expect(new Headers(call[1].headers).get('X-Claim-Token')).toBe(token)
   }
-  const payload = JSON.parse(fetchMock.mock.calls[7][1].body as string)
+  const payload = JSON.parse(fetchMock.mock.calls[6][1].body as string)
   expect(payload.fullName).toBe('Consumidor de prueba')
-  expect(payload.email).toBe('prueba@example.test')
-  expect(payload.approveFinalText).toBe(true)
-  expect(payload.previewId).toBe('preview')
+  expect(payload.idCard).toBe('0102030405')
+  expect(payload.contactInfo).toBe('0999999999 - prueba@example.test')
+  expect(payload.providerCommercialName).toBe('Proveedor ficticio')
+  expect(payload).not.toHaveProperty('previewId')
 })

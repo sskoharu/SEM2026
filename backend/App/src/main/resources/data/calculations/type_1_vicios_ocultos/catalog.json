@@ -1,0 +1,121 @@
+{
+  "claimType": "VICIOS_OCULTOS_CALIDAD",
+  "entries": [
+    {
+      "variable": "fecha_limite_cumplimiento",
+      "aliases": ["fecha_limite_reparacion", "fecha_limite_reposicion", "fecha_limite_devolucion", "plazo_cumplimiento", "fecha_maxima_cumplimiento"],
+      "articles": ["71", "20"],
+      "resolution": "TOOL",
+      "valueType": "DATE",
+      "tool": "calculate_date_plus_days",
+      "arguments": {
+        "baseDate": {"source": "TODAY"},
+        "days": {"source": "CONSTANT", "value": 30}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 71: reparación gratuita, reposición o devolución de la cantidad pagada \"en un plazo no superior a treinta días\".",
+      "note": "El plazo corre desde hoy (fecha en que se presenta el reclamo)."
+    },
+    {
+      "variable": "monto_devolucion",
+      "aliases": ["monto_total_devolucion", "monto_restitucion", "valor_devolucion", "monto_devolucion_precio", "cantidad_pagada", "monto_rescision"],
+      "articles": ["71", "20"],
+      "resolution": "FROM_CONTEXT",
+      "valueType": "MONEY",
+      "contextKeys": ["pricePaid"],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 71: devolución de la cantidad pagada. Art. 20: rescisión del contrato.",
+      "note": "Se copia el precio pagado; no se calcula."
+    },
+    {
+      "variable": "monto_reduccion_precio",
+      "aliases": ["valor_reduccion_precio", "descuento_solicitado", "monto_rebaja"],
+      "articles": ["20"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_percentage",
+      "arguments": {
+        "amount": {"source": "COLLECTED", "key": "pricePaid"},
+        "percentage": {"source": "USER_INPUT", "key": "porcentaje_reduccion_precio"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 20: el consumidor puede optar por la reducción del precio.",
+      "note": "La ley no fija el porcentaje. Lo propone el usuario; si no lo da, se le pregunta con la clave porcentaje_reduccion_precio."
+    },
+    {
+      "variable": "multa_minima_sancion",
+      "aliases": ["multa_proveedor", "sancion_pecuniaria", "multa_por_incumplimiento"],
+      "articles": ["71"],
+      "resolution": "TOOL",
+      "valueType": "MONEY",
+      "tool": "calculate_art71_minimum_fine",
+      "arguments": {
+        "valueOfGood": {"source": "COLLECTED", "key": "pricePaid"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 71 (último inciso): multa equivalente al valor del bien o servicio, nunca inferior a 120 USD, si el proveedor incumple el plazo.",
+      "note": "Es una sanción para el proveedor, informativa en el documento; la impone la autoridad."
+    },
+    {
+      "variable": "fecha_fin_garantia",
+      "aliases": ["fecha_vencimiento_garantia", "fecha_limite_garantia"],
+      "articles": ["71"],
+      "resolution": "TOOL",
+      "valueType": "DATE",
+      "tool": "calculate_date_plus_days",
+      "arguments": {
+        "baseDate": {"source": "COLLECTED", "key": "purchaseDate"},
+        "days": {"source": "COLLECTED", "key": "warrantyDurationDays"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 71 num. 1: el defecto debe manifestarse dentro del plazo de la garantía.",
+      "note": "Requiere que exista una garantía con duración (hasWarranty = true y warrantyDurationDays)."
+    },
+    {
+      "variable": "dias_desde_compra",
+      "aliases": ["dias_transcurridos_desde_compra", "dias_desde_adquisicion"],
+      "articles": ["20", "71"],
+      "resolution": "TOOL",
+      "valueType": "INTEGER",
+      "tool": "calculate_days_between",
+      "arguments": {
+        "startDate": {"source": "COLLECTED", "key": "purchaseDate"},
+        "endDate": {"source": "TODAY"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 20 y Art. 71: la antigüedad de la compra determina si el defecto se manifestó dentro de la garantía.",
+      "note": "El plazo de prescripción no está en los artículos de este tipo; no se calcula una fecha de prescripción hasta confirmar la norma aplicable."
+    },
+    {
+      "variable": "dias_desde_reclamo_remedio",
+      "aliases": ["dias_desde_reclamo", "dias_transcurridos_desde_reclamo"],
+      "articles": ["71"],
+      "resolution": "TOOL",
+      "valueType": "INTEGER",
+      "tool": "calculate_days_between",
+      "arguments": {
+        "startDate": {"source": "COLLECTED", "key": "remedyClaimDate"},
+        "endDate": {"source": "TODAY"}
+      },
+      "contextKeys": [],
+      "onMissing": "ASK_USER",
+      "legalBasis": "Art. 71: si pasan más de 30 días sin cumplir, el proveedor incurre en la multa.",
+      "note": "remedyClaimDate vive en ViciosOcultosParams.legalDeadlines; verificar que Capa 2 lo deje como clave plana en collectedParameters."
+    },
+    {
+      "variable": "indemnizacion_danos_perjuicios",
+      "aliases": ["monto_indemnizacion", "valor_indemnizacion", "indemnizacion", "monto_danos_perjuicios"],
+      "articles": ["20", "71"],
+      "resolution": "AUTHORITY",
+      "valueType": "MONEY",
+      "contextKeys": [],
+      "legalBasis": "Art. 20 y Art. 71: la indemnización por daños y perjuicios procede \"sin perjuicio\" de los demás remedios.",
+      "note": "No hay fórmula legal. Lo fija la autoridad o un juez; el documento debe indicar que está pendiente de determinar."
+    }
+  ]
+}

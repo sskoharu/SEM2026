@@ -1,6 +1,8 @@
 package org.app.services.layer_5.c1;
 
 import lombok.extern.log4j.Log4j2;
+import org.app.exceptions.ClientException;
+import org.springframework.http.HttpStatus;
 import org.app.services.layer_5.dto.DocumentContext;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.core.io.ClassPathResource;
@@ -51,7 +53,6 @@ public class DocumentGeneratorService {
             // 2. Reemplazar en los párrafos normales
             for (XWPFParagraph p : document.getParagraphs()) {
                 replaceInParagraph(p, variables);
-                neutralizeLegalAssertion(p);
             }
 
             // 3. Reemplazar en las tablas (si la plantilla tuviera)
@@ -65,7 +66,10 @@ public class DocumentGeneratorService {
                 }
             }
 
-            // 4. Convertir a bytes
+            // 4. Sección DPE al final del documento
+            appendDpeSection(document, context.getDpeSectionLines());
+
+            // 5. Convertir a bytes
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             document.write(outputStream);
 
@@ -74,23 +78,27 @@ public class DocumentGeneratorService {
 
         } catch (Exception e) {
             log.error("Error generando el archivo Word", e);
-            throw new RuntimeException("No se pudo generar el documento Word.", e);
+            throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .error("No se pudo generar el documento Word.");
+        }
+    }
+
+    private void appendDpeSection(XWPFDocument document, java.util.List<String> lines) {
+        if (lines == null || lines.isEmpty()) return;
+
+        document.createParagraph().createRun().addBreak(BreakType.PAGE);
+        boolean first = true;
+        for (String line : lines) {
+            XWPFRun run = document.createParagraph().createRun();
+            run.setText(line);
+            if (first || line.endsWith(":")) run.setBold(true);
+            first = false;
         }
     }
 
     /**
      * Reemplaza los placeholders en un párrafo, uniendo los "runs" para evitar cortes.
      */
-    private void neutralizeLegalAssertion(XWPFParagraph paragraph) {
-        String text = paragraph.getText();
-        if (text.contains("vulnera de forma directa")) {
-            while (!paragraph.getRuns().isEmpty()) {
-                paragraph.removeRun(0);
-            }
-            paragraph.createRun().setText("Referencias recuperadas para revisión. El documento expresa la solicitud del consumidor; no declara probado un incumplimiento.");
-        }
-    }
-
     private void replaceInParagraph(XWPFParagraph paragraph, Map<String, String> variables) {
         String paragraphText = paragraph.getText();
         if (paragraphText == null || paragraphText.isEmpty()) return;

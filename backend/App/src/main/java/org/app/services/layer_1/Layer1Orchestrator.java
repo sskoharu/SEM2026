@@ -2,6 +2,11 @@ package org.app.services.layer_1;
 
 import lombok.extern.log4j.Log4j2;
 import org.app.repositories.SessionRepository;
+import org.app.exceptions.ClientException;
+import org.springframework.ai.retry.NonTransientAiException;
+import org.springframework.ai.retry.TransientAiException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.ResourceAccessException;
 import org.app.services.context.layer_1.Layer1ExecutionContext;
 import org.app.schemas.interfaces.layer_1.Layer1Step;
 import org.app.schemas.session_object.SessionObject;
@@ -35,7 +40,8 @@ public class Layer1Orchestrator {
             log.error("CRÍTICO: La sesión {} no tiene un estado inicial definido.", session.getSessionId());
             session.setLayer1State(Layer1InternalState.ERROR);
             sessionRepository.save(session);
-            return session;
+            throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .error("La sesión no tiene un estado inicial válido.");
         }
 
         Layer1ExecutionContext context = new Layer1ExecutionContext(session, null, null);
@@ -49,17 +55,27 @@ public class Layer1Orchestrator {
             if (currentStep == null) {
                 log.error("No hay un handler para el estado: {}", session.getLayer1State());
                 session.setLayer1State(Layer1InternalState.ERROR);
-                break;
+                sessionRepository.save(session);
+                throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .error("No se pudo continuar el análisis legal del reclamo.");
             }
 
             try {
                 Layer1InternalState nextState = currentStep.execute(context);
                 session.setLayer1State(nextState);
                 sessionRepository.save(session); // Guardamos progreso iterativo
-            } catch (Exception e) {
-                log.error("Error crítico ejecutando el paso: {}", session.getLayer1State(), e);
+            } catch (RuntimeException e) {
+                Layer1InternalState failedState = session.getLayer1State();
+                log.error("Error crítico ejecutando el paso: {}", failedState, e);
                 session.setLayer1State(Layer1InternalState.ERROR);
-                break;
+                sessionRepository.save(session);
+                if (e instanceof ClientException
+                        || e instanceof TransientAiException || e instanceof NonTransientAiException
+                        || e instanceof ResourceAccessException) {
+                    throw e; // El GlobalExceptionHandler ya sabe responder a estos errores
+                }
+                throw ClientException.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .error("Ocurrió un error durante el análisis legal del reclamo. Intente nuevamente.");
             }
         }
 

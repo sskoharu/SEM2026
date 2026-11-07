@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.app.ratelimit.RateLimitFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,9 +26,10 @@ import java.util.List;
 @EnableMethodSecurity
 public class WebSecurityConfig {
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, RateLimitFilter rateLimitFilter) throws Exception {
 
         log.info("Configurando seguridad de la aplicación");
+        http.addFilterBefore(rateLimitFilter, BasicAuthenticationFilter.class);
         http.headers(head -> head.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         log.info("Configurando CSRF");
@@ -43,9 +46,11 @@ public class WebSecurityConfig {
                 .hasRole("RAG_USER")
                 .requestMatchers(
                         HttpMethod.POST, "/api/v1/claims/**"
-                        )
-                .permitAll()
-                .anyRequest().permitAll()
+                ).permitAll()
+                .requestMatchers(
+                        HttpMethod.GET, "/api/v1/claims/**"
+                ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/health/**").permitAll()
         );
 
         log.info("Configurando autenticación");
@@ -66,7 +71,6 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("X-Claim-Token"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

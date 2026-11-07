@@ -6,7 +6,7 @@ package org.app.schemas.session_object.enums;
         VICIOS_OCULTOS_CALIDAD(
                 1,
                 "Bienes Defectuosos y Vicios Ocultos",
-                "Arts. 11, 20, 26, 71"
+                "Arts. 20, 26, 71"
         ),
 
         //VERIFIED
