@@ -9,7 +9,7 @@ Este documento justifica cómo se divide (fragmenta) el corpus antes de indexarl
 | Unidad de fragmento | **Un artículo completo = un fragmento** (chunking estructural, no por tamaño fijo) |
 | Tamaño | Variable, determinado por el artículo: mediana ≈ 470 caracteres, media ≈ 625, máximo 4.682 (Art. 2) |
 | Solapamiento | **Ninguno (0)**; cada fragmento es autocontenido |
-| Corpus LODC | 64 artículos en `src/main/resources/data/lodc/*.json`, 64 fragmentos |
+| Corpus LODC | 64 fragmentos de 57 artículos distintos (algunos artículos se dividen por numerales) en 10 archivos `src/main/resources/data/lodc/*.json` |
 | Corpus DPE | 14 fragmentos de orientación procedimental en `data/dpe/dpe_orientacion.json` (131 a 575 caracteres, media ≈ 226) |
 | Embeddings | `text-embedding-3-large` (3072 dimensiones), almacenados en Qdrant (`lodc_leyes_vector`) |
 | Metadatos por fragmento | `numero_articulo`, `capitulo`, `tema_principal`, `tipo_reclamo_asociado`, `parametros_requeridos`, `articulos_procedimentales_asociados` |
@@ -59,6 +59,7 @@ Este corpus **no se recupera por embeddings**: la Capa 3 lo consulta de forma de
 |---|---|---|
 | Búsqueda semántica | `search(query, topK=5)` | `BuscandoFuentesStep` / `VectorSearchTool.search` |
 | Umbral de similitud | 0,30 (bajo, para no descartar candidatos; la clasificación posterior filtra) | `VectorSearchTool` |
+| Umbral de abstención | 0,40 inicial (`app.rag.abstention-threshold`); si el mejor score recuperado es menor, tras 3 reintentos responde `SOLICITANDO_ACLARACION` con el objeto `abstention` (motivo, mejorScore, umbral). Sin calibrar: ver `docs/07-evaluacion.md` | `EvaluandoPrecisionStep` / `AbstentionPolicy` |
 | Recuperación exacta | por `numero_articulo` | `VectorSearchTool.getArticlesByNumbers` |
 | Índices de payload | `numero_articulo`, `tipo_reclamo_asociado`, `original_id` | `LodcDataIngestionRunner` |
 
@@ -72,5 +73,5 @@ Con fragmentos de un artículo, un `topK` de 5 entrega como máximo cinco artíc
 ## 9. Limitaciones conocidas
 
 - La recuperación es solo vectorial: no hay búsqueda híbrida (BM25) ni filtro por `tipo_reclamo_asociado` en la consulta, aunque el índice existe. Una consulta que cite "Art. 71" literal depende solo de la similitud.
-- El corpus contiene 64 artículos de la LODC, no la totalidad de la ley ni su reglamento. El sistema se abstiene cuando el caso queda fuera de ese alcance.
+- El corpus contiene 57 artículos de la LODC (64 fragmentos), no la totalidad de la ley ni su reglamento. El sistema se abstiene cuando el caso queda fuera de ese alcance.
 - No se ha medido empíricamente el efecto del tamaño de fragmento (no hay comparación contra un divisor de tamaño fijo). La justificación es estructural y jurídica, respaldada por la métrica de recuperación, no por un experimento de ablación.
