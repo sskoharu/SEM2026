@@ -46,8 +46,8 @@ public class ValidatingProceduralInputStep implements Layer3Step {
                 String paramName = entry.getKey();
                 String value = String.valueOf(entry.getValue());
 
-                // Usamos el Agente de la Capa 2 para validar
-                String result = validationAgent.validateParameter(paramName, value);
+                // Datos logísticos del formulario (p. ej. fecha preferida de entrega o retiro): pueden ser futuros
+                String result = validationAgent.validateParameter(paramName, value, true);
 
                 if (result.startsWith("ERROR")) {
                     hasErrors = true;

@@ -4,6 +4,13 @@ Backend de un asistente agéntico que guía a un consumidor ecuatoriano, paso a 
 
 > Es una herramienta de apoyo. No es un abogado ni da asesoría legal vinculante.
 
+## Despliegue (URL pública)
+
+- **URL:** https://asistente-inteligente-4kiq.onrender.com
+- **Salud:** `GET /health` → `{"status":"UP"}` (sin dependencias, sin autenticación, excluido del rate limit). Disponibilidad de dependencias: `GET /actuator/health/readiness`.
+- **Arranque en frío:** el plan gratuito de Render duerme el servicio tras inactividad; la primera petición puede tardar ~80 s. Conviene llamar a `/health` antes de una demostración.
+- Prueba rápida: `curl https://asistente-inteligente-4kiq.onrender.com/health`
+
 ## Qué hace
 
 1. **Clasifica** el reclamo (uno de ocho tipos) con búsqueda semántica sobre la LODC.
@@ -32,6 +39,15 @@ El porqué de cada decisión técnica y ética está en [`docs/09-decisiones.md`
 - Java 21 y Maven (se incluye `mvnw`).
 - Acceso a: OpenAI, Qdrant, Redis y PostgreSQL.
 - Docker, si se despliega con contenedor.
+
+## Inicio rápido (≈10 minutos)
+
+1. Clonar el repositorio y tener Java 21 (`java -version`).
+2. Definir las variables de la sección siguiente (mínimo `LLM_API_KEY`, `QDRANT_API_KEY`, `REDIS_PASSWORD`, `DB_URL`, `DB_USER`, `DB_PASSWORD`).
+3. Primera vez en un Qdrant vacío: cargar el corpus con `APP_INGESTION_ENABLED=true ./mvnw spring-boot:run` (ver "Carga del corpus") y detener la aplicación.
+4. Arrancar con `./mvnw spring-boot:run`.
+5. Comprobar: `curl http://localhost:8080/health` → `{"status":"UP"}`.
+6. Probar un caso: `POST /api/v1/claims/start` con `{"incidentDescription":"Compré un celular que dejó de encender a los 3 días y la tienda no lo cambia. Tengo la factura."}`.
 
 ## Configuración
 
@@ -87,6 +103,8 @@ Base: `/api/v1/claims`. Límite: 10 peticiones por 60 s por IP.
 | `POST /submit-procedural-form/{sessionId}` | 3 | Envía el formulario del proceder |
 | `POST /{sessionId}/layer4/calculate` | 4 | Ejecuta los cálculos |
 | `POST /{sessionId}/layer5/generate` | 5 | Descarga el `.docx` |
+| `POST /{sessionId}/register` | — | Registra el reclamo terminado (exige capa 3 en `DONE`; 404 si la sesión no existe, 409 si no está lista) |
+| `GET /health` | — | Estado del servicio (fuera del `/api/v1/claims`, sin autenticación ni límite de tasa) |
 
 Los errores devuelven siempre un `ErrorResponse` (`timestamp`, `error`, `status`, `data`) con el código HTTP adecuado.
 
@@ -94,9 +112,23 @@ Los errores devuelven siempre un `ErrorResponse` (`timestamp`, `error`, `status`
 
 | Qué | Dónde |
 |---|---|
+| Pruebas contra la URL desplegada (20 casos, incluye inyección de prompt, con fecha) | [`docs/08-pruebas.md`](docs/08-pruebas.md) |
+| Evaluación repetida y comparada (04-11, 07-11 local, 07-11 URL) | [`eval/comparacion_s3_s4.md`](eval/comparacion_s3_s4.md) |
+| Metodología y calibración del umbral de abstención | [`eval/07-evaluacion.md`](eval/07-evaluacion.md) |
 | Exactitud de las herramientas de cálculo (10 casos, `CalculationEvalTest`) | [`eval/calculos/`](eval/calculos/) |
-| 20 relatos de referencia | [`eval/20_relatos_referencia/`](eval/20_relatos_referencia/) |
-| Plan de pruebas funcionales contra la URL desplegada | [`eval/plan_pruebas_funcionales_url_desplegada/`](plan_pruebas_funcionales_url_desplegada/) |
+| 20 relatos de referencia y resultados (CSV) | [`eval/20_relatos_referencia/`](eval/20_relatos_referencia/) |
+| Integridad y verificación del corpus contra el PDF | [`eval/10-integridad-corpus.md`](eval/10-integridad-corpus.md), [`eval/verificacion_corpus_vs_pdf.md`](eval/verificacion_corpus_vs_pdf.md) |
+| Alcance normativo (qué cubre y qué no) | [`eval/11-alcance-normativo.md`](eval/11-alcance-normativo.md) |
+| Harness de pruebas contra la URL (`DeployedFunctionalTest`, script) | [`plan_pruebas_funcionales_url_desplegada/`](plan_pruebas_funcionales_url_desplegada/) |
+
+## Aviso de uso de IA y tratamiento de datos
+
+- **Uso de IA.** El sistema usa un modelo de lenguaje (OpenAI) para interpretar el relato, redactar el informe y los borradores. Puede equivocarse. Es una herramienta de apoyo: **no es un abogado ni da asesoría legal vinculante**. Revise siempre el resultado antes de presentar un reclamo.
+- **Texto sugerido para la interfaz** (debe mostrarse antes de enviar el relato): *"Este asistente usa inteligencia artificial y puede cometer errores. No reemplaza a un abogado. No escriba en el relato su cédula, teléfono ni dirección: los datos de identificación se piden más adelante y no se envían al modelo."*
+- **Qué datos se envían al modelo:** el relato libre y los parámetros del caso. Nombre, cédula y contacto del consumidor y del proveedor solo se piden al generar el documento y se insertan por código en el Word, sin pasar por el modelo ni guardarse en la sesión.
+- **Retención:** la sesión en Redis expira a las 24 h; el archivo del reclamo registrado queda en PostgreSQL.
+- **Límite conocido:** el relato libre no se anonimiza antes de enviarse al modelo. Por eso el aviso pide no incluir datos personales en el relato.
+- Detalle: secciones E1, E3 y E5 de [`docs/09-decisiones.md`](docs/09-decisiones.md).
 
 ## Estructura del repositorio
 
@@ -112,13 +144,18 @@ src/main/resources/
   prompts/          prompts versionados (.st)
   config/           parámetros variables
   data/             corpus LODC, DPE y catálogos de cálculo
-docs/               arquitectura, decisiones
-eval/               casos y resultados de evaluación
+docs/               arquitectura, RAG, decisiones, pruebas (08-pruebas.md), uso de IA y aportes (10-uso-ia-y-aportes.md)
+eval/               casos, resultados y comparación de evaluación, integridad del corpus
+plan_pruebas_funcionales_url_desplegada/   harness de pruebas contra la URL
+docs/evidencias/  evidencias por semana; semana-4 incluye el índice de la sustentación y el guion
 ```
 
 ## Limitaciones
 
 - No hay anonimización del texto libre del relato antes de enviarlo al modelo.
+- El Reglamento de la LODC no está indexado; el corpus cubre la LODC (verificada contra el PDF) y la orientación de la DPE (14 fragmentos pendientes de revisión humana). Ver [`eval/11-alcance-normativo.md`](eval/11-alcance-normativo.md).
+- El agente no es un bucle ReAct: usa una lista cerrada de herramientas con tope de pasos y traza (`agentTrace`).
+- La clasificación es estable, pero la recuperación exacta de artículos en casos ambiguos puede variar entre llamadas (ver C09 en [`docs/08-pruebas.md`](docs/08-pruebas.md)).
 - El catálogo de cálculo cubre los tipos de reclamo 1, 2 y 4.
 - No se verifica la autenticidad de los adjuntos: la evidencia es una lista declarada.
 

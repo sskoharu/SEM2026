@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                 .requestMatchers(
                         HttpMethod.GET, "/api/v1/claims/**"
                 ).permitAll()
-                .requestMatchers(HttpMethod.GET, "/actuator/health/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/health/**", "/health").permitAll()
         );
 
         log.info("Configurando autenticación");

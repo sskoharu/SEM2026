@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secretos y artefactos ###
+.env
+.env.*
+__pycache__/
+*.pyc
+app.zip

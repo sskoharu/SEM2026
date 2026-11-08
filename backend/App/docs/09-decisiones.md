@@ -62,7 +62,36 @@ Un único `GlobalExceptionHandler` traduce cada fallo a una respuesta `ErrorResp
 
 ### D7. Limitador de tasa por IP, con política "fail-closed"
 
-El limitador (10 peticiones por 60 s en `/api/v1/claims/**`) protege el presupuesto del proveedor de IA frente al abuso. Si Redis no está disponible, se **rechaza** la petición (503) en lugar de dejarla pasar. Es preferible degradar el servicio a perder el control del costo.
+El limitador (10 peticiones por 60 s en `/api/v1/claims/**`) protege el presupuesto del proveedor de IA frente al abuso. Si Redis no está disponible, se **rechaza** la petición (503) en lugar de dejarla pasar. Es preferible degradar el servicio a perder el control del costo. `/health` queda fuera del límite para que los chequeos de la plataforma no consuman cupo.
+
+### D8. Integridad del corpus y evidencia citada
+
+- **Contexto.** Si un fragmento del corpus no coincide con la norma, el sistema cita mal con apariencia de autoridad.
+- **Decisión.** Cada fragmento tiene hash y `estadoRevision` en un manifiesto (`tools/corpus_manifest.py`). La ingesta se aborta si un fragmento no está en el manifiesto, si su hash difiere (texto editado sin registro) o si no está aprobado; este último control se puede relajar con `app.ingestion.allow-unreviewed=true`, que registra una advertencia por fragmento y se usa hoy para la DPE. Los 64 fragmentos de la LODC se contrastaron literalmente contra `F01-lodc.pdf` y están `APROBADO`. Cada respuesta incluye `ragEvidence` con los fragmentos usados, su estado de revisión y la versión del corpus.
+- **Justificación.** Permite a un tercero comprobar de dónde sale cada cita (E4).
+- **Límite.** La aprobación es una comparación automática literal, no una revisión jurídica humana. Los 14 fragmentos de la DPE siguen `PENDIENTE_REVISION` porque no hay PDF fuente.
+
+### D9. Abstención por evidencia insuficiente
+
+- **Decisión.** Si el mejor score de recuperación es menor que `app.rag.abstention-threshold` (0,40), tras reintentos el sistema responde `SOLICITANDO_ACLARACION` con un objeto `abstention` (motivo, mejor score, umbral) en vez de clasificar.
+- **Justificación.** Preferimos pedir aclaración a clasificar sin respaldo (E3). El 0,40 se eligió porque con los 12 casos válidos cualquier umbral ≤ 0,58 conserva el resultado (`eval/07-evaluacion.md`).
+- **Límite.** Con el conjunto actual, el umbral no es lo que corta los casos fuera de dominio (lo hacen el Portero y la traducción): es una segunda barrera, verificada con prueba unitaria (`EvaluandoPrecisionStepTest`).
+
+### D10. Agente con herramientas acotadas y trazable
+
+- **Decisión.** Las herramientas del agente están en un registro cerrado, con un tope de pasos (`app.agent.max-tool-steps`, 5) y una traza (`agentTrace`) en la respuesta.
+- **Justificación.** Limita costo y comportamiento imprevisto y deja una auditoría de qué se ejecutó.
+- **Límite.** No es un bucle ReAct de razonamiento libre: el orden de pasos lo fija el código (D1, D2). Es una elección deliberada por control y auditabilidad.
+
+### D11. Registro del reclamo como paso final determinista
+
+- **Decisión.** `POST /api/v1/claims/{sessionId}/register` archiva el caso en PostgreSQL solo si la Capa 3 está en `DONE` (409 si no; 404 si la sesión no existe) y devuelve id, estado, fecha, tipo, artículos y versión del corpus.
+- **Justificación.** El registro es una acción con consecuencias: no la decide el modelo ni se permite fuera de orden (E2).
+
+### D12. Alcance normativo acotado
+
+- **Decisión.** El corpus cubre la LODC (incluidos los arts. 81–84 sobre el procedimiento ante la Defensoría, que se añaden a la ruta de acción) y la orientación pública de la DPE. El Reglamento de la LODC no está indexado. Ver `eval/11-alcance-normativo.md`.
+- **Justificación.** Es preferible un alcance pequeño y verificado que uno amplio sin verificar. Los relatos que dependan de normas no cargadas se rechazan o se abstienen (casos S14–S16 de `docs/08-pruebas.md`).
 
 ## 2. Decisiones éticas
 
@@ -123,6 +152,11 @@ Contexto: el sistema orienta a ciudadanos en un trámite legal. Un error puede h
 | D5 Prompts y config | `resources/prompts/`, `resources/config/` |
 | D6 Errores | `exceptions/GlobalExceptionHandler`, `ClientException` |
 | D7 Rate limit | `ratelimit/`, `resources/config/parametros-legales.properties` |
+| D8 Integridad del corpus | `tools/corpus_manifest.py`, `eval/10-integridad-corpus.md`, `eval/verificacion_corpus_vs_pdf.md` |
+| D9 Abstención | `AbstentionPolicy`, `EvaluandoPrecisionStep`, `eval/07-evaluacion.md` |
+| D10 Agente acotado | registro de herramientas, `agentTrace` |
+| D11 Registro | `ClaimController`, `ClaimCaseService.register` |
+| D12 Alcance | `eval/11-alcance-normativo.md` |
 | E1–E7 | prompts `.st`, `Layer5Controller`, `DpeRequirementsChecker`, `Dockerfile` |
 
 ## 4. Limitaciones conocidas (honestidad técnica)
@@ -131,7 +165,11 @@ Contexto: el sistema orienta a ciudadanos en un trámite legal. Un error puede h
 - **Verificación de citas en texto libre:** el conjunto de artículos está fundamentado en el corpus, pero el texto que redacta el modelo (informe de la Capa 3, hechos y pretensiones de la Capa 5) no se contrasta después contra ese conjunto.
 - **Cobertura de cálculo:** el catálogo cubre los tipos de reclamo 1, 2 y 4; los tipos 3, 5, 6, 7 y 8 quedan sin catálogo.
 - **Evidencia:** los adjuntos se gestionan como lista declarada; no se verifica su contenido ni su autenticidad.
-- **Inyección de prompt:** la defensa se basa en el diseño de los prompts y en la validación de entradas; no hay un filtro dedicado.
+- **Inyección de prompt:** la defensa se basa en el diseño de los prompts, en el Portero y en la validación de entradas; no hay un filtro dedicado. Se probaron dos casos (I19, I20) y ambos se resistieron, lo cual no equivale a una auditoría exhaustiva.
+- **Corpus:** la LODC está verificada contra el PDF (comparación automática, no revisión jurídica); la DPE (14 fragmentos) está pendiente de revisión humana; el Reglamento de la LODC no está indexado.
+- **Variabilidad del LLM:** la clasificación por tipo es estable, pero la selección exacta de artículos en casos ambiguos puede variar entre llamadas (caso C09, `docs/08-pruebas.md`).
+- **Agente:** no es un bucle ReAct; usa herramientas acotadas con tope de pasos y traza (D10).
+- **Interfaz:** el aviso de IA debe mostrarse en el cliente; este repositorio solo contiene el backend.
 - **Ingesta:** la reconstrucción del índice vectorial es un paso explícito, no automático al arrancar.
 
 Estas limitaciones se declaran de forma abierta. El sistema se presenta como apoyo y no como sustituto de un abogado.

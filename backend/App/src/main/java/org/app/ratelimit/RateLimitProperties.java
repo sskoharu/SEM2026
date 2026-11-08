@@ -18,6 +18,6 @@ public record RateLimitProperties(
         if (llmLimit <= 0) llmLimit = 10;
         if (generalLimit <= 0) generalLimit = 60;
         if (llmPaths == null || llmPaths.isEmpty()) llmPaths = List.of("/api/v1/claims/**");
-        if (excludedPaths == null) excludedPaths = List.of("/actuator/**");
+        if (excludedPaths == null) excludedPaths = List.of("/actuator/**", "/health");
     }
 }

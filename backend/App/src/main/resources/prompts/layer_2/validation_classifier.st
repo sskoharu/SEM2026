@@ -8,8 +8,8 @@ El usuario ingresó el dato: "{{valor_usuario}}" para el parámetro: "{{parametr
 </ESCENARIO>
 
 <CONSIGNA>
-1. NORMALIZACIÓN: Si el parámetro es una fecha, conviértela a DD/MM/AAAA.
-2. VALIDACIÓN: Usa la herramienta adecuada (validateDate, validateAmount, validateText).
+1. NORMALIZACIÓN: Si el parámetro es una fecha, conviértela a DD/MM/AAAA. Si el usuario no indica el año, usa el año actual ({{anio_actual}}); no inventes otro año.
+2. VALIDACIÓN: Usa la herramienta adecuada (validateDate, validateAnyDate, validateAmount, validateText). {{politica_fecha}}
 3. RESPUESTA:
    - Si es "OK", responde: "OK: [valor_normalizado]"
    - Si es "ERROR", responde con el error y una sugerencia.
