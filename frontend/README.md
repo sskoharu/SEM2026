@@ -1,153 +1,88 @@
-# Generador Inteligente de Reclamos de Consumo
+# Frontend del asistente de reclamos de consumo
 
-Frontend académico de UNIANDES para registrar reclamos de consumo en Ecuador y solicitar su análisis al backend Spring Boot.
+Aplicación React + TypeScript para iniciar y continuar un reclamo de consumo en Ecuador mediante el backend Spring Boot del proyecto. El frontend no ejecuta el análisis jurídico localmente: valida la entrada, consume la API, presenta los estados de la sesión y descarga el documento generado por el backend.
 
-## Tecnologías
+**Frontend desplegado:** https://generadoreclamos.vercel.app/
 
-React 19, TypeScript 5.9 y Vite 8. ESLint revisa el código. El diseño utiliza CSS adaptable en azul y blanco, sin bibliotecas visuales adicionales.
+## Requisitos y ejecución
 
-## Instalación y ejecución
+- Node.js compatible con las dependencias del proyecto (la entrega fue validada con Node.js 24).
+- npm.
+- Backend disponible en `https://asistente-inteligente-4kiq.onrender.com` o en `http://localhost:8080` durante el desarrollo local.
 
-Requisitos: Node.js 22.12 o posterior compatible con las herramientas de desarrollo y npm. Esta entrega se validó con Node.js 24.18.0.
-
-Desde la carpeta `frontend`:
+Desde esta carpeta:
 
 ```powershell
 npm ci
 npm run dev
 ```
 
-Comprobaciones y versión de producción:
+Para usar la versión pública, abra [https://generadoreclamos.vercel.app/](https://generadoreclamos.vercel.app/). En desarrollo, la aplicación de Vite queda disponible normalmente en `http://localhost:5173`. El cliente usa `https://asistente-inteligente-4kiq.onrender.com` por defecto. Para apuntar a un backend local o a otra instancia, cree `frontend/.env.local`:
 
-```powershell
-npm run build
-npm run lint
-npm run test
-npm run preview
+```dotenv
+VITE_API_BASE_URL=http://localhost:8080
 ```
 
-`build` comprueba TypeScript y genera `dist/`. `preview` permite revisar esa compilación localmente.
+No coloque secretos en variables `VITE_`: Vite las expone en el navegador. El `.env.local` no debe versionarse.
 
-## Estructura modular
+## Scripts
 
-~~~text
+```powershell
+npm run build   # type-check y compilación de producción en dist/
+npm run lint    # ESLint
+npm run test    # type-check de tests y Vitest
+npm run preview # sirve localmente la compilación de dist/
+```
+
+`npm run test` ejecuta las pruebas con un entorno Node y Vitest. Las pruebas del cliente HTTP, reintentos, métricas y flujo de reclamos usan mocks; no sustituyen una prueba de integración contra una instancia real del backend.
+
+## Flujo funcional actual
+
+1. El usuario acepta el aviso de transparencia de IA y completa el relato del incidente. El frontend exige entre 20 y 2000 caracteres; el backend vuelve a validar y procesa únicamente el relato inicial.
+2. `POST /api/v1/claims/start` inicia la sesión. Si la Capa 1 necesita contexto, el frontend envía las aclaraciones mediante `/{sessionId}/layer1/clarify`.
+3. Cuando la Capa 1 termina, se inicia la Capa 2 con `/{sessionId}/layer2/start`; sus preguntas se responden con `/{sessionId}/layer2/answer`.
+4. El usuario puede solicitar la evaluación de viabilidad (`/evaluate/{sessionId}`), revisar el informe y aceptarlo (`/accept/{sessionId}`).
+5. La Capa 3 puede presentar opciones de acción (`/select-action/{sessionId}`) y, si corresponde, pedir un formulario procedimental (`/submit-procedural-form/{sessionId}`).
+6. La Capa 4 ejecuta cálculos deterministas con `/{sessionId}/layer4/calculate`.
+7. La Capa 5 genera y descarga el Word con `/{sessionId}/layer5/generate`. Los datos personales del documento se solicitan en el último tramo y se insertan por código.
+8. El progreso puede guardarse con `/{sessionId}/save`, consultarse por identificación con `GET /saved` y reanudarse con `POST /saved/{id}/resume`.
+
+El cliente conserva el token de sesión en memoria mediante `sessionAccess.ts`; no lo guarda en `localStorage`. Recargar la página pierde el acceso de la sesión activa, aunque un reclamo guardado puede reanudarse con su identificación. Las solicitudes tienen timeout, cancelación con `AbortController`, errores tipados, métricas técnicas y reintentos solo donde la operación es segura.
+
+## Estructura
+
+```text
 frontend/
-├── public/
-│   ├── favicon.svg
-│   └── icons.svg
+├── public/                         # favicon e iconos públicos
 ├── src/
-│   ├── assets/
-│   │   ├── hero.png
-│   │   ├── react.svg
-│   │   └── vite.svg
-│   ├── modules/
-│   │   └── reclamos/
-│   │       ├── components/
-│   │       │   ├── AnalisisInicial.tsx
-│   │       │   ├── EstadoCarga.tsx
-│   │       │   ├── FormularioReclamo.tsx
-│   │       │   ├── MensajeError.tsx
-│   │       │   ├── PreguntasComplementarias.tsx
-│   │       │   └── ResultadoFinal.tsx
-│   │       ├── constants/
-│   │       │   └── reclamo.constants.ts
-│   │       ├── services/
-│   │       │   ├── reclamosService.ts
-│   │       ├── types/
-│   │       │   └── reclamo.types.ts
-│   │       └── utils/
-│   │           └── validarReclamo.ts
-│   ├── shared/
-│   │   ├── http/
-│   │   │   ├── esperar.ts
-│   │   │   ├── httpClient.ts
-│   │   │   ├── httpErrors.ts
-│   │   │   └── retryPolicy.ts
-│   │   └── metrics/
-│   │       ├── metricas.types.ts
-│   │       └── metricasService.ts
+│   ├── modules/reclamos/
+│   │   ├── components/             # formulario, análisis, preguntas, guardado y resultado
+│   │   ├── constants/              # valores iniciales y opciones de interfaz
+│   │   ├── services/
+│   │   │   ├── reclamosApi.ts      # contrato HTTP de las capas 1 a 5
+│   │   │   ├── savedClaimsService.ts
+│   │   │   ├── savedClaimsMapper.ts
+│   │   │   └── sessionAccess.ts
+│   │   ├── types/                  # tipos de reclamo y respuestas
+│   │   └── utils/                  # validación del formulario
+│   ├── shared/http/                # fetch, timeout, errores y política de reintentos
+│   ├── shared/metrics/             # métricas técnicas sin datos del formulario
+│   ├── App.tsx                     # orquestación del estado visual y del flujo
 │   ├── App.css
-│   ├── App.tsx
-│   ├── index.css
 │   └── main.tsx
-├── tests/
-│   ├── http/
-│   │   ├── httpClient.test.ts
-│   │   └── retryPolicy.test.ts
-│   ├── manual/
-│   │   ├── escenarios.html
-│   │   └── escenarios.tsx
-│   ├── metrics/
-│   │   └── metricasService.test.ts
-│   └── reclamos/
-│       ├── datos.ts
-│       ├── flujo.test.tsx
-│       ├── servicios.test.ts
-│       └── validarReclamo.test.ts
-├── .gitignore
-├── eslint.config.js
-├── index.html
-├── package-lock.json
+├── tests/                          # pruebas unitarias y de flujo con mocks
 ├── package.json
-├── README.md
-├── tsconfig.app.json
-├── tsconfig.json
-├── tsconfig.node.json
-├── tsconfig.tests.json
-├── vite.config.ts
-└── vitest.config.ts
-~~~
+└── vite.config.ts
+```
 
-- `App.tsx` coordina el estado del formulario, etapas, solicitudes cancelables al backend, mensajes, respuestas y reinicio. Conserva la estructura general y el indicador de cuatro etapas.
-- `FormularioReclamo` presenta los campos y comunica los cambios a `App`. Selecciona las soluciones de producto o servicio a partir de las constantes.
-- `AnalisisInicial` presenta los estados de espera, carga y error, los hechos, orientaciones y mensajes. Compone los componentes de preguntas y resultado final.
-- `PreguntasComplementarias` muestra las preguntas y comunica las respuestas opcionales y la acción de completar a `App`.
-- `ResultadoFinal` presenta la confirmación del backend y la cantidad de preguntas pendientes.
-- `reclamo.types.ts` define los tipos compartidos de reclamo, estado, pregunta y análisis.
-- `reclamo.constants.ts` contiene los valores iniciales y las opciones de solución existentes.
-- `validarReclamo.ts` contiene las reglas y mensajes de validación del formulario original.
-- `reclamosApi.ts` valida y adapta las sesiones devueltas por el backend para presentar hechos, preguntas y orientaciones.
+Editar el formulario invalida el análisis anterior para no mostrar hechos desactualizados. Durante una solicitud se bloquea el doble envío; cancelar o recibir un error conserva los datos introducidos y permite reintentar.
 
-Los componentes dependen de los tipos compartidos; el formulario también depende de las constantes. Las utilidades dependen de los tipos y no de React. `App` llama a las utilidades y entrega datos y funciones a los componentes. Los estilos se mantienen en `App.css` e `index.css`; `main.tsx` monta la aplicación con StrictMode.
+## Privacidad y límites
 
-## Funcionalidades disponibles
+- No escriba cédula, teléfono, dirección ni otras credenciales en el relato libre: ese texto se envía al modelo a través del backend.
+- La identificación, nombre y contacto para guardar o generar el documento se manejan en etapas separadas del relato.
+- El frontend no anonimiza el relato, no verifica la vigencia de las fuentes jurídicas y no reemplaza la revisión humana.
+- No existe un modo offline ni una base de datos local de reclamos. La sección de reclamos guardados depende de los endpoints de persistencia y PostgreSQL del backend.
+- El documento descargado es un borrador de apoyo y no constituye asesoría legal vinculante.
 
-- Formulario inicial reducido al relato del incidente, que es el único dato solicitado por `POST /api/v1/claims/start`.
-- Validación de una descripción mínima de 20 caracteres y un máximo de 2000 caracteres.
-- La capa 1 solicita dinámicamente la información faltante mediante las preguntas devueltas por el backend.
-- Análisis inicial conectado al backend, con preguntas y respuestas gestionadas por las sesiones de las capas 1 y 2.
-- Respuestas complementarias opcionales incorporadas al resultado final; las preguntas sin respuesta no impiden continuar.
-- Indicador de cuatro etapas, mensajes de estado y botón **Limpiar** para reiniciar e iniciar otro reclamo.
-- Diseño adaptable para pantallas grandes y pequeñas.
-
-## Limitaciones y pendientes
-
-El frontend no genera análisis localmente ni contiene un modo de demostración. La sesión se conserva en el backend; recargar la página pierde únicamente el estado visual local. Guardar borrador y Mis reclamos permanecen pendientes. El comprobante solo se declara; no hay carga de archivos ni OCR.
-
-El adaptador `services/reclamosApi.ts` usa los endpoints reales del backend: `/api/v1/claims/start`, `/{sessionId}/layer1/clarify`, `/{sessionId}/layer2/start` y `/{sessionId}/layer2/answer`. La URL se configura con `VITE_API_BASE_URL` y usa `https://asistente-inteligente-4kiq.onrender.com` por defecto. Para desarrollo local, defina `VITE_API_BASE_URL=http://localhost:8080`.
-
-## Semana 2
-
-El frontend usa el cliente fetch con AbortController, política de reintentos, errores tipados y métricas técnicas para comunicarse con el backend. Las respuestas se validan antes de presentarse y no existe una ruta local alternativa.
-
-La carga bloquea campos y doble envío. Limpiar cancela; los errores conservan los datos y permiten volver a analizar. Se muestra la latencia local medida y tokens no disponibles.
-
-El cliente HTTP admite timeout configurable (60000 ms por intento), 429 y Retry-After, hasta tres intentos con espera exponencial, conexión, servidor, respuesta vacía o inválida y cancelación. POST y otras operaciones modificadoras no se reintentan sin garantía explícita de idempotencia del servidor y clave estable. Los reintentos incluyen pausas que también pueden cancelarse.
-
-Las métricas guardan identificador, fecha, operación técnica, duración total, estado, código, intentos y tokens. Se conservan hasta 100 registros en memoria y no contienen datos del formulario. Los tokens ausentes se guardan como null, sin estimaciones. obtenerMetricas y limpiarMetricas están disponibles en shared/metrics/metricasService.ts para consumidores internos.
-
-Las pruebas se organizan en tests/reclamos, tests/http y tests/metrics. npm run test comprueba tipos y ejecuta Vitest; la auditoría del 21 de octubre de 2026 tiene 79 pruebas aprobadas. HTTP se prueba con mocks identificados. El laboratorio /tests/manual/escenarios.html funciona solo en el servidor de desarrollo, muestra errores y métricas de prueba y no forma parte de dist.
-
-La documentación completa está en ../docs/semana-2 y las evidencias verificables en ../docs/evidencias/semana-2. Incluyen arquitectura, módulos, manejo de errores, métricas, plan y resultados de pruebas, decisiones e integración pendiente.
-
-## Auditoría final y preparación para GitHub
-
-El 21 de octubre de 2026 se revisó el frontend sin modificar su arquitectura ni actualizar dependencias. TypeScript utiliza `strict`. Editar los datos del formulario descarta el análisis anterior para evitar mostrar hechos desactualizados; los datos introducidos se conservan. Las validaciones del frontend deben repetirse en el backend.
-
-Ejecute también `npm audit`. No coloque credenciales en variables `VITE_`: todo valor expuesto al cliente puede leerse desde el navegador. `.env` y sus variantes están excluidos de Git; `.env.example`, si se necesita, solo debe contener valores públicos de ejemplo. Configure `VITE_API_BASE_URL` cuando el backend no esté en `http://localhost:8080`.
-
-El informe vigente está en `../docs/semana-2/10-auditoria-final.md`. Los documentos y el Word del 20 de octubre conservan las evidencias históricas de 63 pruebas; el informe final registra las 79 actuales. Los recursos de plantilla en `src/assets` y `public/icons.svg` no tienen referencias en la aplicación y se conservan por trazabilidad; no afectan al JavaScript generado.
-
-El backend debe permitir CORS para el origen del frontend y estar disponible antes de enviar el formulario. La aplicación usa por defecto el backend desplegado en Render; para desarrollo local, configure `VITE_API_BASE_URL`. Los POST no se reintentan sin garantía explícita de idempotencia; el flujo actual conserva los datos y muestra el error cuando la conexión o la respuesta no son válidas.
-
-Para publicar posteriormente, revise primero `git status --short` y el contenido preparado con `git diff --cached`. Versione fuente, pruebas, configuraciones, README, package.json, package-lock.json, documentos y evidencias académicas seleccionadas. Excluya node_modules, dist, entornos privados, logs, cachés, archivos temporales y frontend.zip. La publicación debe realizarla el responsable del repositorio; esta auditoría no ejecuta push ni crea remotos.
+La configuración, API completa, corpus, despliegue y limitaciones del backend están documentados en [`../backend/App/README.md`](../backend/App/README.md) y en [`../README.md`](../README.md).
