@@ -59,7 +59,7 @@ Este corpus **no se recupera por embeddings**: la Capa 3 lo consulta de forma de
 |---|---|---|
 | Búsqueda semántica | `search(query, topK=5)` | `BuscandoFuentesStep` / `VectorSearchTool.search` |
 | Umbral de similitud | 0,30 (bajo, para no descartar candidatos; la clasificación posterior filtra) | `VectorSearchTool` |
-| Umbral de abstención | 0,40 inicial (`app.rag.abstention-threshold`); si el mejor score recuperado es menor, tras 3 reintentos responde `SOLICITANDO_ACLARACION` con el objeto `abstention` (motivo, mejorScore, umbral). Sin calibrar: ver `eval/07-evaluacion.md` | `EvaluandoPrecisionStep` / `AbstentionPolicy` |
+| Umbral de abstención | 0,40 inicial (`app.rag.abstention-threshold`); si el mejor score recuperado es menor, tras 3 reintentos responde `SOLICITANDO_ACLARACION` con el objeto `abstention` (motivo, mejorScore, umbral). Calibrado con los casos válidos (cualquier umbral ≤ 0,58 conserva el resultado): ver `eval/07-evaluacion.md` | `EvaluandoPrecisionStep` / `AbstentionPolicy` |
 | Recuperación exacta | por `numero_articulo` | `VectorSearchTool.getArticlesByNumbers` |
 | Índices de payload | `numero_articulo`, `tipo_reclamo_asociado`, `original_id` | `LodcDataIngestionRunner` |
 
@@ -75,3 +75,15 @@ Con fragmentos de un artículo, un `topK` de 5 entrega como máximo cinco artíc
 - La recuperación es solo vectorial: no hay búsqueda híbrida (BM25) ni filtro por `tipo_reclamo_asociado` en la consulta, aunque el índice existe. Una consulta que cite "Art. 71" literal depende solo de la similitud.
 - El corpus contiene 57 artículos de la LODC (64 fragmentos), no la totalidad de la ley ni su reglamento. El sistema se abstiene cuando el caso queda fuera de ese alcance.
 - No se ha medido empíricamente el efecto del tamaño de fragmento (no hay comparación contra un divisor de tamaño fijo). La justificación es estructural y jurídica, respaldada por la métrica de recuperación, no por un experimento de ablación.
+
+## 10. Estado de revisión del corpus
+
+El estado de cada fragmento no se edita a mano: lo registra `src/main/resources/data/corpus_manifest.json` (hash SHA-256, `estado_revision`, `revisado_por`, `fecha_revision`) y solo lo escribe `tools/corpus_manifest.py`. Detalle en `eval/10-integridad-corpus.md`.
+
+| Colección | Fragmentos | Estado | Quién o qué lo revisó |
+|---|---|---|---|
+| LODC | 64 | `APROBADO` | Verificación automática `tools/verify_corpus_pdf.py`, que compara el texto literal contra `F01-lodc.pdf` (`eval/verificacion_corpus_vs_pdf.md`). No es una revisión jurídica humana |
+| DPE (orientación) | 14 | `PENDIENTE_REVISION` | Nadie: no hay documento fuente en el repositorio. Se ingesta con `app.ingestion.allow-unreviewed=true`, que registra una advertencia por fragmento |
+
+- **Consistencia:** si el texto de un fragmento cambia, su hash cambia y vuelve a `PENDIENTE_REVISION`. La ingesta se aborta si el hash difiere o el fragmento no está aprobado. `CorpusManifestConsistencyTest` falla si el JSON y el manifiesto no coinciden.
+- **Trazabilidad:** cada respuesta incluye `ragEvidence` con el fragmento, su `estadoRevision` y la `corpusVersion`.

@@ -144,7 +144,7 @@ src/main/resources/
   prompts/          prompts versionados (.st)
   config/           parámetros variables
   data/             corpus LODC, DPE y catálogos de cálculo
-docs/               arquitectura, RAG, decisiones, pruebas (08-pruebas.md), uso de IA y aportes (10-uso-ia-y-aportes.md)
+docs/               arquitectura, RAG, decisiones, pruebas (08-pruebas.md), evidencias/semana-4/ (uso de IA y aportes en s4i_declaracion_uso_IA_aportes.md)
 eval/               casos, resultados y comparación de evaluación, integridad del corpus
 plan_pruebas_funcionales_url_desplegada/   harness de pruebas contra la URL
 docs/evidencias/  evidencias por semana; semana-4 incluye el índice de la sustentación y el guion

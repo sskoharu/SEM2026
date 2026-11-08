@@ -11,8 +11,8 @@
 | s4e Evaluación comparada | Tres corridas y semana 3 | [`s4e_evaluacion_comparada.md`](s4e_evaluacion_comparada.md), detalle en [`../../../eval/comparacion_s3_s4.md`](../../../eval/comparacion_s3_s4.md) |
 | s4f Límite de tasa y errores seguros | 429 real y mensajes genéricos | [`s4f_limite_tasa_errores.md`](s4f_limite_tasa_errores.md) |
 | s4g / s4h Aviso de IA, README y decisiones | Resumen de lo corregido | [`s4g_s4h_aviso_ia_y_readme.md`](s4g_s4h_aviso_ia_y_readme.md) |
-| s4i Uso de IA y aportes | Declaración y tabla por integrante | [`../../10-uso-ia-y-aportes.md`](../../10-uso-ia-y-aportes.md) |
-| s4j Presentación | PDF usado en la sustentación | *[pendiente: agregar el PDF en `docs/`]* |
+| s4i Uso de IA y aportes | Declaración y tabla por integrante | [`s4i_declaracion_uso_IA_aportes.md`](s4i_declaracion_uso_IA_aportes.md) |
+| s4j Presentación | PDF usado en la sustentación | [`Sustentacion_Asistente_LODC.pdf`](Sustentacion_Asistente_LODC.pdf) |
 
 ## Despliegue
 - URL: https://asistente-inteligente-4kiq.onrender.com (Render, plan gratuito; arranque en frío de hasta ~80 s).
@@ -26,5 +26,5 @@
 | | | | |
 
 ## Pendientes conocidos al momento de la entrega
-- s4j: PDF de la presentación.
+- s4j: PDF de la presentación (agregado).
 - Aviso de IA visible en la interfaz (si hay frontend).
