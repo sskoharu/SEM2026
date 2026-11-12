@@ -1,396 +1,425 @@
 # Ingeniería de requisitos
 
-Estado: **DISEÑADO, NO IMPLEMENTADO**. Fecha: 15 de octubre de 2026.
-
 ## 1. Base, actores y evidencia
 
-Se conserva el alcance de `01-propuesta.md` y el Caso 02 (pp. 6-8 del documento oficial). La guía exige al menos ocho historias, de dos a cuatro criterios verificables y RNF medibles. Aquí se diseñan once historias con tres escenarios cada una, manteniendo las diez historias originales y agregando el cálculo determinista de plazos previsto en la propuesta. No se presentan resultados de pruebas.
+Se conserva el alcance de `01-propuesta.md` y el Caso 02 (pp. 6-8 del documento oficial). La guía exige al menos ocho historias, de dos a cuatro criterios verificables y RNF medibles. El número final de historias y criterios figura en la sección 6.1. No se presentan resultados de pruebas.
 
-El consumidor aporta y corrige hechos y autoriza efectos. El proveedor es objeto del relato, no actor conectado. El equipo mantiene el corpus y evalúa con datos sintéticos. El servicio LLM y el repositorio normativo son dependencias externas. No se implementan cuentas ni panel administrativo.
+### 1.1 Descripción del sistema
 
-La investigación documental está en `evidencias/semana-1/01-preguntas-reales.md`. Los vínculos indican insumos para necesidades, no que las personas hayan solicitado estas funcionalidades de software. HU-08 a HU-10 derivan expresamente del caso académico; HU-11 se incorpora por el alcance explícito de `01-propuesta.md`. Todas las historias son preliminares hasta revisión del equipo/docente; no hay validación con usuarios entrevistados.
+El sistema es un **asistente agéntico conversacional** para orientar reclamos de consumo bajo la Ley Orgánica de Defensa del Consumidor (LODC) de Ecuador. Se implementa como una API REST (backend) organizada en **cinco capas secuenciales**. Cada capa es una **máquina de estados** (patrón State) que se ejecuta hasta alcanzar un estado terminal o de espera del usuario, y cuyo estado se persiste en la sesión para poder reanudar la conversación:
+
+| Capa | Función |
+|---|---|
+| 1. Comprensión | Valida el dominio, traduce el relato a lenguaje jurídico, recupera fuentes normativas (RAG) y clasifica el reclamo en uno de ocho tipos. |
+| 2. Parámetros | Determina qué datos exige la ley para el tipo de reclamo, pregunta al usuario lo que falta y valida cada respuesta. |
+| 3. Razonamiento jurídico | Evalúa la viabilidad, presenta un informe, admite correcciones en lote del usuario y genera opciones de ruta de acción con su formulario procedimental. |
+| 4. Cálculo | Planifica los cálculos y los ejecuta con funciones deterministas (código Java), sin delegar los calculos deterministas al modelo. |
+| 5. Documento | Redacta el reclamo y lo inyecta en una plantilla DOCX. |
+
+### 1.2 Actores y dependencias
+
+- **Consumidor:** aporta y corrige hechos, responde preguntas de aclaración, acepta o corrige el informe, elige la acción y solicita la generación del documento.
+- **Proveedor:** es objeto del relato, no actor conectado.
+- **Equipo:** mantiene el corpus normativo y evalúa con datos sintéticos.
+- **Dependencias externas:** servicio LLM (GPT, consumido mediante un cliente compatible con OpenAI), base vectorial **Qdrant** con el corpus LODC, y **Redis** para el estado de sesión.
+- **Alcance:** el sistema orienta y genera el documento del reclamo; no incluye cuentas de usuario, panel administrativo ni el envío del reclamo a autoridades.
+
+### 1.3 Evidencia y trazabilidad
+
+La investigación documental está en `evidencias/semana-1/01-preguntas-reales.md`. Los vínculos indican insumos para necesidades, no que las personas hayan solicitado estas funcionalidades de software. N06 a N08 derivan expresamente del caso académico y de `01-propuesta.md`. N09 a N11 se incorporan por el diseño del sistema (Capas 2, 3 y 5) y no tienen pregunta de investigación asociada. Todas las historias son preliminares hasta revisión del equipo/docente; no hay validación con usuarios entrevistados.
 
 ## 2. Necesidades y prioridad
 
-| ID | Necesidad | Procedencia | Prioridad |
+| ID | Necesidad | Prioridad | Estado frente al sistema |
 |---|---|---|---|
-| N01 | Determinar si el relato se enmarca dentro de las relaciones de consumo amparadas por la LODC, descartando consultas ajenas al dominio. | P01, P02, P04 | Obligatoria |
-| N02 | Estructurar cronológicamente los hechos e identificar tanto la ausencia de datos esenciales como las contradicciones lógicas en el relato, para requerir su aclaración al usuario. | P08, P09, P10, P13 | Obligatoria |
-| N03 | Vincular los hechos relatados con los artículos exactos de la normativa vigente mediante recuperación de fuentes verificables (RAG), evitando alucinaciones legales. | P03, P05 | Obligatoria |
-| N04 | Establecer la ruta institucional correcta (proveedor → ente regulador sectorial → Defensoría del Pueblo) según el tipo de servicio. | P06, P07, P15 | Obligatoria |
-| N05 | Clasificar la naturaleza del problema (ej. garantías, cobros indebidos), definir la pretensión económica exacta e inducir a la correción de textos maliciosos o difamatorias. | P11, P12 | Obligatoria |
-| N06 | Contrastar el relato del consumidor con la evidencia documental aportada para validar la existencia de la transacción o el incumplimiento. | P14 y Caso 02 | Opcional |
-| N07 | Generar un documento legal formal (DOCX/PDF) inyectando los hechos y citas confirmados garantizando cero invenciones | Caso 02, objetivo y Fase 1 | Obligatoria |
-| N08 | Requerir la autorización humana explícita (confirmación) sobre los datos extraídos antes de persistir la información en la base de datos o generar archivos. | Caso 02, indicadores | Obligatoria |
-| N09 | Ejecutar cálculos o estimaciones (plazos legales, promedios de montos en disputa) y definir rutas mediante reglas deterministas verificadas, garantizando que el modelo de IA no invente cifras ni procedimientos para satisfacer el reclamo | `01-propuesta.md`, alcance 3.1 | Obligatoria, condicionada a validación normativa |
+| N01 | Determinar si el relato se enmarca dentro de las relaciones de consumo amparadas por la LODC, descartando consultas ajenas al dominio. | Obligatoria | Cubierta (Capa 1) |
+| N02 | Estructurar los hechos del relato en los datos que la ley exige, identificando los que faltan y solicitando su aclaración al usuario. | Obligatoria | Cubierta (Capas 1 y 2) |
+| N03 | Vincular los hechos con artículos de la normativa vigente mediante recuperación de fuentes verificables (RAG) sobre el corpus de la LODC, de modo que los artículos aplicables y procedimentales se determinen por los metadatos del corpus y no por generación libre del modelo, reduciendo el riesgo de alucinaciones legales. | Obligatoria | Cubierta (Capas 1 y 3, Qdrant) |
+| N04 | Orientar sobre la **ruta de acción procedimental** del reclamo, apoyada en los artículos procedimentales de la LODC asociados al tipo de reclamo. | Obligatoria | Cubierta (Capa 3) |
+| N05 | Clasificar preliminarmente el reclamo en uno de **ocho tipos** (vicios ocultos, servicio técnico, incumplimiento de contrato, información y facturación, servicios públicos, contratos de adhesión, servicios financieros, prácticas abusivas), sin emitir un dictamen jurídico definitivo. | Obligatoria | Cubierta (Capa 1) |
+| N06 | Generar un documento formal descargable en formato **DOCX** con los hechos y fundamentos del reclamo, a partir de una plantilla estática y de los datos de la sesión | Obligatoria | Cubierta (Capa 5) |
+| N07 | Requerir una acción explícita del usuario (aceptar el informe, elegir la acción) antes de avanzar a la generación del documento (Caso 02, indicadores). | Obligatoria | Cubierta (Capa 3) |
+| N08 | Ejecutar cálculos y estimaciones (plazos, montos, porcentajes) mediante funciones deterministas de código, sin que el modelo realice la aritmética. | Obligatoria | Cubierta (Capa 4) |
+| N09 | Recolectar de forma guiada los datos que la ley exige para cada tipo de reclamo, preguntando uno a uno, validando y normalizando cada respuesta. | Obligatoria | Cubierta (Capa 2) |
+| N10 | Evaluar la viabilidad del reclamo, mostrar un informe al usuario y permitir correcciones en lote antes de continuar. | Obligatoria | Cubierta (Capa 3) |
+| N11 | Proteger los datos de identificación del consumidor y del proveedor: solicitarlos solo al generar el documento, inyectarlos mediante código en la plantilla y no enviarlos al modelo ni almacenarlos en la sesión. | Obligatoria | Cubierta (Capa 5) |
 
 ## 3. Requisitos funcionales
 
-| ID | Comportamiento requerido | HU | Prioridad | Necesidad |
-|---|---|---|---|---|
-| RF-01 | Validar que el relato ingresado no esté vacío, confirmar que pertenece al dominio de defensa del consumidor y aislarlo temporalmente en sesión, separando los datos personales (PII) antes del procesamiento. | HU-01 | Obligatoria | N01 |
-| RF-02 | Permitir la carga opcional de archivos adjuntos, aplicando validación de formato y OCR local para digitalizar la evidencia de forma segura, haciendo que su contenido esté disponible para ser contrastado con el relato del consumidor, y notificando si el documento resulta ilegible. | HU-02 | Opcional | N06 |
-| RF-03 | Utilizar el modelo generativo (LLM) para extraer y estructurar cronológicamente los hechos clave del relato y aislar la pretensión económica exacta, devolviendo un JSON fuertemente tipado (mediante BeanOutputConverter) que servirá de insumo para la validación lógica posterior.| HU-03 | Obligatoria | N02, N05 |
-| RF-04 | Detectar omisiones o contradicciones lógicas en los datos extraídos frente al OCR (ej. falta de proveedor o fechas incompatibles), solicitar aclaraciones al usuario y gestionar las correcciones incrementando la versión del estado en memoria. | HU-04 | Obligatoria | N02, N06 |
-| RF-05 | Clasificar la categoría legal preliminar del reclamo (sin emitir un dictamen jurídico definitivo), definir la pretensión económica exacta e inducir a la correción de textos maliciosos o difamatorias automáticamente el procesamiento si el relato contiene lenguaje difamatorio o intenciones maliciosas. | HU-05 | Obligatoria | N05 |
-| RF-06 | Consultar la base vectorial (ChromaDB) para recuperar exclusivamente fragmentos vigentes de la normativa (LODC), absteniéndose por completo de sugerir fundamentos si no existe coincidencia en el corpus oficial. | HU-06 | Obligatoria | N03 |
-| RF-07 | Presentar un informe visual estructurado (Frontend) que muestre los derechos posibles, las citas exactas de la ley recuperadas por el motor RAG, los datos faltantes y la ruta de escalamiento institucional correcta. | HU-07 | Obligatoria | N03 , N04 |
-| RF-08 | Renderizar una vista previa en pantalla y, únicamente tras la acción del usuario, inyectar los datos confirmados en plantillas estáticas del servidor para generar documentos formales descargables (DOCX/PDF). | HU-08 | Obligatoria | N07 |
-| RF-09 | Requerir acciones de confirmación humana separadas y explícitas para (a) generar el documento y (b) registrar el reclamo, invalidando automáticamente los permisos previos si los hechos (la versión) sufren modificaciones. | HU-09 | Obligatoria | N08 |
-| RF-10 | Persistir los datos esenciales del reclamo en la base de datos relacional mediante una transacción atómica e idempotente solo cuando exista autorización explícita vigente. | HU-10 | Obligatoria | N08 |
-| RF-11 | Ejecutar funciones estáticas (código Java puro) para calcular plazos legales y valores económicos (ej. promedio de consumo), así como determinar la instancia de resolución correcta, basándose exclusivamente en los datos extraídos y reglas preconfiguradas, sin utilizar el LLM para el cálculo lógico o aritmético. | HU-11 | Obligatoria, condicionada a validación normativa | N09 |
+Los requisitos se describen como comportamiento de la **API REST**; la presentación visual corresponde al cliente que la consuma.
+
+| ID | Comportamiento requerido | HU | Prioridad | Necesidad | Estado |
+|---|---|---|---|---|---|
+| RF-01 | Validar que el relato no esté vacío (respuesta 400) y que corresponda a una consulta de consumo mediante un filtro previo («portero»). Si es ajena al dominio, rechazar con un mensaje explicativo sin invocar la recuperación normativa; si es insuficiente, devolver preguntas de aclaración. Si es válido, crear una sesión temporal con identificador único. | HU-01 | Obligatoria | N01 | Cubierto |
+| RF-02 | Extraer del relato, mediante salidas estructuradas y tipadas del modelo: (a) el análisis inicial (si es reclamo de consumo, si es suficiente y qué aclaraciones faltan) y (b) los parámetros que la ley exige para el tipo de reclamo, usando un agente de extracción especializado por tipo. Lo que el relato no contiene queda pendiente para preguntarse después. Las pruebas que el usuario dice tener se registran de forma declarativa. | HU-02 | Obligatoria | N02, N09 | Cubierto |
+| RF-03 | Determinar los parámetros pendientes y preguntarlos de uno en uno con una pregunta redactada por el modelo; validar y normalizar cada respuesta (por ejemplo, fecha pasada en formato DD/MM/AAAA, texto no vacío) y repreguntar explicando el error cuando la respuesta no es válida. La capa finaliza cuando no quedan parámetros pendientes. | HU-03 | Obligatoria | N02, N09 | Cubierto |
+| RF-04 | Clasificar el reclamo en uno de ocho tipos, con un tipo principal y uno secundario opcional, combinando los metadatos de los fragmentos normativos recuperados, la sugerencia del modelo y reglas semánticas. La clasificación es una orientación preliminar, no un dictamen jurídico. | HU-04 | Obligatoria | N05 | Cubierto |
+| RF-05 | Consultar la base vectorial **Qdrant** (corpus LODC) con una consulta traducida a lenguaje jurídico para recuperar los fragmentos normativos, con artículo y metadatos. Si no se recuperan fragmentos tras hasta 3 reintentos de traducción, pedir aclaración al usuario en lugar de continuar. Los artículos aplicables se determinan a partir de los metadatos de los fragmentos recuperados (número de artículo y tipo de reclamo asociado), y los artículos procedimentales de la Capa 3 se obtienen por filtro de metadato sobre el corpus, de modo que las citas provienen del corpus y no de la generación libre del modelo. | HU-05 | Obligatoria | N03 | Cubierto |
+| RF-06 | Entregar un informe de viabilidad estructurado que incluya los fundamentos normativos y las opciones de ruta de acción con sus artículos procedimentales; permitir al usuario aceptar el informe o enviar correcciones en lote, que se revalidan. | HU-06 | Obligatoria | N03, N04, N10 | Cubierto |
+| RF-07 | Tras la aceptación del usuario y la ejecución de la Capa 4, generar un documento **DOCX** inyectando los datos de la sesión en una plantilla estática; el modelo redacta únicamente las secciones de hechos y pretensiones. Los datos de identificación del consumidor y del proveedor se reciben solo en esta etapa, se inyectan en la plantilla mediante código y no se envían al modelo ni se almacenan en la sesión. | HU-07 | Obligatoria | N06, N11 | Cubierto |
+| RF-08 | Exigir una acción explícita del usuario en cada punto de decisión: aceptar el informe o corregirlo, seleccionar la acción y enviar el formulario procedimental; el documento solo se genera mediante una llamada expresa. | HU-08 | Obligatoria | N04, N07 | Cubierto |
+| RF-09 | Planificar los cálculos necesarios y ejecutarlos con funciones Java (fecha límite sumando días, interés legal por mora y porcentaje de un monto); el modelo decide qué función invocar, pero la aritmética la realiza el código. | HU-09 | Obligatoria | N08 | Cubierto |
+| RF-10 | Persistir tras cada transición el estado de la capa y de la sesión (Redis, con vencimiento de 24 horas), de modo que la conversación pueda pausarse y reanudarse, aplicando un límite de 3 reintentos al ciclo de recuperación normativa. | HU-10 | Obligatoria | N09, N10 | Cubierto |
 
 ## 4. Reglas de negocio
 
-- RN-01: hechos no aportados permanecen nulos; una inferencia no se convierte en hecho confirmado.
-- RN-02: citas deben existir en el corpus y apuntar a versión revisada. Existencia no prueba aplicabilidad; revisión humana y evaluación siguen siendo necesarias.
-- RN-03: no registrar ni crear DOCX/PDF descargable sin confirmación de esa operación, versión y sesión. Generar no implica registrar.
-- RN-04: cambios materiales invalidan las autorizaciones anteriores; evitar duplicados con clave de idempotencia.
-- RN-05: dominio ecuatoriano de consumo; ni asesoría definitiva ni envío externo. La aplicación no declara probado un incumplimiento.
-- RN-06: para generar se requieren proveedor identificable, descripción de hechos, petición y revisión de campos. Fecha/monto desconocidos no se inventan; se solicita aclaración o se declara expresamente su ausencia cuando no sean indispensables. Fechas, nombres o contacto que el usuario no aporte no se completan por modelo.
-- RN-07: no usar relatos privados como corpus ni almacenar adjuntos o nombres en logs. Solo datos sintéticos salen al proveedor durante el prototipo.
-- RN-08: el usuario decide su petición; el sistema no inventa indemnizaciones, acusaciones o sanciones.
-- RN-09: fuentes con vigencia pendiente no se habilitan como fundamento operativo hasta revisión. Las copias locales no equivalen a corpus aprobado.
-- RN-10: los plazos se calcularán mediante reglas deterministas versionadas, nunca por estimación del modelo; si no existe regla validada o faltan datos esenciales, se mostrará «plazo no determinado». Los ejemplos de días o meses mencionados en la propuesta NO se consideran vigentes sin comprobación.
-- RN-11: la ruta de escalamiento se mostrará por etapas solo cuando cada institución y su competencia estén verificadas para la categoría; en caso contrario se indicará la limitación.
-- RN-12: el documento DOCX y su representación PDF deberán reflejar la misma versión confirmada del reclamo y conservar los datos personales fuera del LLM.
+- RN-01: los datos que el relato no contiene permanecen pendientes y se preguntan al usuario; el sistema no los completa por su cuenta (RF-02, RF-03).
+- RN-02: las citas normativas provienen del corpus de la LODC cargado en Qdrant: los artículos aplicables y procedimentales se determinan por metadatos del corpus (RF-05). Que un artículo exista en el corpus no prueba que sea aplicable al caso; la revisión del usuario y la evaluación del equipo siguen siendo necesarias.
+- RN-03: el documento DOCX solo se genera mediante una llamada expresa del usuario y después de que la Capa 4 haya producido el plan de ejecución; en caso contrario, la API responde con un error y no genera el archivo (RF-07, RF-08).
+- RN-04: la sesión es temporal: se conserva en Redis con un vencimiento de 24 horas y no existe un registro definitivo del reclamo (RF-10).
+- RN-05: el alcance es el dominio ecuatoriano de consumo (LODC). El sistema ofrece orientación preliminar, no asesoría jurídica definitiva, no declara probado un incumplimiento y no envía el reclamo a ninguna autoridad (RF-01, RF-04).
+- RN-06: para generar el documento se requieren los datos de identificación del consumidor y del proveedor, que aporta el usuario en esa etapa. Si no hay un monto calculado ni pagado, la cuantía se consigna como «A determinar» en lugar de inventarse (RF-07).
+- RN-07: no se usan relatos de usuarios como corpus: el corpus es exclusivamente el texto de la LODC. Los datos de identificación no se envían al modelo ni se guardan en la sesión (RF-07, N11).
+- RN-08: el sistema solo utiliza el corpus de la LODC cargado por el equipo; no consulta fuentes externas de normativa. La actualización de ese corpus es responsabilidad del equipo (RF-05).
+- RN-09: las operaciones aritméticas (fecha límite, interés legal, porcentaje) las ejecuta código Java, no el modelo. Los resultados son estimaciones orientativas que forman parte del plan de ejecución (RF-09).
+- RN-10: la ruta de acción procedimental se construye a partir de los artículos procedimentales del tipo de reclamo y el usuario elige la opción antes de continuar (RF-06, RF-08).
 
 ## 5. Requisitos no funcionales medibles
 
-Todos los valores numéricos de esta sección son **objetivos propuestos**, no umbrales atribuidos al docente ni mediciones obtenidas. Entorno de referencia por confirmar: un proceso backend, 2 vCPU, 4 GiB RAM, red estable, corpus de hasta 1.000 fragmentos y datos sintéticos. Si el alojamiento no satisface estas condiciones se revisarán los objetivos y se documentará la diferencia.
+Todos los valores numéricos de esta sección son **objetivos propuestos**, no umbrales atribuidos al docente ni mediciones obtenidas. Entorno de referencia: un proceso backend (Spring Boot, Java 21) desplegado como contenedor Docker, con Redis y Qdrant como servicios externos, red estable, corpus de la LODC y datos sintéticos. Si el alojamiento no satisface estas condiciones se revisarán los objetivos y se documentará la diferencia.
 
 | ID / atributo | Objetivo propuesto | Método y condiciones de medición |
 |---|---|---|
-| RNF-01 Tiempo | p95 de análisis textual <= 30 s, sin arranque en frío; timeout global 45 s | 30 solicitudes secuenciales de 1.000 caracteres, 1 usuario, modelo y red registrados |
-| RNF-02 Disponibilidad | >= 95 % de comprobaciones /health satisfactorias en ventana de ensayo de 2 horas | Una comprobación por minuto; informar arranque en frío y caídas, sin prometer SLA |
-| RNF-03 Trazabilidad | 100 % de afirmaciones normativas mostradas con ID de fuente/localizador y versión | Revisión de 15 informes y comparación con corpus; cita inexistente bloqueada |
-| RNF-04 Privacidad | Cero nombres, contactos o adjuntos personales reales en prompts de desarrollo, logs y repositorio | Datos sintéticos, inspección del payload y búsqueda por marcadores de prueba en logs; revisión manual adicional |
-| RNF-05 Seguridad | 100 % de intentos sin autorización rechazados; clave solo en backend | Matriz negativa por operación y versión; inspección de frontend e historial |
-| RNF-06 Mantenibilidad | Cada herramienta con esquema y pruebas de éxito y error; suite con doble sin API | Ejecutar pruebas automatizadas de Java (JUnit 5) y frontend (Vitest, si se adopta); rastrear los 33 criterios diseñados, sin fijar cobertura artificial |
-| RNF-07 Accesibilidad | Flujo completo por teclado, etiquetas en todos los campos y errores asociados | Lista manual en navegador de escritorio, zoom 200 %, sin bloqueo de foco; no se declara certificación WCAG |
-| RNF-08 Errores | 100 % de fallos simulados de timeout, 429 y salida inválida con mensaje seguro y sin efecto | Dobles del proveedor, máximo 2 reintentos dentro del límite global; revisar respuesta/log |
-| RNF-09 Archivos | Hasta 3 archivos, 5 MiB cada uno; PDF, PNG o JPEG; MIME y firma congruentes | Límites exactos, sobrelímite, extensión falsa, PDF sin texto e imagen borrosa; rechazar contenido ejecutable |
-| RNF-10 Rendimiento | Con 3 análisis concurrentes no mezclar sesiones ni duplicar registros; p95 <= 45 s | 30 solicitudes repartidas entre 3 sesiones sintéticas; reportar memoria/latencia y cuotas |
-| RNF-11 Retención | Temporal de sesión <= 60 min; archivos finales temporales <= 60 min; registros sintéticos <= 7 días | Reloj controlado y limpieza al vencer; comprobar almacenamiento y metadatos; no autoriza datos reales |
+| RNF-01 Tiempo | p95 de una solicitud a una capa <= 45 s, sin arranque en frío | 30 solicitudes secuenciales con relatos de 1.000 caracteres, 1 usuario; registrar modelo y red |
+| RNF-02 Trazabilidad | 100 % de los artículos listados como aplicables en el informe existen en el corpus de la LODC | Revisión de 15 informes y comparación de cada artículo con los archivos JSON del corpus |
+| RNF-03 Privacidad | Cero datos de identificación del consumidor o del proveedor en los prompts enviados al modelo | Datos sintéticos; inspección del payload enviado al LLM y búsqueda de marcadores de prueba en los registros |
+| RNF-04 Seguridad | 100 % de las solicitudes a rutas no permitidas rechazadas (401); clave del modelo solo en variables de entorno del backend | Matriz negativa por ruta; inspección del repositorio y de la configuración |
+| RNF-05 Limitación de tasa | Máximo 10 solicitudes por minuto por IP en endpoints que invocan al modelo y 60 en el resto; el exceso recibe 429 con `Retry-After` | Pruebas de 11 solicitudes en una ventana de 60 s desde una IP; verificar las cabeceras `X-RateLimit-*` y que Redis no disponible responde 503 |
+| RNF-06 Mantenibilidad | Cada capa tiene un orquestador y pasos independientes (patrón State) con una clase por estado; el proyecto compila con `mvnw package` | Revisión de la estructura de paquetes y ejecución del build |
+| RNF-07 Errores | Los errores de validación y de dominio devuelven un cuerpo JSON con mensaje; los fallos del proveedor del modelo se reintentan hasta 4 veces con espera creciente (máximo 10 s) | Simular un relato vacío, uno ajeno al dominio y un fallo del proveedor; revisar respuesta y registros |
+| RNF-08 Concurrencia | Con 3 sesiones concurrentes no se mezcla el estado entre ellas; cada sesión se identifica por su `sessionId` | 3 sesiones sintéticas en paralelo; comparar el estado final de cada una |
+| RNF-09 Retención | La sesión vence a las 24 horas desde su último guardado | Consultar el TTL de la clave en Redis tras guardar una sesión; no autoriza datos reales |
+| RNF-10 Configuración | Claves y direcciones de servicios externos se inyectan por variables de entorno; ningún secreto en el repositorio | Búsqueda de secretos en el repositorio; arranque del contenedor solo con variables de entorno |
 
 ## 6. Historias y criterios Gherkin
 
-Se conservan los identificadores CA y CP existentes; los nuevos se añaden sin renumerar los anteriores. Los 30 CA originales se corresponden con filas de `evidencias/semana-1/04-diseno-pruebas.md`; los tres CA nuevos de HU-11 requieren agregar CP-11.1 a CP-11.3 en esa matriz antes de declarar trazabilidad completa. En cada historia se indica el origen de la necesidad para no fabricar evidencia.
+Las historias se describen sobre la **API REST** del backend implementado. Cada criterio de aceptación (CA) se redactó a partir de un comportamiento verificable del sistema; la matriz de pruebas `evidencias/semana-1/04-diseno-pruebas.md` debe actualizarse con los nuevos CA antes de declarar trazabilidad completa. Los identificadores CA nuevos reemplazan a los anteriores. No se presentan resultados de pruebas.
 
 ### HU-01. Ingreso del relato
 
-Como consumidor que desea reclamar, quiero describir lo ocurrido en un entorno que separe mi identidad de los hechos para iniciar un análisis seguro e identificable.
+Como consumidor que desea reclamar, quiero describir lo ocurrido para iniciar un análisis y que el sistema filtre lo que no corresponde a una relación de consumo.
 
-Requisito: RF-01. Necesidad: N01. Investigación: P01, P02, P04. Prioridad: obligatoria. Estado: diseño preliminar.
+Requisito: RF-01. Necesidad: N01. Investigación: P01, P02, P04. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-01.1**
 
 ```gherkin
-Dado que el formulario está disponible y el relato sintético contiene 120 caracteres
-Cuando envío el relato ingresando mis datos personales (PII) en campos separados
-Entonces el backend aísla los datos personales en sesión, acepta el texto limpio y devuelve un identificador temporal, sin registrar un reclamo
-
+Dado que el relato sintético describe un problema de consumo con datos suficientes
+Cuando envío POST /api/v1/claims/start con la descripción del incidente
+Entonces el sistema crea una sesión temporal con identificador único y ejecuta la Capa 1
+Y la respuesta incluye el estado de la sesión, sin registrar un reclamo definitivo
 ```
 
 **CA-01.2**
 
 ```gherkin
-Dado que el campo relato está vacío o solo tiene espacios
-Cuando solicito analizar
-Entonces recibo validación 400 o 422 y no se invoca al modelo
+Dado que el campo del relato está vacío o solo tiene espacios
+Cuando envío POST /api/v1/claims/start
+Entonces recibo un error 400 y no se invoca al modelo
 ```
 
 **CA-01.3**
 
 ```gherkin
 Dado que el relato contiene una consulta ajena al consumo
-Cuando solicito analizar
-Entonces el sistema explica el límite de dominio sin generar documento ni registrar
+Cuando envío POST /api/v1/claims/start
+Entonces recibo un error 400 con un mensaje que explica el límite de dominio
+Y no se ejecuta la recuperación normativa ni se genera documento
 ```
 
-### HU-02. Evidencias opcionales
+**CA-01.4**
 
-Como consumidor con comprobantes, quiero adjuntar evidencia opcional de forma segura para contextualizar mis hechos sin perder la procedencia ni exponer la imagen a terceros.
+```gherkin
+Dado que el relato es de consumo pero no contiene información suficiente
+Cuando envío POST /api/v1/claims/start
+Entonces el sistema devuelve preguntas de aclaración sin ejecutar la recuperación normativa
+```
 
-Requisito: RF-02. Necesidad: N06. Investigación: P14. Prioridad: obligatoria. Estado: diseño preliminar.
+### HU-02. Extracción de hechos y parámetros
+
+Como consumidor que relata un problema, quiero que el sistema extraiga de mi relato los datos que la ley exige para no tener que repetirlos.
+
+Requisito: RF-02. Necesidad: N02, N09. Investigación: P08, P09, P10, P13. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-02.1**
 
 ```gherkin
-Dado que hay relato válido y un documento adjunto legible dentro de los límites
-Cuando adjunto la evidencia y solicito análisis
-Entonces el sistema aplica OCR local para digitalizar el texto de forma segura sin enviarlo a APIs externas
-Y el contenido extraído queda disponible con un ID para ser contrastado con el relato y validar la transacción
+Dado que el tipo de reclamo ya fue clasificado y el relato incluye datos exigidos por la ley, como la fecha o el monto
+Cuando la Capa 2 inicia con POST /api/v1/claims/{sessionId}/layer2/start
+Entonces el agente de extracción del tipo de reclamo guarda esos datos en la sesión
+Y no vuelve a preguntarlos al usuario
 ```
 
 **CA-02.2**
 
 ```gherkin
-Dado que no dispongo de adjuntos
-Cuando envío un relato válido
-Entonces el análisis continúa e identifica que la evidencia documental no fue aportada, absteniéndose de inventar comprobantes
+Dado que el relato omite datos exigidos por la ley
+Cuando el agente de extracción procesa el relato
+Entonces esos datos permanecen pendientes y se preguntan al usuario, sin que el modelo les asigne un valor
 ```
 
 **CA-02.3**
 
 ```gherkin
-Dado que el adjunto es ilegible, es un archivo ejecutable o supera el límite de 5 MiB
-Cuando intento incorporarlo al formulario
-Entonces el sistema rechaza la carga o informa la ilegibilidad, solicitando un documento válido sin inventar contenido
+Dado que el relato menciona pruebas que el usuario posee, como factura o fotografías
+Cuando la Capa 2 procesa el relato
+Entonces esas pruebas se registran de forma declarativa en la sesión, sin leer ni analizar archivos
 ```
 
-### HU-03. Extracción de hechos
+### HU-03. Recolección guiada de datos faltantes
 
-Como consumidor que relata un problema, quiero que el sistema organice mis hechos cronológicamente e identifique mi pretensión económica exacta, para poder revisarlos de forma clara antes de someterlos a validación.
+Como consumidor, quiero que el sistema me pregunte de uno en uno lo que falta y valide mis respuestas para completar mi reclamo sin errores.
 
-Requisito: RF-03. Necesidad: N02, N05, N06. Investigación: P08, P09, P11, P12, P13, P14. Prioridad: obligatoria. Estado: diseño preliminar.
+Requisito: RF-03. Necesidad: N02, N09. Investigación: P08, P09, P10, P13. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-03.1**
 
 ```gherkin
-Dado que el relato incluye detalles del incidente, múltiples fechas y cifras económicas
-Cuando el agente orquestador procesa la extracción
-Entonces el modelo devuelve un JSON fuertemente tipado que ordena los eventos cronológicamente y aísla el monto exacto de la pretensión económica
+Dado que hay parámetros pendientes
+Cuando la Capa 2 termina de procesar
+Entonces el sistema formula una pregunta para el siguiente parámetro pendiente
+Y la sesión queda en espera de la respuesta del usuario
 ```
 
 **CA-03.2**
 
 ```gherkin
-Dado que el relato omite datos como la fecha del incidente o el proveedor
-Cuando el LLM extrae los hechos
-Entonces esos campos se mapean explícitamente como nulos en el JSON (para ser procesados por la auditoría posterior) sin que el modelo invente valores para rellenarlos
+Dado que la sesión espera una respuesta
+Cuando envío POST /api/v1/claims/{sessionId}/layer2/answer con una fecha futura o con un formato distinto de DD/MM/AAAA
+Entonces el sistema rechaza el dato con un mensaje de error y vuelve a preguntar el mismo parámetro
 ```
 
-### HU-04. Datos faltantes
+**CA-03.3**
 
-Como consumidor que ha relatado su caso, quiero que el sistema me alerte si olvidé datos esenciales o si existen contradicciones lógicas entre mi relato y mis pruebas, para poder corregirlos y asegurar que mi reclamo sea válido.
+```gherkin
+Dado que respondo todas las preguntas con valores válidos
+Cuando no quedan parámetros pendientes
+Entonces la Capa 2 finaliza con estado DONE y los valores quedan guardados en la sesión
+```
 
-Requisito: RF-04. Necesidad: N02. Investigación: P08, P09, P10, P13. Prioridad: obligatoria. Estado: diseño preliminar.
+**CA-03.4**
+
+```gherkin
+Dado que la sesión no está esperando una respuesta
+Cuando envío POST /api/v1/claims/{sessionId}/layer2/answer
+Entonces recibo un error 400 y el estado de la sesión no cambia
+```
+
+### HU-04. Clasificación preliminar del reclamo
+
+Como consumidor, quiero que el sistema identifique el tipo de reclamo para recibir la orientación que corresponde a mi caso.
+
+Requisito: RF-04. Necesidad: N05. Investigación: P11, P12. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-04.1**
 
 ```gherkin
-Dado que los datos extraídos no logran identificar al proveedor o el monto exacto
-Cuando el sistema audita el JSON generado
-Entonces marca explícitamente esos campos como faltantes, solicita al usuario completarlos y bloquea la generación del documento formal hasta cumplir el mínimo requerido
+Dado que la recuperación normativa devolvió fragmentos con metadatos de tipo de reclamo
+Cuando la Capa 1 ejecuta la clasificación
+Entonces la sesión registra un tipo principal entre los ocho tipos definidos
+Y se guardan los artículos aplicables y los parámetros requeridos para ese tipo
 ```
 
 **CA-04.2**
 
 ```gherkin
-Dado que el sistema detecta fechas de compra contradictorias en el relato o una discrepancia evidente entre el relato y los montos leídos por el OCR
-Cuando reviso el análisis
-Entonces el sistema señala ambas versiones de los hechos y solicita una aclaración explícita, absteniéndose de escoger o adivinar una respuesta arbitrariamente
+Dado que los fragmentos recuperados corresponden a más de un tipo de reclamo
+Cuando la Capa 1 ejecuta la clasificación
+Entonces la sesión registra además un tipo secundario distinto del principal
 ```
 
-**CA-04.3**
+### HU-05. Recuperación normativa
 
-```gherkin
-Dado que el usuario aclara un dato faltante o corrige una contradicción
-Cuando el sistema guarda la corrección en memoria temporal
-Entonces se incrementa el número de versión del reclamo y se invalidan automáticamente cualquier confirmación o autorización asociada a la versión anterior
-```
+Como consumidor, quiero que el sistema fundamente mi caso en artículos de la LODC recuperados del corpus para orientarme con fuentes verificables.
 
-### HU-05. Clasificación preliminar del reclamo
-
-Como consumidor que reporta un problema, quiero que el sistema clasifique mi caso (ej. falla de garantía, cobro indebido) para orientar correctamente el valor de mi reclamo, sabiendo que es una sugerencia técnica y no una sentencia legal definitiva.
-
-Requisito: RF-05. Necesidad: N05. Investigación: P11, P12. Prioridad: obligatoria. Estado: diseño preliminar.
+Requisito: RF-05. Necesidad: N03. Investigación: P03, P05. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-05.1**
 
 ```gherkin
-Dado que el relato describe claramente un problema económico (ej. un cargo de $45 no reconocido)
-Cuando el sistema analiza el caso
-Entonces devuelve una categoría preliminar propuesta (ej. "Cobro Indebido") vinculada al monto, incluyendo una advertencia clara de que es una sugerencia y no un fallo legal
+Dado que el relato superó el filtro inicial
+Cuando la Capa 1 traduce el relato a lenguaje jurídico y consulta Qdrant
+Entonces recupera fragmentos de la LODC con su número de artículo y metadatos
+Y los artículos aplicables se determinan a partir de esos metadatos
 ```
 
 **CA-05.2**
 
 ```gherkin
-Dado que los hechos mezclan múltiples quejas sin dejar clara la pretensión principal
-Cuando el sistema intenta clasificar el caso
-Entonces detecta la ambigüedad y solicita al usuario aclarar cuál es el motivo central de su reclamo económico
+Dado que la búsqueda no recupera fragmentos tras 3 reintentos de traducción
+Cuando se alcanza el límite de reintentos
+Entonces el sistema solicita una aclaración al usuario en lugar de continuar con la clasificación
 ```
 
 **CA-05.3**
 
 ```gherkin
-Dado que el relato no describe una infracción de consumo sino que contiene insultos o acusaciones difamatorias
-Cuando se procesa la clasificación
-Entonces el sistema bloquea el análisis, rechaza la solicitud y detiene el flujo sin generar reportes
+Dado que la sesión solicitó una aclaración en la Capa 1
+Cuando envío POST /api/v1/claims/{sessionId}/layer1/clarify con información adicional
+Entonces la información se añade al relato, el contador de reintentos vuelve a cero y se reinicia el flujo de la Capa 1
 ```
 
-### HU-06. Recuperación normativa
+### HU-06. Informe de viabilidad y correcciones
 
-Como consumidor que desconoce de leyes, quiero que el sistema busque en la base de datos oficial los artículos exactos de la Ley de Defensa del Consumidor que aplican a mi caso, para fundamentar mi reclamo con normativas reales y evitar que la inteligencia artificial invente leyes.
+Como consumidor, quiero revisar un informe de viabilidad con sus fundamentos normativos y corregir los datos antes de continuar.
 
-Requisito: RF-06. Necesidad: N03. Investigación: P03, P05. Prioridad: obligatoria. Estado: diseño preliminar.
+Requisito: RF-06. Necesidad: N03, N04, N10. Investigación: P03, P05, P06, P07, P15. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-06.1**
 
 ```gherkin
-Dado que el relato del usuario coincide con artículos vigentes en la base de datos legal (ChromaDB)
-Cuando el sistema busca el fundamento normativo
-Entonces recupera los fragmentos exactos de la ley, mostrando el nombre del documento oficial y el número del artículo (ej. Art. 38 LODC)
+Dado que la Capa 2 finalizó con estado DONE
+Cuando envío POST /api/v1/claims/evaluate/{sessionId}
+Entonces el sistema genera un informe de viabilidad estructurado con los fundamentos normativos
+Y la sesión queda en espera de mi decisión
 ```
 
 **CA-06.2**
 
 ```gherkin
-Dado que los hechos del relato no están contemplados ni protegidos por la Ley de Defensa del Consumidor
-Cuando el sistema intenta buscar la normativa
-Entonces informa que no hay leyes aplicables para ese caso y prohíbe a la IA inventar fundamentos o artículos inexistentes
+Dado que la Capa 2 no ha finalizado
+Cuando envío POST /api/v1/claims/evaluate/{sessionId}
+Entonces recibo un error 400 y no se genera el informe
 ```
 
 **CA-06.3**
 
 ```gherkin
-Dado que el usuario escribe instrucciones trampa en su relato para intentar confundir al sistema (Prompt Injection)
-Cuando el sistema busca la normativa
-Entonces ignora cualquier orden maliciosa, tratando el texto únicamente como datos, sin revelar configuraciones secretas del servidor
+Dado que el informe está en espera de decisión
+Cuando envío POST /api/v1/claims/batch-update/{sessionId} con los parámetros corregidos
+Entonces el sistema valida los nuevos valores y reevalúa el informe
 ```
 
-### HU-07. Informe con fuentes y ruta de escalamiento
+**CA-06.4**
 
-Como consumidor que busca orientación, quiero ver citas y una ruta institucional de escalamiento respaldada para revisar el fundamento y conocer a quién acudir primero.
+```gherkin
+Dado que envío una corrección en lote sin parámetros
+Cuando el sistema recibe la solicitud
+Entonces recibo un error 400 con el mensaje «No se enviaron parámetros para actualizar»
+```
 
-Requisito: RF-07. Necesidad: N03, N04. Investigación: P03, P05, P06, P07, P15. Prioridad: obligatoria. Estado: diseño preliminar.
+### HU-07. Generación del documento
+
+Como consumidor, quiero descargar un documento formal con mi reclamo para presentarlo ante el proveedor, entregando mis datos de identificación solo al final.
+
+Requisito: RF-07. Necesidad: N06, N11. Investigación: Caso 02, objetivo y Fase 1. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-07.1**
 
 ```gherkin
-Dado que el análisis propone una asociación normativa
-Cuando se muestra el informe
-Entonces cada afirmación normativa tiene fuente, localizador y URL comprobables en el corpus
+Dado que la Capa 4 produjo el plan de ejecución
+Cuando envío POST /api/v1/claims/{sessionId}/layer5/generate con mis datos de identificación y los del proveedor
+Entonces recibo un archivo DOCX generado a partir de la plantilla, con los datos de la sesión y las secciones de hechos y pretensiones redactadas por el modelo
+Y la sesión pasa a estado COMPLETED
 ```
 
 **CA-07.2**
 
 ```gherkin
-Dado que el modelo devuelve un ID de cita inexistente
-Cuando se valida la salida
-Entonces se bloquea esa afirmación y se informa fundamento insuficiente
+Dado que el plan de ejecución está vacío
+Cuando envío POST /api/v1/claims/{sessionId}/layer5/generate
+Entonces recibo un error 400 que indica ejecutar primero los cálculos de la Capa 4 y no se genera el documento
 ```
 
 **CA-07.3**
 
 ```gherkin
-Dado que la instancia competente no se puede verificar
-Cuando se muestra orientación
-Entonces se declara la limitación sin presentar una institución como competente de forma definitiva ni inventar etapas de escalamiento
+Dado que genero el documento con datos de identificación sintéticos
+Cuando reviso el contenido enviado al modelo y la sesión guardada en Redis
+Entonces no aparecen mi nombre, cédula, contacto ni los datos del proveedor
 ```
 
-### HU-08. Borrador formal
+### HU-08. Acciones explícitas del usuario
 
-Como consumidor que revisó sus hechos, quiero un borrador descargable para preparar un reclamo con datos y fuentes identificados.
+Como consumidor, quiero decidir en cada paso importante para que el sistema no avance sin mi autorización.
 
-Requisito: RF-08. Necesidad: N07. Investigación: Sin pregunta directa; Caso 02. Prioridad: obligatoria. Estado: diseño preliminar.
+Requisito: RF-08. Necesidad: N04, N07. Investigación: Caso 02, indicadores. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-08.1**
 
 ```gherkin
-Dado que revisé la vista previa no descargable y confirmé generar la versión actual
-Cuando solicito el documento
-Entonces obtengo un DOCX y un PDF correspondientes a la misma versión confirmada, con plantilla, hechos aportados y referencias verificadas
+Dado que la sesión no está esperando mi decisión
+Cuando envío POST /api/v1/claims/accept/{sessionId}
+Entonces recibo un error 400 y el estado de la sesión no cambia
 ```
 
+**CA-08.2**
 
-### HU-09. Confirmación explícita
+```gherkin
+Dado que el sistema presenta opciones de ruta de acción
+Cuando envío POST /api/v1/claims/select-action/{sessionId} sin el identificador de opción
+Entonces recibo un error 400 que indica que debo enviar un optionId
+```
 
-Como consumidor responsable del contenido, quiero autorizar separadamente generar y registrar el reclamo formal para controlar los efectos sobre mis datos.
+**CA-08.3**
 
-Requisito: RF-09. Necesidad: N08. Investigación: Sin pregunta directa; indicador del Caso 02. Prioridad: obligatoria. Estado: diseño preliminar.
+```gherkin
+Dado que la opción elegida exige un formulario con datos adicionales
+Cuando envío POST /api/v1/claims/submit-procedural-form/{sessionId} con un dato inválido
+Entonces la sesión permanece en espera del formulario y la respuesta incluye el mensaje de error del campo
+```
+
+### HU-09. Cálculo mediante funciones de código
+
+Como consumidor que necesita conocer plazos y montos, quiero que los cálculos los realice código y no el modelo para obtener resultados consistentes.
+
+Requisito: RF-09. Necesidad: N08. Investigación: alcance de `01-propuesta.md`, apartado 3.1. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-09.1**
 
 ```gherkin
-Dado que la vista previa corresponde a una versión revisada
-Cuando confirmo generar
-Entonces la autorización se liga a sesión, operación y versión y no autoriza registrar
+Dado que la Capa 3 finalizó y existen cálculos requeridos
+Cuando envío POST /api/v1/claims/{sessionId}/layer4/calculate
+Entonces el sistema planifica los cálculos, los ejecuta con funciones Java (fecha límite, interés legal, porcentaje)
+Y guarda los resultados en el plan de ejecución de la sesión
 ```
 
 **CA-09.2**
 
 ```gherkin
-Dado que rechazo o cancelo la confirmación
-Cuando se intenta continuar
-Entonces no se genera documento final ni se registra reclamo
+Dado que la Capa 3 no ha finalizado
+Cuando envío POST /api/v1/claims/{sessionId}/layer4/calculate
+Entonces recibo un error 400 y no se ejecutan los cálculos
 ```
 
 **CA-09.3**
 
 ```gherkin
-Dado que existe una autorización previa para la versión 1 del relato
-Y los hechos del caso son modificados generando una versión 2
-Cuando se intenta generar el documento o registrar el reclamo
-Entonces el backend rechaza la autorización obsoleta dela v1 y exige una nueva confirmación explícita la v2
+Dado que un cálculo falla durante su ejecución
+Cuando el sistema registra el resultado
+Entonces la variable correspondiente queda marcada con «ERROR_CALCULO» en lugar de un valor inventado
 ```
 
-**CA-09.4**
+### HU-10. Sesión persistente y reanudable
 
-```gherkin
-Dado que el informe estructurado corresponde a una versión revisada del caso
-Cuando confirmo explícitamente la acción de registrar el reclamo
-Entonces la autorización se liga exclusivamente a la operación de registro para esa versión y habilita al sistema para guardar los datos
-```
+Como consumidor, quiero poder pausar mi reclamo y retomarlo con el mismo identificador para no repetir el proceso.
 
-### HU-10. Registro autorizado
-
-Como consumidor que decidió conservar su reclamo, quiero autorizar su registro interno para guardar únicamente la información necesaria.
-
-Requisito: RF-10. Necesidad: N08. Investigación: Sin pregunta directa; Caso 02. Prioridad: obligatoria. Estado: diseño preliminar.
+Requisito: RF-10. Necesidad: N09, N10. Investigación: diseño del sistema. Prioridad: obligatoria. Estado: implementada; verificación pendiente.
 
 **CA-10.1**
 
 ```gherkin
-Dado que confirmé registrar la versión actual
-Cuando solicito registro
-Entonces se guarda una sola transacción con hechos, referencias y prueba mínima de autorización; no se envía a autoridades
+Dado que una capa terminó un paso y quedó en espera del usuario
+Cuando consulto o continúo la sesión con su identificador
+Entonces el sistema retoma el flujo desde el estado guardado, sin repetir los pasos anteriores
 ```
 
 **CA-10.2**
 
 ```gherkin
-Dado que solo confirmé generar o no confirmé nada
-Cuando solicito registrar
-Entonces el backend rechaza y no crea filas de reclamo
+Dado que el identificador de sesión no existe o ya venció
+Cuando envío una solicitud con ese identificador
+Entonces el sistema responde con un error indicando que la sesión no fue encontrada
 ```
 
 **CA-10.3**
 
 ```gherkin
-Dado que repito la misma solicitud autorizada con igual clave de idempotencia
-Cuando se recibe dos veces
-Entonces se devuelve el mismo identificador sin duplicar el reclamo
+Dado que una sesión se guardó en Redis
+Cuando consulto el TTL de su clave
+Entonces el vencimiento es de 24 horas
 ```
 
-### HU-11. Cálculo determinista de plazos legales
+### 6.1 Resumen
 
-Como consumidor que necesita conocer el tiempo disponible para actuar, quiero consultar un plazo calculado a partir de una regla legal vigente y datos confirmados para orientar mis siguientes pasos sin recibir fechas inventadas.
-
-Requisito: RF-11. Necesidad: N09. Investigación: alcance de `01-propuesta.md`, apartado 3.1. Prioridad: obligatoria condicionada a validación normativa. Estado: diseño preliminar.
-
-**CA-11.1**
-
-```gherkin
-Dado que existe una regla de plazo validada con fuente, versión, evento inicial y unidad de cómputo, y he confirmado la fecha de inicio
-Cuando solicito el cálculo
-Entonces el backend aplica la función determinista y muestra el resultado, la regla utilizada, su fuente y los supuestos del cálculo
-```
-
-**CA-11.2**
-
-```gherkin
-Dado que la norma no está verificada o la fecha inicial es desconocida
-Cuando solicito conocer el plazo
-Entonces el sistema indica «plazo no determinado» y solicita verificar los datos sin inventar días ni fechas
-```
-
-**CA-11.3**
-
-```gherkin
-Dado que la regla de plazo aplicable está marcada como derogada o no vigente
-Cuando el sistema evalúa el caso
-Entonces excluye esa regla del cálculo e informa que no puede determinar el plazo con esa fuente
-```
+El documento contiene **10 historias** (la guía exige al menos ocho) y **32 criterios de aceptación** distribuidos entre 2 y 4 por historia. Todos describen comportamientos del backend implementado, a verificar mediante pruebas.
